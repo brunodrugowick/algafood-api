@@ -11,10 +11,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 public class Cuisine {
 	
+	@EqualsAndHashCode.Include
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
