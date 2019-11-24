@@ -8,6 +8,7 @@ import org.springframework.context.ApplicationContext;
 
 import dev.drugowick.algaworks.AlgafoodApiApplication;
 import dev.drugowick.algaworks.domain.model.Cuisine;
+import dev.drugowick.algaworks.domain.repository.CuisineRepository;
 
 public class FindCuisineMain {
 
@@ -16,8 +17,8 @@ public class FindCuisineMain {
 				.web(WebApplicationType.NONE)
 				.run(args);
 				
-		CuisineCrud cuisineCrud = applicationContext.getBean(CuisineCrud.class);
-		List<Cuisine> cuisines = cuisineCrud.listAll();
+		CuisineRepository cuisineRepository = applicationContext.getBean(CuisineRepository.class);
+		List<Cuisine> cuisines = cuisineRepository.list();
 		for (Cuisine cuisine : cuisines) {
 			System.out.println(cuisine.getName());
 		}

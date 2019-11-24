@@ -1,4 +1,4 @@
-package dev.drugowick.algaworks.jpa;
+package dev.drugowick.algaworks.infrastructure.repository;
 
 import java.util.List;
 
@@ -9,30 +9,35 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import dev.drugowick.algaworks.domain.model.Cuisine;
+import dev.drugowick.algaworks.domain.repository.CuisineRepository;
 
 @Component
-public class CuisineCrud {
-	
+public class CuisineRepositoryImpl implements CuisineRepository {
+
 	@PersistenceContext
 	private EntityManager manager;
 	
-	public List<Cuisine> listAll() {
+	@Override
+	public List<Cuisine> list() {
 		return manager.createQuery("from Cuisine", Cuisine.class)
 				.getResultList();
 	}
 	
-	public Cuisine findById(Long id) {
+	@Override
+	public Cuisine get(Long id) {
 		return manager.find(Cuisine.class, id);
 	}
 	
 	@Transactional
+	@Override
 	public Cuisine save(Cuisine cuisine) {
 		return manager.merge(cuisine);
 	}
 	
 	@Transactional
+	@Override
 	public void remove(Cuisine cuisine) {
-		cuisine = findById(cuisine.getId());
+		cuisine = get(cuisine.getId());
 		manager.remove(cuisine);
 	}
 

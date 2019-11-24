@@ -6,6 +6,7 @@ import org.springframework.context.ApplicationContext;
 
 import dev.drugowick.algaworks.AlgafoodApiApplication;
 import dev.drugowick.algaworks.domain.model.Cuisine;
+import dev.drugowick.algaworks.domain.repository.CuisineRepository;
 
 public class RemoveCuisineMain {
 
@@ -14,12 +15,13 @@ public class RemoveCuisineMain {
 				.web(WebApplicationType.NONE)
 				.run(args);
 				
-		CuisineCrud cuisineCrud = applicationContext.getBean(CuisineCrud.class);
+		
+		CuisineRepository cuisineRepository = applicationContext.getBean(CuisineRepository.class);
 		
 		Cuisine cuisine = new Cuisine();
 		cuisine.setId(1L);
 		
-		cuisineCrud.remove(cuisine);
+		cuisineRepository.remove(cuisine);
 		
 	}
 }
