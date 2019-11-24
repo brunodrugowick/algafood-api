@@ -1,4 +1,4 @@
-package dev.drugowick.algaworks.algafoodapi.jpa;
+package dev.drugowick.algaworks.algafoodapi.jpa.test.cuisine;
 
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;

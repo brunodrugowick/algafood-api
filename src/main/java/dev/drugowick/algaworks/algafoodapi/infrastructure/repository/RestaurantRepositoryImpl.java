@@ -37,6 +37,7 @@ public class RestaurantRepositoryImpl implements RestaurantRepository {
 	@Transactional
 	@Override
 	public void remove(Restaurant restaurant) {
+		// Finds the entity so Hibernate has it Managed (not Detached).
 		restaurant = get(restaurant.getId());
 		manager.remove(restaurant);
 	}
