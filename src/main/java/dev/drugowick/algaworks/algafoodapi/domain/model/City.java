@@ -6,7 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -33,7 +33,7 @@ public class City {
 	@Column(nullable = false)
 	private String name;
 	
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(nullable = false)
 	private Province province;
 
