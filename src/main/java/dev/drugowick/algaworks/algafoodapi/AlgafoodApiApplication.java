@@ -1,4 +1,4 @@
-package dev.drugowick.algaworks;
+package dev.drugowick.algaworks.algafoodapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

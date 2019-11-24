@@ -1,8 +1,8 @@
-package dev.drugowick.algaworks.domain.repository;
+package dev.drugowick.algaworks.algafoodapi.domain.repository;
 
 import java.util.List;
 
-import dev.drugowick.algaworks.domain.model.Cuisine;
+import dev.drugowick.algaworks.algafoodapi.domain.model.Cuisine;
 
 public interface CuisineRepository {
 

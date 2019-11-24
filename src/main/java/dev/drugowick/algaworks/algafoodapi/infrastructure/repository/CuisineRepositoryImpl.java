@@ -1,4 +1,4 @@
-package dev.drugowick.algaworks.infrastructure.repository;
+package dev.drugowick.algaworks.algafoodapi.infrastructure.repository;
 
 import java.util.List;
 
@@ -8,8 +8,8 @@ import javax.persistence.PersistenceContext;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import dev.drugowick.algaworks.domain.model.Cuisine;
-import dev.drugowick.algaworks.domain.repository.CuisineRepository;
+import dev.drugowick.algaworks.algafoodapi.domain.model.Cuisine;
+import dev.drugowick.algaworks.algafoodapi.domain.repository.CuisineRepository;
 
 @Component
 public class CuisineRepositoryImpl implements CuisineRepository {

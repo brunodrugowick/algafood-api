@@ -1,4 +1,6 @@
-package dev.drugowick.algaworks.domain.model;
+package dev.drugowick.algaworks.algafoodapi.domain.model;
+
+import java.math.BigDecimal;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,12 +15,14 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode(of = "id")
 @Entity
-public class Cuisine {
+public class Restaurant {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	private String name;
+	
+	private BigDecimal deliveryFee;
 
 }
