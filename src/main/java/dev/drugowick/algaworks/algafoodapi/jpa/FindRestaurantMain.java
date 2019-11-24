@@ -20,7 +20,9 @@ public class FindRestaurantMain {
 		RestaurantRepository restaurantRepository = applicationContext.getBean(RestaurantRepository.class);
 		List<Restaurant> restaurants = restaurantRepository.list();
 		for (Restaurant restaurant : restaurants) {
-			System.out.println(restaurant.getName());
+			System.out.printf("%s - %f - %s\n", restaurant.getName(),
+					restaurant.getDeliveryFee(),
+					restaurant.getCuisine().getName());
 		}
 	}
 }
