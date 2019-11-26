@@ -2,6 +2,7 @@ package dev.drugowick.algaworks.algafoodapi.api.controller;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,8 +27,14 @@ public class ProvinceController {
 	}
 	
 	@GetMapping(value = {"/{id}"})
-	public Province get(@PathVariable Long id) {
-		return provinceRepository.get(id);
+	public ResponseEntity<Province> get(@PathVariable Long id) {
+		Province province = provinceRepository.get(id);
+		
+		if (province != null) {
+			return ResponseEntity.ok(province);
+		}
+		
+		return ResponseEntity.notFound().build();
 	}
 	
 }
