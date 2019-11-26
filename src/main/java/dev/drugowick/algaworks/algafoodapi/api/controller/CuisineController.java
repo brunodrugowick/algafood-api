@@ -28,6 +28,11 @@ public class CuisineController {
 		return cuisineRepository.list();
 	}
 	
+	@GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
+	public CuisinesXmlWrapper listXml() {
+		return new CuisinesXmlWrapper(cuisineRepository.list());
+	}
+	
 	@GetMapping(value = { "/{id}" })
 	public Cuisine get(@PathVariable Long id) {
 		return cuisineRepository.get(id);
