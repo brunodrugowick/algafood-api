@@ -2,13 +2,11 @@ package dev.drugowick.algaworks.algafoodapi.api.controller;
 
 import java.util.List;
 
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.drugowick.algaworks.algafoodapi.api.model.CuisinesXmlWrapper;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Cuisine;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.CuisineRepository;
 
@@ -26,11 +24,6 @@ public class CuisineController {
 	@GetMapping
 	public List<Cuisine> list() {
 		return cuisineRepository.list();
-	}
-	
-	@GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
-	public CuisinesXmlWrapper listXml() {
-		return new CuisinesXmlWrapper(cuisineRepository.list());
 	}
 	
 	@GetMapping(value = { "/{id}" })
