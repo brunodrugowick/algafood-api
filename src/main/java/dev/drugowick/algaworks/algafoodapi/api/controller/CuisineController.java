@@ -2,11 +2,13 @@ package dev.drugowick.algaworks.algafoodapi.api.controller;
 
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -43,6 +45,19 @@ public class CuisineController {
 		
 		if (cuisine != null) {
 			return ResponseEntity.ok(cuisine);
+		}
+		
+		return ResponseEntity.notFound().build();
+	}
+	
+	@PutMapping(value = "/{id}")
+	public ResponseEntity<Cuisine> update(@PathVariable Long id, @RequestBody Cuisine cuisine) {
+		Cuisine cuisineToUpdate = cuisineRepository.get(id);
+		
+		if (cuisineToUpdate != null) {
+			BeanUtils.copyProperties(cuisine, cuisineToUpdate, "id");
+			cuisineToUpdate = cuisineRepository.save(cuisineToUpdate);
+			return ResponseEntity.ok(cuisineToUpdate);
 		}
 		
 		return ResponseEntity.notFound().build();
