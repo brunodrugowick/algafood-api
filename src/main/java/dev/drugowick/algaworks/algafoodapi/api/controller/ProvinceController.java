@@ -3,8 +3,10 @@ package dev.drugowick.algaworks.algafoodapi.api.controller;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.drugowick.algaworks.algafoodapi.domain.model.Cuisine;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Province;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.ProvinceRepository;
 
@@ -61,6 +62,22 @@ public class ProvinceController {
 		}
 		
 		return ResponseEntity.notFound().build();
+	}
+	
+	@DeleteMapping(value = "/{id}")
+	public ResponseEntity<Province> delete(@PathVariable Long id) {
+		try {
+			Province province = provinceRepository.get(id);
+			if (province != null) {
+				provinceRepository.remove(province);
+				return ResponseEntity.noContent().build();
+			}
+			
+			return ResponseEntity.notFound().build();
+			
+		} catch (DataIntegrityViolationException exception) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
 	}
 	
 }
