@@ -36,8 +36,13 @@ public class ProvinceController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Province save(@RequestBody Province province) {
-		return provinceRepository.save(province);
+	public ResponseEntity<Province> save(@RequestBody Province province) {
+		// Temporary. Client should not send an ID when posting. See #2.
+		if (province.getId() != null) {
+			return ResponseEntity.badRequest()
+					.build();
+		}
+		return ResponseEntity.ok(provinceRepository.save(province));
 	}
 	
 	@GetMapping(value = {"/{id}"})

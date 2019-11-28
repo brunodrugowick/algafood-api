@@ -37,8 +37,13 @@ public class CuisineController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Cuisine save(@RequestBody Cuisine cuisine) {
-		return cuisineRepository.save(cuisine);
+	public ResponseEntity<Cuisine> save(@RequestBody Cuisine cuisine) {
+		// Temporary. Client should not send an ID when posting. See #2.
+		if (cuisine.getId() != null) {
+			return ResponseEntity.badRequest()
+					.build();
+		}
+		return ResponseEntity.ok(cuisineRepository.save(cuisine));
 	}
 	
 	@GetMapping(value = { "/{id}" })
