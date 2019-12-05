@@ -18,15 +18,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dev.drugowick.algaworks.algafoodapi.domain.model.Province;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.ProvinceRepository;
+import dev.drugowick.algaworks.algafoodapi.domain.service.ProvinceCrudService;
 
 @RestController
 @RequestMapping(value = "/provinces")
 public class ProvinceController {
 
 	private ProvinceRepository provinceRepository;
-	
-	public ProvinceController(ProvinceRepository provinceRepository) {
+	private ProvinceCrudService provinceCrudService;
+
+	public ProvinceController(ProvinceRepository provinceRepository, ProvinceCrudService provinceCrudService) {
 		this.provinceRepository = provinceRepository;
+		this.provinceCrudService = provinceCrudService;
 	}
 
 	@GetMapping
@@ -42,7 +45,7 @@ public class ProvinceController {
 			return ResponseEntity.badRequest()
 					.build();
 		}
-		return ResponseEntity.ok(provinceRepository.save(province));
+		return ResponseEntity.ok(provinceCrudService.create(province));
 	}
 	
 	@GetMapping(value = {"/{id}"})

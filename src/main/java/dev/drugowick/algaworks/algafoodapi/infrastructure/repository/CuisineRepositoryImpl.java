@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,9 +37,14 @@ public class CuisineRepositoryImpl implements CuisineRepository {
 	
 	@Transactional
 	@Override
-	public void remove(Cuisine cuisine) {
+	public void remove(Long id) {
 		// Finds the entity so Hibernate has it Managed (not Detached).
-		cuisine = get(cuisine.getId());
+		Cuisine cuisine = get(id);
+		
+		if (cuisine == null) {
+			throw new EmptyResultDataAccessException(1);
+		}
+		
 		manager.remove(cuisine);
 	}
 

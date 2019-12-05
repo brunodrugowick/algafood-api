@@ -16,18 +16,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityBeingUsedException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Cuisine;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.CuisineRepository;
+import dev.drugowick.algaworks.algafoodapi.domain.service.CuisineCrudService;
+import dev.drugowick.algaworks.algafoodapi.domain.service.EntityNotFoundException;
 
 @RestController
 @RequestMapping(value = "/cuisines")
 public class CuisineController {
 	
 	private CuisineRepository cuisineRepository;
+	private CuisineCrudService cuisinesCrudService;
 	
-	public CuisineController(CuisineRepository cuisineRepository) {
-		super();
+	public CuisineController(CuisineRepository cuisineRepository, CuisineCrudService cuisinesCrudService) {
 		this.cuisineRepository = cuisineRepository;
+		this.cuisinesCrudService = cuisinesCrudService;
 	}
 
 	@GetMapping
@@ -43,7 +47,7 @@ public class CuisineController {
 			return ResponseEntity.badRequest()
 					.build();
 		}
-		return ResponseEntity.ok(cuisineRepository.save(cuisine));
+		return ResponseEntity.ok(cuisinesCrudService.create(cuisine));
 	}
 	
 	@GetMapping(value = { "/{id}" })
@@ -63,7 +67,7 @@ public class CuisineController {
 		
 		if (cuisineToUpdate != null) {
 			BeanUtils.copyProperties(cuisine, cuisineToUpdate, "id");
-			cuisineToUpdate = cuisineRepository.save(cuisineToUpdate);
+			cuisineToUpdate = cuisinesCrudService.update(id, cuisineToUpdate);
 			return ResponseEntity.ok(cuisineToUpdate);
 		}
 		
@@ -73,17 +77,16 @@ public class CuisineController {
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Cuisine> delete(@PathVariable Long id) {
 		try {
-			Cuisine cuisine = cuisineRepository.get(id);
-			if (cuisine != null) {
-				cuisineRepository.remove(cuisine);
-				return ResponseEntity.noContent().build();
-			}
+			cuisinesCrudService.delete(id);
+			return ResponseEntity.noContent().build();
 			
-			return ResponseEntity.notFound().build();
-			
-		} catch (DataIntegrityViolationException exception) {
+		} catch (EntityBeingUsedException e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+			
+		} catch (EntityNotFoundException e) {
+			return ResponseEntity.notFound().build();
 		}
+			
 	}
 
 }
