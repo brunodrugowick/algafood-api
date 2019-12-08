@@ -1,15 +1,14 @@
 package dev.drugowick.algaworks.algafoodapi.infrastructure.repository;
 
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
+import dev.drugowick.algaworks.algafoodapi.domain.model.Restaurant;
+import dev.drugowick.algaworks.algafoodapi.domain.repository.RestaurantRepository;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import dev.drugowick.algaworks.algafoodapi.domain.model.Restaurant;
-import dev.drugowick.algaworks.algafoodapi.domain.repository.RestaurantRepository;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.List;
 
 @Component
 public class RestaurantRepositoryImpl implements RestaurantRepository {
@@ -36,9 +35,14 @@ public class RestaurantRepositoryImpl implements RestaurantRepository {
 
 	@Transactional
 	@Override
-	public void remove(Restaurant restaurant) {
+	public void remove(Long id) {
 		// Finds the entity so Hibernate has it Managed (not Detached).
-		restaurant = get(restaurant.getId());
+		Restaurant restaurant = get(id);
+
+		if (restaurant == null) {
+			throw new EmptyResultDataAccessException(1);
+		}
+
 		manager.remove(restaurant);
 	}
 
