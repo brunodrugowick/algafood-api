@@ -10,7 +10,10 @@ This project was bootstrapped with Spring Boot, so:
 ./mvnw spring-boot:run
 ``` 
 
+## Testing
+
+There's a [Insomnia_requests.json](Insomnia_requests.json) file. Import it into [Insomnia](https://insomnia.rest/download/) to test all endpoints (already with examples).
+
 ## Media Types
 
-The API works with `application/json` ~~by default but works with `application/xml` if specified via `Accept` header by the client~~.
-~~Although not specified for every method, this behavior is provided by just adding `com.fasterxml.jackson.dataformat / jackson-dataformat-xml` dependency.~~
+The API works with `application/json`.
