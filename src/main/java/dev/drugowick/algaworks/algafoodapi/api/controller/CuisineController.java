@@ -1,34 +1,30 @@
 package dev.drugowick.algaworks.algafoodapi.api.controller;
 
-import java.util.List;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityBeingUsedException;
+import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Cuisine;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.CuisineRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.CuisineCrudService;
-import dev.drugowick.algaworks.algafoodapi.domain.service.EntityNotFoundException;
+import org.springframework.beans.BeanUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/cuisines")
 public class CuisineController {
-	
+
+	/**
+	 * I don't like it but, for the sake of simplicity for now, operations that do not require a
+	 * transaction are using the repository (get, list) and operations that require a transaction
+	 * are using the service layer (delete, save, update).
+	 */
+
 	private CuisineRepository cuisineRepository;
 	private CuisineCrudService cuisinesCrudService;
-	
+
 	public CuisineController(CuisineRepository cuisineRepository, CuisineCrudService cuisinesCrudService) {
 		this.cuisineRepository = cuisineRepository;
 		this.cuisinesCrudService = cuisinesCrudService;
@@ -38,7 +34,7 @@ public class CuisineController {
 	public List<Cuisine> list() {
 		return cuisineRepository.list();
 	}
-	
+
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<Cuisine> save(@RequestBody Cuisine cuisine) {

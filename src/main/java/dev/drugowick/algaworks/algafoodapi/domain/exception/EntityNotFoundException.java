@@ -1,4 +1,4 @@
-package dev.drugowick.algaworks.algafoodapi.domain.service;
+package dev.drugowick.algaworks.algafoodapi.domain.exception;
 
 public class EntityNotFoundException extends RuntimeException {
 

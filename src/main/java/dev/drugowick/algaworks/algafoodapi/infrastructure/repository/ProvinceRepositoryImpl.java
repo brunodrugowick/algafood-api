@@ -1,15 +1,14 @@
 package dev.drugowick.algaworks.algafoodapi.infrastructure.repository;
 
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
+import dev.drugowick.algaworks.algafoodapi.domain.model.Province;
+import dev.drugowick.algaworks.algafoodapi.domain.repository.ProvinceRepository;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import dev.drugowick.algaworks.algafoodapi.domain.model.Province;
-import dev.drugowick.algaworks.algafoodapi.domain.repository.ProvinceRepository;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.List;
 
 @Component
 public class ProvinceRepositoryImpl implements ProvinceRepository {
@@ -36,9 +35,14 @@ public class ProvinceRepositoryImpl implements ProvinceRepository {
 
 	@Transactional
 	@Override
-	public void remove(Province province) {
+	public void remove(Long id) {
 		// Finds the entity so Hibernate has it Managed (not Detached).
-		province = get(province.getId());
+		Province province = get(id);
+
+		if (province == null) {
+			throw new EmptyResultDataAccessException(1);
+		}
+
 		manager.remove(province);
 
 	}

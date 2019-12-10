@@ -1,6 +1,7 @@
 package dev.drugowick.algaworks.algafoodapi.domain.service;
 
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityBeingUsedException;
+import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Cuisine;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Restaurant;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.CuisineRepository;

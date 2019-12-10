@@ -1,16 +1,14 @@
 package dev.drugowick.algaworks.algafoodapi.infrastructure.repository;
 
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
+import dev.drugowick.algaworks.algafoodapi.domain.model.City;
+import dev.drugowick.algaworks.algafoodapi.domain.repository.CityRepository;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import dev.drugowick.algaworks.algafoodapi.domain.model.City;
-import dev.drugowick.algaworks.algafoodapi.domain.model.Cuisine;
-import dev.drugowick.algaworks.algafoodapi.domain.repository.CityRepository;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.List;
 
 @Component
 public class CityRepositoryImpl implements CityRepository {
@@ -37,10 +35,15 @@ public class CityRepositoryImpl implements CityRepository {
 
 	@Transactional
 	@Override
-	public void remove(City city) {
+	public void remove(Long id) {
 		// Finds the entity so Hibernate has it Managed (not Detached).
-				city = get(city.getId());
-				manager.remove(city);
+		City city = get(id);
+
+		if (city == null) {
+			throw new EmptyResultDataAccessException(1);
+		}
+
+		manager.remove(city);
 	}
 
 }

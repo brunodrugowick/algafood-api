@@ -1,8 +1,8 @@
 package dev.drugowick.algaworks.algafoodapi.api.controller;
 
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityBeingUsedException;
+import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Restaurant;
-import dev.drugowick.algaworks.algafoodapi.domain.service.EntityNotFoundException;
 import dev.drugowick.algaworks.algafoodapi.domain.service.RestaurantCrudService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
@@ -74,15 +74,15 @@ public class RestaurantController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Restaurant> delete(@PathVariable Long id) {
+	public ResponseEntity<?> delete(@PathVariable Long id) {
 		try {
 			restaurantCrudService.delete(id);
 			return ResponseEntity.noContent().build();
 
 		} catch (EntityBeingUsedException exception) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(exception.getMessage());
 		} catch (EntityNotFoundException exception) {
-			return ResponseEntity.notFound().build();
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
 		}
 	}
 
