@@ -12,7 +12,7 @@ This project was bootstrapped with Spring Boot, so:
 
 ## Testing
 
-There's a [Insomnia_requests.json](Insomnia_requests.json) file. Import it into [Insomnia](https://insomnia.rest/download/) to test all endpoints (already with examples).
+There's a [Insomnia_requests.json](src/main/resources/static/Insomnia_requests.json) file. Import it into [Insomnia](https://insomnia.rest/download/) to test all endpoints (already with examples).
 
 You may use it against [https://algafoodapi.herokuapp.com/](https://algafoodapi.herokuapp.com/). Some endpoints you can try via browser (GET requests):
 
