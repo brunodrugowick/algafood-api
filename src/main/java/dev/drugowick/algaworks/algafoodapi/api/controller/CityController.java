@@ -26,12 +26,10 @@ public class CityController {
 
     private CityRepository cityRepository;
     private CityCrudService cityCrudService;
-    private ObjectMerger<City> objectMerger;
 
-    public CityController(CityRepository cityRepository, CityCrudService cityCrudService, ObjectMerger<City> objectMerger) {
+    public CityController(CityRepository cityRepository, CityCrudService cityCrudService) {
         this.cityRepository = cityRepository;
         this.cityCrudService = cityCrudService;
-        this.objectMerger = objectMerger;
     }
 
     @GetMapping
@@ -98,7 +96,9 @@ public class CityController {
             return ResponseEntity.notFound().build();
         }
 
-        cityToUpdate = objectMerger.mergeRequestBodyToGenericObject(cityMap, cityToUpdate);
+        ObjectMerger
+                .of(City.class)
+                .mergeRequestBodyToGenericObject(cityMap, cityToUpdate);
 
         return update(id, cityToUpdate);
     }

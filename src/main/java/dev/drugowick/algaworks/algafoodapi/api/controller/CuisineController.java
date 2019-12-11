@@ -26,12 +26,10 @@ public class CuisineController {
 
 	private CuisineRepository cuisineRepository;
 	private CuisineCrudService cuisinesCrudService;
-	private ObjectMerger<Cuisine> objectMerger;
 
-	public CuisineController(CuisineRepository cuisineRepository, CuisineCrudService cuisinesCrudService, ObjectMerger<Cuisine> objectMerger) {
+	public CuisineController(CuisineRepository cuisineRepository, CuisineCrudService cuisinesCrudService) {
 		this.cuisineRepository = cuisineRepository;
 		this.cuisinesCrudService = cuisinesCrudService;
-		this.objectMerger = objectMerger;
 	}
 
 	@GetMapping
@@ -82,7 +80,9 @@ public class CuisineController {
 			return ResponseEntity.notFound().build();
 		}
 
-		cuisineToUpdate = objectMerger.mergeRequestBodyToGenericObject(cuisineMap, cuisineToUpdate);
+		ObjectMerger
+				.of(Cuisine.class)
+				.mergeRequestBodyToGenericObject(cuisineMap, cuisineToUpdate);
 
 		return update(id, cuisineToUpdate);
 	}

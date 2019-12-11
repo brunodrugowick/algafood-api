@@ -26,12 +26,10 @@ public class ProvinceController {
 
 	private ProvinceRepository provinceRepository;
 	private ProvinceCrudService provinceCrudService;
-	private ObjectMerger<Province> objectMerger;
 
-	public ProvinceController(ProvinceRepository provinceRepository, ProvinceCrudService provinceCrudService, ObjectMerger<Province> objectMerger) {
+	public ProvinceController(ProvinceRepository provinceRepository, ProvinceCrudService provinceCrudService) {
 		this.provinceRepository = provinceRepository;
 		this.provinceCrudService = provinceCrudService;
-		this.objectMerger = objectMerger;
 	}
 
 	@GetMapping
@@ -88,7 +86,9 @@ public class ProvinceController {
 			return ResponseEntity.notFound().build();
 		}
 
-		provinceToUpdate = objectMerger.mergeRequestBodyToGenericObject(provinceMap, provinceToUpdate);
+		ObjectMerger
+				.of(Province.class)
+				.mergeRequestBodyToGenericObject(provinceMap, provinceToUpdate);
 
 		return update(id, provinceToUpdate);
 	}

@@ -18,12 +18,29 @@ public class ObjectMerger<T> {
     private ObjectMapper objectMapper;
     private Class<T> type;
 
-    public ObjectMerger(Class<T> type) {
+    private ObjectMerger(Class<T> type) {
         this.objectMapper = new ObjectMapper();
         this.type = type;
     }
 
-    public T mergeRequestBodyToGenericObject(Map<String, Object> objectMap, T objectToUpdate) {
+    /**
+     * Returns a new instance of ObjectMerger<T> of the given type as parameter.
+     *
+     * @param type a class to be merged with a Map of <String, Object>.
+     * @return
+     */
+    public static ObjectMerger of(Class type) {
+        return new ObjectMerger(type);
+    }
+
+    /**
+     * Updates an objectToUpdate according to data from a Map<String, Object>.
+     *
+     * @param objectMap      a Map of <String, Object> with data to update destination object. The string values
+     *                       must match fields on the destination object.
+     * @param objectToUpdate the object to update.
+     */
+    public void mergeRequestBodyToGenericObject(Map<String, Object> objectMap, T objectToUpdate) {
         T newObject = objectMapper.convertValue(objectMap, type);
 
         objectMap.forEach((fieldProp, valueProp) -> {
@@ -34,7 +51,5 @@ public class ObjectMerger<T> {
 
             ReflectionUtils.setField(field, objectToUpdate, newValue);
         });
-
-        return objectToUpdate;
     }
 }

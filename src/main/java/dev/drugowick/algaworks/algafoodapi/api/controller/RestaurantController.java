@@ -18,11 +18,9 @@ import java.util.Map;
 public class RestaurantController {
 
 	private RestaurantCrudService restaurantCrudService;
-	private ObjectMerger<Restaurant> objectMerger;
 
-	public RestaurantController(RestaurantCrudService restaurantCrudService, ObjectMerger<Restaurant> objectMerger) {
+	public RestaurantController(RestaurantCrudService restaurantCrudService) {
 		this.restaurantCrudService = restaurantCrudService;
-		this.objectMerger = objectMerger;
 	}
 
 	@GetMapping
@@ -85,7 +83,9 @@ public class RestaurantController {
 			return ResponseEntity.notFound().build();
 		}
 
-		restaurantToUpdate = objectMerger.mergeRequestBodyToGenericObject(restaurantMap, restaurantToUpdate);
+		ObjectMerger
+				.of(Restaurant.class)
+				.mergeRequestBodyToGenericObject(restaurantMap, restaurantToUpdate);
 
 		return update(id, restaurantToUpdate);
 	}
