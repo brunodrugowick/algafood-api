@@ -1,5 +1,6 @@
 package dev.drugowick.algaworks.algafoodapi.api.controller;
 
+import dev.drugowick.algaworks.algafoodapi.api.controller.utils.ObjectMerger;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityBeingUsedException;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.City;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("cities")
@@ -24,10 +26,12 @@ public class CityController {
 
     private CityRepository cityRepository;
     private CityCrudService cityCrudService;
+    private ObjectMerger<City> objectMerger;
 
-    public CityController(CityRepository cityRepository, CityCrudService cityCrudService) {
+    public CityController(CityRepository cityRepository, CityCrudService cityCrudService, ObjectMerger<City> objectMerger) {
         this.cityRepository = cityRepository;
         this.cityCrudService = cityCrudService;
+        this.objectMerger = objectMerger;
     }
 
     @GetMapping
@@ -84,6 +88,19 @@ public class CityController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> cityMap) {
+        City cityToUpdate = cityRepository.get(id);
+
+        if (cityToUpdate == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        cityToUpdate = objectMerger.mergeRequestBodyToGenericObject(cityMap, cityToUpdate);
+
+        return update(id, cityToUpdate);
     }
 
     @DeleteMapping("/{id}")

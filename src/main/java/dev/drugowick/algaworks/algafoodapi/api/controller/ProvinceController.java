@@ -1,5 +1,6 @@
 package dev.drugowick.algaworks.algafoodapi.api.controller;
 
+import dev.drugowick.algaworks.algafoodapi.api.controller.utils.ObjectMerger;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityBeingUsedException;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Province;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/provinces")
@@ -24,10 +26,12 @@ public class ProvinceController {
 
 	private ProvinceRepository provinceRepository;
 	private ProvinceCrudService provinceCrudService;
+	private ObjectMerger<Province> objectMerger;
 
-	public ProvinceController(ProvinceRepository provinceRepository, ProvinceCrudService provinceCrudService) {
+	public ProvinceController(ProvinceRepository provinceRepository, ProvinceCrudService provinceCrudService, ObjectMerger<Province> objectMerger) {
 		this.provinceRepository = provinceRepository;
 		this.provinceCrudService = provinceCrudService;
+		this.objectMerger = objectMerger;
 	}
 
 	@GetMapping
@@ -74,6 +78,19 @@ public class ProvinceController {
 		// The save method will update when an existing ID is being passed.
 		provinceToUpdate = provinceRepository.save(provinceToUpdate);
 		return ResponseEntity.ok(provinceToUpdate);
+	}
+
+	@PatchMapping("/{id}")
+	public ResponseEntity<?> partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> provinceMap) {
+		Province provinceToUpdate = provinceRepository.get(id);
+
+		if (provinceToUpdate == null) {
+			return ResponseEntity.notFound().build();
+		}
+
+		provinceToUpdate = objectMerger.mergeRequestBodyToGenericObject(provinceMap, provinceToUpdate);
+
+		return update(id, provinceToUpdate);
 	}
 
 	@DeleteMapping(value = "/{id}")

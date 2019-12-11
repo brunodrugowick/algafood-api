@@ -1,5 +1,6 @@
 package dev.drugowick.algaworks.algafoodapi.api.controller;
 
+import dev.drugowick.algaworks.algafoodapi.api.controller.utils.ObjectMerger;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityBeingUsedException;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Restaurant;
@@ -10,15 +11,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/restaurants")
 public class RestaurantController {
-	
-	private RestaurantCrudService restaurantCrudService;
 
-	public RestaurantController(RestaurantCrudService restaurantCrudService) {
+	private RestaurantCrudService restaurantCrudService;
+	private ObjectMerger<Restaurant> objectMerger;
+
+	public RestaurantController(RestaurantCrudService restaurantCrudService, ObjectMerger<Restaurant> objectMerger) {
 		this.restaurantCrudService = restaurantCrudService;
+		this.objectMerger = objectMerger;
 	}
 
 	@GetMapping
@@ -71,6 +75,19 @@ public class RestaurantController {
 		} catch (EntityNotFoundException e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
+	}
+
+	@PatchMapping("/{id}")
+	public ResponseEntity<?> partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> restaurantMap) {
+		Restaurant restaurantToUpdate = restaurantCrudService.read(id);
+
+		if (restaurantToUpdate == null) {
+			return ResponseEntity.notFound().build();
+		}
+
+		restaurantToUpdate = objectMerger.mergeRequestBodyToGenericObject(restaurantMap, restaurantToUpdate);
+
+		return update(id, restaurantToUpdate);
 	}
 
 	@DeleteMapping("/{id}")

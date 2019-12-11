@@ -1,5 +1,6 @@
 package dev.drugowick.algaworks.algafoodapi.api.controller;
 
+import dev.drugowick.algaworks.algafoodapi.api.controller.utils.ObjectMerger;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityBeingUsedException;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Cuisine;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/cuisines")
@@ -24,10 +26,12 @@ public class CuisineController {
 
 	private CuisineRepository cuisineRepository;
 	private CuisineCrudService cuisinesCrudService;
+	private ObjectMerger<Cuisine> objectMerger;
 
-	public CuisineController(CuisineRepository cuisineRepository, CuisineCrudService cuisinesCrudService) {
+	public CuisineController(CuisineRepository cuisineRepository, CuisineCrudService cuisinesCrudService, ObjectMerger<Cuisine> objectMerger) {
 		this.cuisineRepository = cuisineRepository;
 		this.cuisinesCrudService = cuisinesCrudService;
+		this.objectMerger = objectMerger;
 	}
 
 	@GetMapping
@@ -60,22 +64,35 @@ public class CuisineController {
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<Cuisine> update(@PathVariable Long id, @RequestBody Cuisine cuisine) {
 		Cuisine cuisineToUpdate = cuisineRepository.get(id);
-		
+
 		if (cuisineToUpdate != null) {
 			BeanUtils.copyProperties(cuisine, cuisineToUpdate, "id");
 			cuisineToUpdate = cuisinesCrudService.update(id, cuisineToUpdate);
 			return ResponseEntity.ok(cuisineToUpdate);
 		}
-		
+
 		return ResponseEntity.notFound().build();
 	}
-	
+
+	@PatchMapping("/{id}")
+	public ResponseEntity<?> partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> cuisineMap) {
+		Cuisine cuisineToUpdate = cuisineRepository.get(id);
+
+		if (cuisineToUpdate == null) {
+			return ResponseEntity.notFound().build();
+		}
+
+		cuisineToUpdate = objectMerger.mergeRequestBodyToGenericObject(cuisineMap, cuisineToUpdate);
+
+		return update(id, cuisineToUpdate);
+	}
+
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Cuisine> delete(@PathVariable Long id) {
 		try {
 			cuisinesCrudService.delete(id);
 			return ResponseEntity.noContent().build();
-			
+
 		} catch (EntityBeingUsedException e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 			

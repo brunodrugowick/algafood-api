@@ -1,21 +1,29 @@
 {
   "_type": "export",
   "__export_format": 4,
-  "__export_date": "2019-12-10T03:33:38.127Z",
+  "__export_date": "2019-12-11T04:24:25.400Z",
   "__export_source": "insomnia.desktop.app:v7.0.5",
   "resources": [
     {
-      "_id": "req_86b129d6ff644c27bb07f1b2c82e5ea6",
+      "_id": "req_0de87750b614487194779dd9a5337d30",
       "authentication": {},
-      "body": {},
-      "created": 1574821996680,
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"name\": \"São Paulo SP\",\n\t\"abbreviation\": \"SPSP\"\n}"
+      },
+      "created": 1576033990683,
       "description": "",
-      "headers": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
       "isPrivate": false,
-      "metaSortKey": -1574726683826,
-      "method": "DELETE",
-      "modified": 1575947884148,
-      "name": "Remove Province",
+      "metaSortKey": -1576033990683,
+      "method": "PATCH",
+      "modified": 1576037890933,
+      "name": "Partial Update Province",
       "parameters": [],
       "parentId": "fld_bd5ad5c551e044149938534a641179bc",
       "settingDisableRenderRequestBody": false,
@@ -24,7 +32,7 @@
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ localhost  }}/provinces/6",
+      "url": "{{ host }}/provinces/1",
       "_type": "request"
     },
     {
@@ -49,6 +57,29 @@
       "_type": "workspace"
     },
     {
+      "_id": "req_86b129d6ff644c27bb07f1b2c82e5ea6",
+      "authentication": {},
+      "body": {},
+      "created": 1574821996680,
+      "description": "",
+      "headers": [],
+      "isPrivate": false,
+      "metaSortKey": -1574726683826,
+      "method": "DELETE",
+      "modified": 1576037896076,
+      "name": "Remove Province",
+      "parameters": [],
+      "parentId": "fld_bd5ad5c551e044149938534a641179bc",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingFollowRedirects": "global",
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host }}/provinces/6",
+      "_type": "request"
+    },
+    {
       "_id": "req_34cc663c9bc94dbfb234855068575185",
       "authentication": {},
       "body": {
@@ -67,7 +98,7 @@
       "isPrivate": false,
       "metaSortKey": -1574726683776,
       "method": "PUT",
-      "modified": 1575947808019,
+      "modified": 1576037900218,
       "name": "Update Province",
       "parameters": [],
       "parentId": "fld_bd5ad5c551e044149938534a641179bc",
@@ -77,7 +108,7 @@
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ localhost  }}/provinces/6",
+      "url": "{{ host }}/provinces/6",
       "_type": "request"
     },
     {
@@ -99,7 +130,7 @@
       "isPrivate": false,
       "metaSortKey": -1574726683726,
       "method": "POST",
-      "modified": 1575947780570,
+      "modified": 1576037904127,
       "name": "Save Province",
       "parameters": [],
       "parentId": "fld_bd5ad5c551e044149938534a641179bc",
@@ -109,7 +140,7 @@
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ localhost  }}/provinces",
+      "url": "{{ host }}/provinces",
       "_type": "request"
     },
     {
@@ -129,7 +160,7 @@
       "isPrivate": false,
       "metaSortKey": -1574726683676,
       "method": "GET",
-      "modified": 1574731266707,
+      "modified": 1576037884930,
       "name": "List Provinces",
       "parameters": [],
       "parentId": "fld_bd5ad5c551e044149938534a641179bc",
@@ -139,7 +170,7 @@
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ localhost  }}/provinces",
+      "url": "{{ host }}/provinces",
       "_type": "request"
     },
     {
@@ -157,7 +188,7 @@
       "isPrivate": false,
       "metaSortKey": -1574726072057,
       "method": "GET",
-      "modified": 1575510131719,
+      "modified": 1576037910660,
       "name": "Get Province",
       "parameters": [],
       "parentId": "fld_bd5ad5c551e044149938534a641179bc",
@@ -167,21 +198,29 @@
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ localhost  }}/provinces/1",
+      "url": "{{ host }}/provinces/1",
       "_type": "request"
     },
     {
-      "_id": "req_de5d0ce4e8bd431693e6a8ba0dfe644c",
+      "_id": "req_86943d9a516c42aca02ae7385a189255",
       "authentication": {},
-      "body": {},
-      "created": 1575690680764,
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"name\": \"Campinas Nova\",\n\t\"province\": {\n\t\t\"id\": 2\n\t}\n}"
+      },
+      "created": 1576034812850,
       "description": "",
-      "headers": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
       "isPrivate": false,
-      "metaSortKey": -1574726683826,
-      "method": "DELETE",
-      "modified": 1575948002629,
-      "name": "Remove City",
+      "metaSortKey": -1576034812850,
+      "method": "PATCH",
+      "modified": 1576037915079,
+      "name": "Partial Update City",
       "parameters": [],
       "parentId": "fld_6303a1ad572842a69c58ff54b923205c",
       "settingDisableRenderRequestBody": false,
@@ -190,7 +229,7 @@
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ localhost  }}/cities/2",
+      "url": "{{ host }}/cities/1",
       "_type": "request"
     },
     {
@@ -204,6 +243,29 @@
       "name": "Cities",
       "parentId": "wrk_54a98f6f616e4d71a13e9aff83c8fde8",
       "_type": "request_group"
+    },
+    {
+      "_id": "req_de5d0ce4e8bd431693e6a8ba0dfe644c",
+      "authentication": {},
+      "body": {},
+      "created": 1575690680764,
+      "description": "",
+      "headers": [],
+      "isPrivate": false,
+      "metaSortKey": -1574726683826,
+      "method": "DELETE",
+      "modified": 1576037919723,
+      "name": "Remove City",
+      "parameters": [],
+      "parentId": "fld_6303a1ad572842a69c58ff54b923205c",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingFollowRedirects": "global",
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host }}/cities/2",
+      "_type": "request"
     },
     {
       "_id": "req_febbda9d6c644c8fb68e6507faf6daf6",
@@ -224,7 +286,7 @@
       "isPrivate": false,
       "metaSortKey": -1574726683776,
       "method": "PUT",
-      "modified": 1575947988512,
+      "modified": 1576037925475,
       "name": "Update City",
       "parameters": [],
       "parentId": "fld_6303a1ad572842a69c58ff54b923205c",
@@ -234,7 +296,7 @@
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ localhost  }}/cities/5",
+      "url": "{{ host }}/cities/5",
       "_type": "request"
     },
     {
@@ -256,7 +318,7 @@
       "isPrivate": false,
       "metaSortKey": -1574726683726,
       "method": "POST",
-      "modified": 1575945048693,
+      "modified": 1576037930036,
       "name": "Save City",
       "parameters": [],
       "parentId": "fld_6303a1ad572842a69c58ff54b923205c",
@@ -266,7 +328,7 @@
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ localhost  }}/cities",
+      "url": "{{ host }}/cities",
       "_type": "request"
     },
     {
@@ -286,7 +348,7 @@
       "isPrivate": false,
       "metaSortKey": -1574726683676,
       "method": "GET",
-      "modified": 1575939796976,
+      "modified": 1576037934618,
       "name": "List City",
       "parameters": [],
       "parentId": "fld_6303a1ad572842a69c58ff54b923205c",
@@ -296,7 +358,7 @@
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ localhost  }}/cities",
+      "url": "{{ host }}/cities",
       "_type": "request"
     },
     {
@@ -314,7 +376,7 @@
       "isPrivate": false,
       "metaSortKey": -1574726072057,
       "method": "GET",
-      "modified": 1575945887828,
+      "modified": 1576037939086,
       "name": "Get City",
       "parameters": [],
       "parentId": "fld_6303a1ad572842a69c58ff54b923205c",
@@ -324,21 +386,29 @@
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ localhost  }}/cities/4",
+      "url": "{{ host }}/cities/4",
       "_type": "request"
     },
     {
-      "_id": "req_936d8d693a9642b1b6012783754c838f",
+      "_id": "req_cd141bd5245e47adab9e520c188ac761",
       "authentication": {},
-      "body": {},
-      "created": 1574821797548,
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"name\": \"Bavarian 2\"\n}"
+      },
+      "created": 1576034918053,
       "description": "",
-      "headers": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
       "isPrivate": false,
-      "metaSortKey": -1574821797548,
-      "method": "DELETE",
-      "modified": 1575512181162,
-      "name": "Remove Cuisine",
+      "metaSortKey": -1576034918053,
+      "method": "PATCH",
+      "modified": 1576037943773,
+      "name": "Partial Update Cuisine",
       "parameters": [],
       "parentId": "fld_d725a82800054426b22bff5a148e68ce",
       "settingDisableRenderRequestBody": false,
@@ -347,7 +417,7 @@
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ localhost  }}/cuisines/1",
+      "url": "{{ host }}/cuisines/2",
       "_type": "request"
     },
     {
@@ -361,6 +431,29 @@
       "name": "Cuisines",
       "parentId": "wrk_54a98f6f616e4d71a13e9aff83c8fde8",
       "_type": "request_group"
+    },
+    {
+      "_id": "req_936d8d693a9642b1b6012783754c838f",
+      "authentication": {},
+      "body": {},
+      "created": 1574821797548,
+      "description": "",
+      "headers": [],
+      "isPrivate": false,
+      "metaSortKey": -1574821797548,
+      "method": "DELETE",
+      "modified": 1576037948110,
+      "name": "Remove Cuisine",
+      "parameters": [],
+      "parentId": "fld_d725a82800054426b22bff5a148e68ce",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingFollowRedirects": "global",
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host }}/cuisines/1",
+      "_type": "request"
     },
     {
       "_id": "req_08c26aa5e1b842038be63125c516e3c1",
@@ -381,7 +474,7 @@
       "isPrivate": false,
       "metaSortKey": -1574819198688,
       "method": "PUT",
-      "modified": 1574819372919,
+      "modified": 1576037952595,
       "name": "Update Cuisine",
       "parameters": [],
       "parentId": "fld_d725a82800054426b22bff5a148e68ce",
@@ -391,7 +484,7 @@
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ localhost  }}/cuisines/1",
+      "url": "{{ host }}/cuisines/1",
       "_type": "request"
     },
     {
@@ -413,7 +506,7 @@
       "isPrivate": false,
       "metaSortKey": -1574739049162,
       "method": "POST",
-      "modified": 1574906359324,
+      "modified": 1576037958041,
       "name": "Save Cuisine",
       "parameters": [],
       "parentId": "fld_d725a82800054426b22bff5a148e68ce",
@@ -423,7 +516,7 @@
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ localhost  }}/cuisines",
+      "url": "{{ host }}/cuisines",
       "_type": "request"
     },
     {
@@ -443,7 +536,7 @@
       "isPrivate": false,
       "metaSortKey": -1574725460438,
       "method": "GET",
-      "modified": 1574738846702,
+      "modified": 1576037962830,
       "name": "List Ciusines",
       "parameters": [],
       "parentId": "fld_d725a82800054426b22bff5a148e68ce",
@@ -453,7 +546,7 @@
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ localhost  }}/cuisines",
+      "url": "{{ host }}/cuisines",
       "_type": "request"
     },
     {
@@ -473,7 +566,7 @@
       "isPrivate": false,
       "metaSortKey": -1574725460388,
       "method": "GET",
-      "modified": 1575509991615,
+      "modified": 1576037968024,
       "name": "Get Cuisine",
       "parameters": [],
       "parentId": "fld_d725a82800054426b22bff5a148e68ce",
@@ -483,21 +576,29 @@
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ localhost  }}/cuisines/1",
+      "url": "{{ host }}/cuisines/1",
       "_type": "request"
     },
     {
-      "_id": "req_8a0acf0ae2b742b8a08280eb1527f6dc",
+      "_id": "req_e2670129cc0c4352a4f5f61f8a4594fe",
       "authentication": {},
-      "body": {},
-      "created": 1575686671206,
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"name\": \"Bar Preste Atenção PROMO\",\n\t\"deliveryFee\": 10.00,\n\t\"cuisine\": {\n\t\t\"id\": 1\n\t}\n}"
+      },
+      "created": 1576028312877,
       "description": "",
-      "headers": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
       "isPrivate": false,
-      "metaSortKey": -1575686671206,
-      "method": "DELETE",
-      "modified": 1575945155351,
-      "name": "Remove Restaurant",
+      "metaSortKey": -1576028312878,
+      "method": "PATCH",
+      "modified": 1576037972658,
+      "name": "Partial Update Restaurant",
       "parameters": [],
       "parentId": "fld_35ad49773d8748e388cbdbcd0fa76ca1",
       "settingDisableRenderRequestBody": false,
@@ -506,7 +607,7 @@
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ localhost  }}/restaurants/3",
+      "url": "{{ host }}/restaurants/1",
       "_type": "request"
     },
     {
@@ -520,6 +621,29 @@
       "name": "Restaurant",
       "parentId": "wrk_54a98f6f616e4d71a13e9aff83c8fde8",
       "_type": "request_group"
+    },
+    {
+      "_id": "req_8a0acf0ae2b742b8a08280eb1527f6dc",
+      "authentication": {},
+      "body": {},
+      "created": 1575686671206,
+      "description": "",
+      "headers": [],
+      "isPrivate": false,
+      "metaSortKey": -1575686671206,
+      "method": "DELETE",
+      "modified": 1576037977093,
+      "name": "Remove Restaurant",
+      "parameters": [],
+      "parentId": "fld_35ad49773d8748e388cbdbcd0fa76ca1",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingFollowRedirects": "global",
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host }}/restaurants/3",
+      "_type": "request"
     },
     {
       "_id": "req_c7445880af624500aaf86f06cb262b12",
@@ -540,7 +664,7 @@
       "isPrivate": false,
       "metaSortKey": -1574726378016.5,
       "method": "PUT",
-      "modified": 1575811024379,
+      "modified": 1576037981369,
       "name": "Update Restaurant",
       "parameters": [],
       "parentId": "fld_35ad49773d8748e388cbdbcd0fa76ca1",
@@ -550,7 +674,7 @@
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ localhost  }}/restaurants/1",
+      "url": "{{ host }}/restaurants/1",
       "_type": "request"
     },
     {
@@ -572,7 +696,7 @@
       "isPrivate": false,
       "metaSortKey": -1574726377966.5,
       "method": "POST",
-      "modified": 1575766189427,
+      "modified": 1576037985990,
       "name": "Save Restaurant",
       "parameters": [],
       "parentId": "fld_35ad49773d8748e388cbdbcd0fa76ca1",
@@ -582,7 +706,7 @@
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ localhost  }}/restaurants",
+      "url": "{{ host }}/restaurants",
       "_type": "request"
     },
     {
@@ -600,7 +724,7 @@
       "isPrivate": false,
       "metaSortKey": -1574726377916.5,
       "method": "GET",
-      "modified": 1575751144192,
+      "modified": 1576037990248,
       "name": "Get Restaurant",
       "parameters": [],
       "parentId": "fld_35ad49773d8748e388cbdbcd0fa76ca1",
@@ -610,7 +734,7 @@
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ localhost  }}/restaurants/3",
+      "url": "{{ host }}/restaurants/3",
       "_type": "request"
     },
     {
@@ -630,7 +754,7 @@
       "isPrivate": false,
       "metaSortKey": -1574726377866.5,
       "method": "GET",
-      "modified": 1575513555876,
+      "modified": 1576037995309,
       "name": "List Restaurants",
       "parameters": [],
       "parentId": "fld_35ad49773d8748e388cbdbcd0fa76ca1",
@@ -640,7 +764,7 @@
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ localhost  }}/restaurants",
+      "url": "{{ host }}/restaurants",
       "_type": "request"
     },
     {
@@ -670,17 +794,36 @@
       "color": "#dbba08",
       "created": 1574731172668,
       "data": {
-        "localhost": "http://localhost:8080"
+        "host": "http://localhost:8080"
       },
       "dataPropertyOrder": {
         "&": [
-          "localhost"
+          "host"
         ]
       },
       "isPrivate": false,
       "metaSortKey": 1574731172668,
-      "modified": 1575421570535,
+      "modified": 1576037864129,
       "name": "Development",
+      "parentId": "env_ab541dddf7ec4a540bcd2e585f2a482bdedf25ab",
+      "_type": "environment"
+    },
+    {
+      "_id": "env_ae7b882254c14c93af83950392ffc922",
+      "color": "#01008c",
+      "created": 1576025786031,
+      "data": {
+        "host": "https://algafoodapi.herokuapp.com"
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "host"
+        ]
+      },
+      "isPrivate": false,
+      "metaSortKey": 1576025786031,
+      "modified": 1576037870810,
+      "name": "Production",
       "parentId": "env_ab541dddf7ec4a540bcd2e585f2a482bdedf25ab",
       "_type": "environment"
     }
