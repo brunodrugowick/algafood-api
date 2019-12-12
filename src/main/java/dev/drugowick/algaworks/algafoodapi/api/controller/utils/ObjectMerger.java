@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -15,22 +16,44 @@ import java.util.Map;
  */
 public class ObjectMerger<T> {
 
-    private ObjectMapper objectMapper;
+    /**
+     * Determines if a Map cache will be used for ObjectMergers.
+     */
+    private static boolean cacheEnabled = true;
+    private static Map<Object, ObjectMerger> objectMergerCache = new HashMap<>();
+
+    private static ObjectMapper objectMapper;
     private Class<T> type;
 
+
     private ObjectMerger(Class<T> type) {
-        this.objectMapper = new ObjectMapper();
+        objectMapper = new ObjectMapper();
         this.type = type;
     }
 
     /**
-     * Returns a new instance of ObjectMerger<T> of the given type as parameter.
+     * Returns a new instance of ObjectMerger<T> of the given type as parameter OR
+     * an existing instance created before.
      *
      * @param type a class to be merged with a Map of <String, Object>.
      * @return
      */
     public static ObjectMerger of(Class type) {
-        return new ObjectMerger(type);
+
+        if (!cacheEnabled) {
+            // Cache is not enabled. A new instance is always created.
+            return new ObjectMerger(type);
+        }
+
+        if (!objectMergerCache.containsKey(type)) {
+            ObjectMerger objectMerger = new ObjectMerger(type);
+            objectMergerCache.put(type, objectMerger);
+            // Cache enabled. Instance created (first request).
+            return objectMerger;
+        }
+
+        // Cache enabled. Returning existing instance.
+        return objectMergerCache.get(type);
     }
 
     /**
@@ -52,4 +75,5 @@ public class ObjectMerger<T> {
             ReflectionUtils.setField(field, objectToUpdate, newValue);
         });
     }
+
 }
