@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -13,12 +12,6 @@ import java.util.Map;
  * Uses ReflectionUtils from Spring Framework to set values to the Object.
  */
 public class ObjectMerger {
-
-    /**
-     * Determines if a Map cache will be used for ObjectMergers.
-     */
-    private static boolean cacheEnabled = true;
-    private static Map<Object, ObjectMerger> objectMergerCache = new HashMap<>();
 
     /**
      * Updates an objectToUpdate of type type according to data from a Map<String, Object>.
