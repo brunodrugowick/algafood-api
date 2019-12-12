@@ -80,9 +80,7 @@ public class CuisineController {
 			return ResponseEntity.notFound().build();
 		}
 
-		ObjectMerger
-				.of(Cuisine.class)
-				.mergeRequestBodyToGenericObject(cuisineMap, cuisineToUpdate);
+		ObjectMerger.mergeRequestBodyToGenericObject(cuisineMap, cuisineToUpdate, Cuisine.class);
 
 		return update(id, cuisineToUpdate);
 	}

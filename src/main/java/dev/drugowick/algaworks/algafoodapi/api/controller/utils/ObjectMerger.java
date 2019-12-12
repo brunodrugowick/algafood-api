@@ -8,13 +8,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Helper method to merge the request body (a Map<String, Object>) to an Object to be updated via a Patch HTTP request.
+ * Helper class merge the request body (a Map<String, Object>) to an Object to be updated via a Patch HTTP request.
  * <p>
  * Uses ReflectionUtils from Spring Framework to set values to the Object.
- *
- * @param <T>
  */
-public class ObjectMerger<T> {
+public class ObjectMerger {
 
     /**
      * Determines if a Map cache will be used for ObjectMergers.
@@ -22,49 +20,18 @@ public class ObjectMerger<T> {
     private static boolean cacheEnabled = true;
     private static Map<Object, ObjectMerger> objectMergerCache = new HashMap<>();
 
-    private static ObjectMapper objectMapper;
-    private Class<T> type;
-
-
-    private ObjectMerger(Class<T> type) {
-        objectMapper = new ObjectMapper();
-        this.type = type;
-    }
-
     /**
-     * Returns a new instance of ObjectMerger<T> of the given type as parameter OR
-     * an existing instance created before.
-     *
-     * @param type a class to be merged with a Map of <String, Object>.
-     * @return
-     */
-    public static ObjectMerger of(Class type) {
-
-        if (!cacheEnabled) {
-            // Cache is not enabled. A new instance is always created.
-            return new ObjectMerger(type);
-        }
-
-        if (!objectMergerCache.containsKey(type)) {
-            ObjectMerger objectMerger = new ObjectMerger(type);
-            objectMergerCache.put(type, objectMerger);
-            // Cache enabled. Instance created (first request).
-            return objectMerger;
-        }
-
-        // Cache enabled. Returning existing instance.
-        return objectMergerCache.get(type);
-    }
-
-    /**
-     * Updates an objectToUpdate according to data from a Map<String, Object>.
+     * Updates an objectToUpdate of type type according to data from a Map<String, Object>.
      *
      * @param objectMap      a Map of <String, Object> with data to update destination object. The string values
      *                       must match fields on the destination object.
      * @param objectToUpdate the object to update.
+     *
+     * @param type           the type of the objectToUpdate.
      */
-    public void mergeRequestBodyToGenericObject(Map<String, Object> objectMap, T objectToUpdate) {
-        T newObject = objectMapper.convertValue(objectMap, type);
+    public static void mergeRequestBodyToGenericObject(Map<String, Object> objectMap, Object objectToUpdate, Class type) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Object newObject = objectMapper.convertValue(objectMap, type);
 
         objectMap.forEach((fieldProp, valueProp) -> {
             Field field = ReflectionUtils.findField(type, fieldProp);
@@ -75,5 +42,4 @@ public class ObjectMerger<T> {
             ReflectionUtils.setField(field, objectToUpdate, newValue);
         });
     }
-
 }

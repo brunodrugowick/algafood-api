@@ -83,9 +83,7 @@ public class RestaurantController {
 			return ResponseEntity.notFound().build();
 		}
 
-		ObjectMerger
-				.of(Restaurant.class)
-				.mergeRequestBodyToGenericObject(restaurantMap, restaurantToUpdate);
+		ObjectMerger.mergeRequestBodyToGenericObject(restaurantMap, restaurantToUpdate, Restaurant.class);
 
 		return update(id, restaurantToUpdate);
 	}

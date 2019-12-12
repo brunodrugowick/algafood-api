@@ -96,9 +96,7 @@ public class CityController {
             return ResponseEntity.notFound().build();
         }
 
-        ObjectMerger
-                .of(City.class)
-                .mergeRequestBodyToGenericObject(cityMap, cityToUpdate);
+        ObjectMerger.mergeRequestBodyToGenericObject(cityMap, cityToUpdate, City.class);
 
         return update(id, cityToUpdate);
     }

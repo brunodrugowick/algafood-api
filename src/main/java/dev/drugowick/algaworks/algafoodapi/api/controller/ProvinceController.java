@@ -86,9 +86,7 @@ public class ProvinceController {
 			return ResponseEntity.notFound().build();
 		}
 
-		ObjectMerger
-				.of(Province.class)
-				.mergeRequestBodyToGenericObject(provinceMap, provinceToUpdate);
+		ObjectMerger.mergeRequestBodyToGenericObject(provinceMap, provinceToUpdate, Province.class);
 
 		return update(id, provinceToUpdate);
 	}
