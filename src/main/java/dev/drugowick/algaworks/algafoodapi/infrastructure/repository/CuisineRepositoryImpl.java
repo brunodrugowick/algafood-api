@@ -24,8 +24,8 @@ public class CuisineRepositoryImpl implements CuisineRepository {
 
 	@Override
 	public List<Cuisine> listByName(String name) {
-		return manager.createQuery("from Cuisine where name = :name", Cuisine.class)
-				.setParameter("name", name)
+		return manager.createQuery("from Cuisine where name like :name", Cuisine.class)
+				.setParameter("name", "%" + name + "%")
 				.getResultList();
 	}
 
