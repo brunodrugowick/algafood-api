@@ -8,8 +8,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class CuisineCrudService {
 	
@@ -23,14 +21,6 @@ public class CuisineCrudService {
 		return cuisineRepository.save(cuisine);
 	}
 	
-	public Cuisine read(Long id) {
-		return cuisineRepository.get(id);
-	}
-	
-	public List<Cuisine> list() {
-		return cuisineRepository.list();
-	}
-	
 	public Cuisine update(Long id, Cuisine cuisine) {
 		cuisine.setId(id);
 		return cuisineRepository.save(cuisine);
@@ -38,7 +28,7 @@ public class CuisineCrudService {
 	
 	public void delete(Long id) {
 		try {
-			cuisineRepository.remove(id);
+			cuisineRepository.deleteById(id);
 		} catch (DataIntegrityViolationException exception) {
 			throw new EntityBeingUsedException(
 					String.format("Cuisine %d is being used by another entity and can not be removed.", id));

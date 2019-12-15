@@ -12,6 +12,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RestaurantCrudService {
@@ -26,12 +27,9 @@ public class RestaurantCrudService {
 
 	public Restaurant create(Restaurant restaurant) {
 		Long cuisineId = restaurant.getCuisine().getId();
-		Cuisine cuisine = cuisineRepository.get(cuisineId);
-
-		if (cuisine == null) {
-			throw new EntityNotFoundException(
-					String.format("No cuisine with ID %d", cuisineId));
-		}
+		Cuisine cuisine = cuisineRepository.findById(cuisineId)
+				.orElseThrow(() -> new EntityNotFoundException(
+						String.format("No cuisine with ID %d", cuisineId)));
 
 		restaurant.setCuisine(cuisine);
 		return restaurantRepository.save(restaurant);
@@ -47,15 +45,15 @@ public class RestaurantCrudService {
 
 	public Restaurant update(Long id, Restaurant restaurant) {
 		Long cuisineId = restaurant.getCuisine().getId();
-		Cuisine cuisine = cuisineRepository.get(cuisineId);
+		Optional<Cuisine> cuisine = cuisineRepository.findById(cuisineId);
 
-		if (cuisine == null) {
+		if (cuisine.isEmpty()) {
 			throw new EntityNotFoundException(
 					String.format("No cuisine with ID %d", cuisineId));
 		}
 
 		Restaurant restaurantToSave = restaurantRepository.get(id);
-		restaurantToSave.setCuisine(cuisine);
+		restaurantToSave.setCuisine(cuisine.get());
 
 		if (restaurantToSave == null) {
 			throw new EntityNotFoundException(

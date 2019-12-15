@@ -1,18 +1,11 @@
 package dev.drugowick.algaworks.algafoodapi.domain.repository;
 
 import dev.drugowick.algaworks.algafoodapi.domain.model.Cuisine;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
+@Repository
+public interface CuisineRepository extends JpaRepository<Cuisine, Long> {
 
-public interface CuisineRepository {
-
-	Cuisine save(Cuisine cuisine);
-
-	Cuisine get(Long id);
-
-	List<Cuisine> list();
-
-	List<Cuisine> listByName(String name);
-
-	void remove(Long id);
+//	List<Cuisine> listByName(String name);
 }

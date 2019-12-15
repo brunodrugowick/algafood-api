@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/cuisines")
@@ -34,7 +35,7 @@ public class CuisineController {
 
 	@GetMapping
 	public List<Cuisine> list() {
-		return cuisineRepository.list();
+		return cuisineRepository.findAll();
 	}
 
 	@PostMapping
@@ -50,23 +51,23 @@ public class CuisineController {
 	
 	@GetMapping(value = { "/{id}" })
 	public ResponseEntity<Cuisine> get(@PathVariable Long id) {
-		Cuisine cuisine = cuisineRepository.get(id);
-		
-		if (cuisine != null) {
-			return ResponseEntity.ok(cuisine);
+		Optional<Cuisine> cuisine = cuisineRepository.findById(id);
+
+		if (cuisine.isPresent()) {
+			return ResponseEntity.ok(cuisine.get());
 		}
-		
+
 		return ResponseEntity.notFound().build();
 	}
 	
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<Cuisine> update(@PathVariable Long id, @RequestBody Cuisine cuisine) {
-		Cuisine cuisineToUpdate = cuisineRepository.get(id);
+		Optional<Cuisine> cuisineToUpdate = cuisineRepository.findById(id);
 
-		if (cuisineToUpdate != null) {
-			BeanUtils.copyProperties(cuisine, cuisineToUpdate, "id");
-			cuisineToUpdate = cuisinesCrudService.update(id, cuisineToUpdate);
-			return ResponseEntity.ok(cuisineToUpdate);
+		if (cuisineToUpdate.isPresent()) {
+			BeanUtils.copyProperties(cuisine, cuisineToUpdate.get(), "id");
+			Cuisine cuisineUpdated = cuisinesCrudService.update(id, cuisineToUpdate.get());
+			return ResponseEntity.ok(cuisineUpdated);
 		}
 
 		return ResponseEntity.notFound().build();
@@ -74,15 +75,15 @@ public class CuisineController {
 
 	@PatchMapping("/{id}")
 	public ResponseEntity<?> partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> cuisineMap) {
-		Cuisine cuisineToUpdate = cuisineRepository.get(id);
+		Optional<Cuisine> cuisineToUpdate = cuisineRepository.findById(id);
 
-		if (cuisineToUpdate == null) {
+		if (cuisineToUpdate.isEmpty()) {
 			return ResponseEntity.notFound().build();
 		}
 
-		ObjectMerger.mergeRequestBodyToGenericObject(cuisineMap, cuisineToUpdate, Cuisine.class);
+		ObjectMerger.mergeRequestBodyToGenericObject(cuisineMap, cuisineToUpdate.get(), Cuisine.class);
 
-		return update(id, cuisineToUpdate);
+		return update(id, cuisineToUpdate.get());
 	}
 
 	@DeleteMapping(value = "/{id}")
@@ -99,10 +100,10 @@ public class CuisineController {
 		}
 
 	}
-
+/**
 	@GetMapping(value = "/by-name")
 	public List<Cuisine> cuisinesByName(@RequestParam("name") String name) {
 		return cuisineRepository.listByName(name);
 	}
-
+ */
 }
