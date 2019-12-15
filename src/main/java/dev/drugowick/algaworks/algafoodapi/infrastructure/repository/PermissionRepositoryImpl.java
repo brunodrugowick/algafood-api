@@ -1,22 +1,20 @@
 package dev.drugowick.algaworks.algafoodapi.infrastructure.repository;
 
-import java.util.List;
+import dev.drugowick.algaworks.algafoodapi.domain.model.Permission;
+import dev.drugowick.algaworks.algafoodapi.domain.repository.PermissionRepository;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
-import dev.drugowick.algaworks.algafoodapi.domain.model.Permission;
-import dev.drugowick.algaworks.algafoodapi.domain.repository.PermissionRepository;
-
-@Component
+@Repository
 public class PermissionRepositoryImpl implements PermissionRepository {
 
 	@PersistenceContext
 	private EntityManager manager;
-	
+
 	@Transactional
 	@Override
 	public Permission save(Permission permission) {

@@ -1,23 +1,21 @@
 package dev.drugowick.algaworks.algafoodapi.infrastructure.repository;
 
-import java.util.List;
+import dev.drugowick.algaworks.algafoodapi.domain.model.Cuisine;
+import dev.drugowick.algaworks.algafoodapi.domain.repository.CuisineRepository;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
-import dev.drugowick.algaworks.algafoodapi.domain.model.Cuisine;
-import dev.drugowick.algaworks.algafoodapi.domain.repository.CuisineRepository;
-
-@Component
+@Repository
 public class CuisineRepositoryImpl implements CuisineRepository {
 
 	@PersistenceContext
 	private EntityManager manager;
-	
+
 	@Override
 	public List<Cuisine> list() {
 		return manager.createQuery("from Cuisine", Cuisine.class)
@@ -28,7 +26,7 @@ public class CuisineRepositoryImpl implements CuisineRepository {
 	public Cuisine get(Long id) {
 		return manager.find(Cuisine.class, id);
 	}
-	
+
 	@Transactional
 	@Override
 	public Cuisine save(Cuisine cuisine) {

@@ -1,22 +1,20 @@
 package dev.drugowick.algaworks.algafoodapi.infrastructure.repository;
 
-import java.util.List;
+import dev.drugowick.algaworks.algafoodapi.domain.model.PaymentMethod;
+import dev.drugowick.algaworks.algafoodapi.domain.repository.PaymentMethodRepository;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
-import dev.drugowick.algaworks.algafoodapi.domain.model.PaymentMethod;
-import dev.drugowick.algaworks.algafoodapi.domain.repository.PaymentMethodRepository;
-
-@Component
+@Repository
 public class PaymentMethodRepositoryImpl implements PaymentMethodRepository {
 
 	@PersistenceContext
 	private EntityManager entityManager;
-	
+
 	@Transactional
 	@Override
 	public PaymentMethod save(PaymentMethod paymentMethod) {

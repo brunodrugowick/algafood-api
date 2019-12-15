@@ -3,14 +3,14 @@ package dev.drugowick.algaworks.algafoodapi.infrastructure.repository;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Restaurant;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.RestaurantRepository;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
-@Component
+@Repository
 public class RestaurantRepositoryImpl implements RestaurantRepository {
 	
 	@PersistenceContext
