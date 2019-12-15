@@ -21,7 +21,14 @@ public class CuisineRepositoryImpl implements CuisineRepository {
 		return manager.createQuery("from Cuisine", Cuisine.class)
 				.getResultList();
 	}
-	
+
+	@Override
+	public List<Cuisine> listByName(String name) {
+		return manager.createQuery("from Cuisine where name = :name", Cuisine.class)
+				.setParameter("name", name)
+				.getResultList();
+	}
+
 	@Override
 	public Cuisine get(Long id) {
 		return manager.find(Cuisine.class, id);

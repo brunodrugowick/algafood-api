@@ -93,11 +93,16 @@ public class CuisineController {
 
 		} catch (EntityBeingUsedException e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
-			
+
 		} catch (EntityNotFoundException e) {
 			return ResponseEntity.notFound().build();
 		}
-			
+
+	}
+
+	@GetMapping(value = "/by-name")
+	public List<Cuisine> cuisinesByName(@RequestParam("name") String name) {
+		return cuisineRepository.listByName(name);
 	}
 
 }
