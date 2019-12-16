@@ -1,9 +1,192 @@
 {
   "_type": "export",
   "__export_format": 4,
-  "__export_date": "2019-12-16T04:35:51.107Z",
+  "__export_date": "2019-12-16T19:09:13.640Z",
   "__export_source": "insomnia.desktop.app:v7.0.5",
   "resources": [
+    {
+      "_id": "req_642812f5cae146239a29d754374b8ace",
+      "authentication": {},
+      "body": {},
+      "created": 1576516975371,
+      "description": "",
+      "headers": [],
+      "isPrivate": false,
+      "metaSortKey": -1576516975371,
+      "method": "GET",
+      "modified": 1576517010786,
+      "name": "Restaurants By Cuisine Name",
+      "parameters": [
+        {
+          "description": "",
+          "id": "pair_78ad26488fad4df5847e8479473dd819",
+          "name": "cuisine",
+          "value": "Brazil"
+        }
+      ],
+      "parentId": "fld_843be8d9a0694c5e875836589385f0e2",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingFollowRedirects": "global",
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host_beta  }}/restaurants/by-cuisine",
+      "_type": "request"
+    },
+    {
+      "_id": "fld_843be8d9a0694c5e875836589385f0e2",
+      "created": 1576516205824,
+      "description": "",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1575513382489,
+      "modified": 1576522260704,
+      "name": "Beta Endpoints",
+      "parentId": "wrk_54a98f6f616e4d71a13e9aff83c8fde8",
+      "_type": "request_group"
+    },
+    {
+      "_id": "wrk_54a98f6f616e4d71a13e9aff83c8fde8",
+      "created": 1573878141068,
+      "description": "",
+      "modified": 1575509831894,
+      "name": "Algafood API",
+      "parentId": null,
+      "_type": "workspace"
+    },
+    {
+      "_id": "req_7653f503a13f4fa2af42e8454470e639",
+      "authentication": {},
+      "body": {},
+      "created": 1576520189844,
+      "description": "",
+      "headers": [],
+      "isPrivate": false,
+      "metaSortKey": -1576516598577,
+      "method": "GET",
+      "modified": 1576520241682,
+      "name": "Restaurants By Delivery Fee",
+      "parameters": [
+        {
+          "description": "",
+          "id": "pair_78ad26488fad4df5847e8479473dd819",
+          "name": "startingFee",
+          "value": "8"
+        },
+        {
+          "description": "",
+          "id": "pair_42957a1deade401ba9990a47aa5a6d34",
+          "name": "endingFee",
+          "value": "20"
+        }
+      ],
+      "parentId": "fld_843be8d9a0694c5e875836589385f0e2",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingFollowRedirects": "global",
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host_beta  }}/restaurants/by-deliveryFee",
+      "_type": "request"
+    },
+    {
+      "_id": "req_c4f0c2f4f9f346de9a34941403cb22f3",
+      "authentication": {},
+      "body": {},
+      "created": 1576516221783,
+      "description": "",
+      "headers": [],
+      "isPrivate": false,
+      "metaSortKey": -1576516221783,
+      "method": "GET",
+      "modified": 1576522275337,
+      "name": "Cuisines By Part of the Name",
+      "parameters": [
+        {
+          "description": "",
+          "id": "pair_47c646688b6b448aba6476a1be013dd6",
+          "name": "name",
+          "value": "Ita"
+        }
+      ],
+      "parentId": "fld_843be8d9a0694c5e875836589385f0e2",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingFollowRedirects": "global",
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host_beta  }}/cuisines/by-name",
+      "_type": "request"
+    },
+    {
+      "_id": "req_b53fa12a43e34278bd60633e34fcfebc",
+      "authentication": {},
+      "body": {},
+      "created": 1576521936031,
+      "description": "",
+      "headers": [],
+      "isPrivate": false,
+      "metaSortKey": -1576492154093.5,
+      "method": "GET",
+      "modified": 1576523117171,
+      "name": "City by Name and Province",
+      "parameters": [
+        {
+          "description": "",
+          "id": "pair_47c646688b6b448aba6476a1be013dd6",
+          "name": "cityName",
+          "value": "Camp"
+        },
+        {
+          "description": "",
+          "id": "pair_4116780e7110488da1c21d22d3d7d686",
+          "name": "provinceAbbreviation",
+          "value": "S"
+        }
+      ],
+      "parentId": "fld_843be8d9a0694c5e875836589385f0e2",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingFollowRedirects": "global",
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host_beta  }}/cities/by-name-and-provinceAbbreviation",
+      "_type": "request"
+    },
+    {
+      "_id": "req_d04e613493ba4bd4a3c05a059219051b",
+      "authentication": {},
+      "body": {},
+      "created": 1576522955685,
+      "description": "",
+      "headers": [],
+      "isPrivate": false,
+      "metaSortKey": -1576480120248.75,
+      "method": "GET",
+      "modified": 1576523051720,
+      "name": "Cities by Name (Starting With)",
+      "parameters": [
+        {
+          "description": "",
+          "id": "pair_47c646688b6b448aba6476a1be013dd6",
+          "name": "cityStart",
+          "value": "Flo"
+        }
+      ],
+      "parentId": "fld_843be8d9a0694c5e875836589385f0e2",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingFollowRedirects": "global",
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host_beta  }}/cities/by-name-starting-with",
+      "_type": "request"
+    },
     {
       "_id": "req_0de87750b614487194779dd9a5337d30",
       "authentication": {},
@@ -46,15 +229,6 @@
       "name": "Provinces",
       "parentId": "wrk_54a98f6f616e4d71a13e9aff83c8fde8",
       "_type": "request_group"
-    },
-    {
-      "_id": "wrk_54a98f6f616e4d71a13e9aff83c8fde8",
-      "created": 1573878141068,
-      "description": "",
-      "modified": 1575509831894,
-      "name": "Algafood API",
-      "parentId": null,
-      "_type": "workspace"
     },
     {
       "_id": "req_86b129d6ff644c27bb07f1b2c82e5ea6",
@@ -529,14 +703,14 @@
       "isPrivate": false,
       "metaSortKey": -1574732254800,
       "method": "GET",
-      "modified": 1576431323986,
+      "modified": 1576513971933,
       "name": "List Cuisines By Name",
       "parameters": [
         {
           "description": "",
           "id": "pair_ae62361e15664d7eb24caf4f78a41493",
           "name": "name",
-          "value": "Italia"
+          "value": "a"
         }
       ],
       "parentId": "fld_d725a82800054426b22bff5a148e68ce",
@@ -815,7 +989,7 @@
       "isPrivate": false,
       "metaSortKey": -1576468086404,
       "method": "PATCH",
-      "modified": 1576468329094,
+      "modified": 1576471550902,
       "name": "Partial Update Payment Method",
       "parameters": [],
       "parentId": "fld_a7525f3c1b89470d90441bca5fc36c61",
@@ -825,7 +999,7 @@
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ host  }}/payment-methods/1",
+      "url": "{{ host  }}/payment-methods/2",
       "_type": "request"
     },
     {
@@ -868,7 +1042,7 @@
       "authentication": {},
       "body": {
         "mimeType": "application/json",
-        "text": "{\n  \"id\": 1,\n\t\"description\": \"Arroas\"\n}"
+        "text": "{\n\t\"description\": \"Arroas\"\n}"
       },
       "created": 1576467342701,
       "description": "",
@@ -881,7 +1055,7 @@
       "isPrivate": false,
       "metaSortKey": -1576467342701,
       "method": "PUT",
-      "modified": 1576467632944,
+      "modified": 1576471515716,
       "name": "Update Payment Method",
       "parameters": [],
       "parentId": "fld_a7525f3c1b89470d90441bca5fc36c61",
@@ -989,7 +1163,7 @@
       "isPrivate": false,
       "metaSortKey": -1576468086404,
       "method": "PATCH",
-      "modified": 1576469275362,
+      "modified": 1576471413097,
       "name": "Partial Update Permission",
       "parameters": [],
       "parentId": "fld_10c839d85c8248aa81e611c79aef06ae",
@@ -1024,7 +1198,7 @@
       "isPrivate": false,
       "metaSortKey": -1576467656902,
       "method": "DELETE",
-      "modified": 1576469132139,
+      "modified": 1576471442699,
       "name": "Remove Permission",
       "parameters": [],
       "parentId": "fld_10c839d85c8248aa81e611c79aef06ae",
@@ -1034,7 +1208,7 @@
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ host  }}/permissions/1",
+      "url": "{{ host  }}/permissions/10",
       "_type": "request"
     },
     {
@@ -1042,7 +1216,7 @@
       "authentication": {},
       "body": {
         "mimeType": "application/json",
-        "text": "{\n  \"name\": \"WRITE\",\n  \"description\": \"READ and WRITE records\"\n}"
+        "text": "{\n  \"name\": \"WRITE321\",\n  \"description\": \"READ and WRITE records\"\n}"
       },
       "created": 1576468994487,
       "description": "",
@@ -1055,7 +1229,7 @@
       "isPrivate": false,
       "metaSortKey": -1576467342701,
       "method": "PUT",
-      "modified": 1576469210380,
+      "modified": 1576471429117,
       "name": "Update Permission",
       "parameters": [],
       "parentId": "fld_10c839d85c8248aa81e611c79aef06ae",
@@ -1065,7 +1239,7 @@
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ host  }}/permissions/4",
+      "url": "{{ host  }}/permissions/66",
       "_type": "request"
     },
     {
@@ -1172,16 +1346,18 @@
       "color": "#dbba08",
       "created": 1574731172668,
       "data": {
-        "host": "http://localhost:8080"
+        "host": "http://localhost:8080",
+        "host_beta": "http://localhost:8080/beta"
       },
       "dataPropertyOrder": {
         "&": [
-          "host"
+          "host",
+          "host_beta"
         ]
       },
       "isPrivate": false,
       "metaSortKey": 1574731172668,
-      "modified": 1576037864129,
+      "modified": 1576516270011,
       "name": "Development",
       "parentId": "env_ab541dddf7ec4a540bcd2e585f2a482bdedf25ab",
       "_type": "environment"
