@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/provinces")
@@ -34,15 +35,15 @@ public class ProvinceController {
 
 	@GetMapping
 	public List<Province> list() {
-		return provinceRepository.list();
+		return provinceRepository.findAll();
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Province> get(@PathVariable Long id) {
-		Province province = provinceRepository.get(id);
+		Optional<Province> province = provinceRepository.findById(id);
 
-		if (province != null) {
-			return ResponseEntity.ok(province);
+		if (province.isPresent()) {
+			return ResponseEntity.ok(province.get());
 		}
 
 		return ResponseEntity.notFound().build();
@@ -63,32 +64,32 @@ public class ProvinceController {
 	
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<Province> update(@PathVariable Long id, @RequestBody Province province) {
-		Province provinceToUpdate = provinceRepository.get(id);
+		Optional<Province> provinceToUpdate = provinceRepository.findById(id);
 
 		/**
 		 * Not found because the URI is not a valid resource on the application.
 		 */
-		if (provinceToUpdate == null) {
+		if (provinceToUpdate.isEmpty()) {
 			return ResponseEntity.notFound().build();
 		}
 
-		BeanUtils.copyProperties(province, provinceToUpdate, "id");
+		BeanUtils.copyProperties(province, provinceToUpdate.get(), "id");
 		// The save method will update when an existing ID is being passed.
-		provinceToUpdate = provinceRepository.save(provinceToUpdate);
-		return ResponseEntity.ok(provinceToUpdate);
+		Province provinceUpdated = provinceRepository.save(provinceToUpdate.get());
+		return ResponseEntity.ok(provinceUpdated);
 	}
 
 	@PatchMapping("/{id}")
 	public ResponseEntity<?> partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> provinceMap) {
-		Province provinceToUpdate = provinceRepository.get(id);
+		Optional<Province> provinceToUpdate = provinceRepository.findById(id);
 
-		if (provinceToUpdate == null) {
+		if (provinceToUpdate.isEmpty()) {
 			return ResponseEntity.notFound().build();
 		}
 
-		ObjectMerger.mergeRequestBodyToGenericObject(provinceMap, provinceToUpdate, Province.class);
+		ObjectMerger.mergeRequestBodyToGenericObject(provinceMap, provinceToUpdate.get(), Province.class);
 
-		return update(id, provinceToUpdate);
+		return update(id, provinceToUpdate.get());
 	}
 
 	@DeleteMapping(value = "/{id}")

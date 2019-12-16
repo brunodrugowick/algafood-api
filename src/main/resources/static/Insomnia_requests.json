@@ -1,7 +1,7 @@
 {
   "_type": "export",
   "__export_format": 4,
-  "__export_date": "2019-12-11T04:24:25.400Z",
+  "__export_date": "2019-12-16T04:35:51.107Z",
   "__export_source": "insomnia.desktop.app:v7.0.5",
   "resources": [
     {
@@ -9,7 +9,7 @@
       "authentication": {},
       "body": {
         "mimeType": "application/json",
-        "text": "{\n\t\"name\": \"São Paulo SP\",\n\t\"abbreviation\": \"SPSP\"\n}"
+        "text": "{\n\t\"name\": \"Rio Grande do Sul\",\n\t\"abbreviation\": \"RS\"\n}"
       },
       "created": 1576033990683,
       "description": "",
@@ -22,7 +22,7 @@
       "isPrivate": false,
       "metaSortKey": -1576033990683,
       "method": "PATCH",
-      "modified": 1576037890933,
+      "modified": 1576469755288,
       "name": "Partial Update Province",
       "parameters": [],
       "parentId": "fld_bd5ad5c551e044149938534a641179bc",
@@ -32,7 +32,7 @@
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ host }}/provinces/1",
+      "url": "{{ host }}/provinces/4",
       "_type": "request"
     },
     {
@@ -66,7 +66,7 @@
       "isPrivate": false,
       "metaSortKey": -1574726683826,
       "method": "DELETE",
-      "modified": 1576037896076,
+      "modified": 1576469702670,
       "name": "Remove Province",
       "parameters": [],
       "parentId": "fld_bd5ad5c551e044149938534a641179bc",
@@ -76,7 +76,7 @@
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ host }}/provinces/6",
+      "url": "{{ host }}/provinces/1",
       "_type": "request"
     },
     {
@@ -98,7 +98,7 @@
       "isPrivate": false,
       "metaSortKey": -1574726683776,
       "method": "PUT",
-      "modified": 1576037900218,
+      "modified": 1576469693347,
       "name": "Update Province",
       "parameters": [],
       "parentId": "fld_bd5ad5c551e044149938534a641179bc",
@@ -108,7 +108,7 @@
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ host }}/provinces/6",
+      "url": "{{ host }}/provinces/5",
       "_type": "request"
     },
     {
@@ -206,7 +206,7 @@
       "authentication": {},
       "body": {
         "mimeType": "application/json",
-        "text": "{\n\t\"name\": \"Campinas Nova\",\n\t\"province\": {\n\t\t\"id\": 2\n\t}\n}"
+        "text": "{\n\t\"name\": \"Campinas\"\n}"
       },
       "created": 1576034812850,
       "description": "",
@@ -219,7 +219,7 @@
       "isPrivate": false,
       "metaSortKey": -1576034812850,
       "method": "PATCH",
-      "modified": 1576037915079,
+      "modified": 1576469835827,
       "name": "Partial Update City",
       "parameters": [],
       "parentId": "fld_6303a1ad572842a69c58ff54b923205c",
@@ -254,7 +254,7 @@
       "isPrivate": false,
       "metaSortKey": -1574726683826,
       "method": "DELETE",
-      "modified": 1576037919723,
+      "modified": 1576464293193,
       "name": "Remove City",
       "parameters": [],
       "parentId": "fld_6303a1ad572842a69c58ff54b923205c",
@@ -264,7 +264,7 @@
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ host }}/cities/2",
+      "url": "{{ host }}/cities/5",
       "_type": "request"
     },
     {
@@ -272,7 +272,7 @@
       "authentication": {},
       "body": {
         "mimeType": "application/json",
-        "text": "{\n  \"name\": \"Uberlândina\",\n  \"province\": {\n    \"id\": 1\n  }\n}"
+        "text": "{\n  \"name\": \"Campinas 2\",\n    \"province\": {\n      \"id\": 2\n    }\n}"
       },
       "created": 1575690680760,
       "description": "",
@@ -286,7 +286,7 @@
       "isPrivate": false,
       "metaSortKey": -1574726683776,
       "method": "PUT",
-      "modified": 1576037925475,
+      "modified": 1576469807634,
       "name": "Update City",
       "parameters": [],
       "parentId": "fld_6303a1ad572842a69c58ff54b923205c",
@@ -296,7 +296,7 @@
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ host }}/cities/5",
+      "url": "{{ host }}/cities/1",
       "_type": "request"
     },
     {
@@ -304,7 +304,7 @@
       "authentication": {},
       "body": {
         "mimeType": "application/json",
-        "text": "{\n\t\"name\": \"Campinas\",\n\t\"province\": {\n\t\t\"id\": 2\n\t}\n}"
+        "text": "{\n\t\"name\": \"Campinas NOVA 123\",\n\t\"province\": {\n\t\t\"id\": 4\n\t}\n}"
       },
       "created": 1575690680736,
       "description": "",
@@ -318,7 +318,7 @@
       "isPrivate": false,
       "metaSortKey": -1574726683726,
       "method": "POST",
-      "modified": 1576037930036,
+      "modified": 1576469775510,
       "name": "Save City",
       "parameters": [],
       "parentId": "fld_6303a1ad572842a69c58ff54b923205c",
@@ -442,7 +442,7 @@
       "isPrivate": false,
       "metaSortKey": -1574821797548,
       "method": "DELETE",
-      "modified": 1576037948110,
+      "modified": 1576467769443,
       "name": "Remove Cuisine",
       "parameters": [],
       "parentId": "fld_d725a82800054426b22bff5a148e68ce",
@@ -520,6 +520,36 @@
       "_type": "request"
     },
     {
+      "_id": "req_fdd7f005133c4a348b78524febc9c52c",
+      "authentication": {},
+      "body": {},
+      "created": 1576428890604,
+      "description": "",
+      "headers": [],
+      "isPrivate": false,
+      "metaSortKey": -1574732254800,
+      "method": "GET",
+      "modified": 1576431323986,
+      "name": "List Cuisines By Name",
+      "parameters": [
+        {
+          "description": "",
+          "id": "pair_ae62361e15664d7eb24caf4f78a41493",
+          "name": "name",
+          "value": "Italia"
+        }
+      ],
+      "parentId": "fld_d725a82800054426b22bff5a148e68ce",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingFollowRedirects": "global",
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host }}/cuisines/by-name",
+      "_type": "request"
+    },
+    {
       "_id": "req_d3a6b59f5e0446eab0c5b5b97fcd6bfd",
       "authentication": {},
       "body": {},
@@ -584,7 +614,7 @@
       "authentication": {},
       "body": {
         "mimeType": "application/json",
-        "text": "{\n\t\"name\": \"Bar Preste Atenção PROMO\",\n\t\"deliveryFee\": 10.00,\n\t\"cuisine\": {\n\t\t\"id\": 1\n\t}\n}"
+        "text": "{\n\t\"name\": \"Bar Preste Atenção PROMO\",\n\t\"deliveryFee\": 10.00,\n\t\"cuisine\": {\n\t\t\"id\": 2\n\t}\n}"
       },
       "created": 1576028312877,
       "description": "",
@@ -597,7 +627,7 @@
       "isPrivate": false,
       "metaSortKey": -1576028312878,
       "method": "PATCH",
-      "modified": 1576037972658,
+      "modified": 1576470901918,
       "name": "Partial Update Restaurant",
       "parameters": [],
       "parentId": "fld_35ad49773d8748e388cbdbcd0fa76ca1",
@@ -607,7 +637,7 @@
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ host }}/restaurants/1",
+      "url": "{{ host }}/restaurants/100",
       "_type": "request"
     },
     {
@@ -724,7 +754,7 @@
       "isPrivate": false,
       "metaSortKey": -1574726377916.5,
       "method": "GET",
-      "modified": 1576037990248,
+      "modified": 1576440013445,
       "name": "Get Restaurant",
       "parameters": [],
       "parentId": "fld_35ad49773d8748e388cbdbcd0fa76ca1",
@@ -734,7 +764,7 @@
       "settingRebuildPath": true,
       "settingSendCookies": true,
       "settingStoreCookies": true,
-      "url": "{{ host }}/restaurants/3",
+      "url": "{{ host }}/restaurants/2",
       "_type": "request"
     },
     {
@@ -765,6 +795,354 @@
       "settingSendCookies": true,
       "settingStoreCookies": true,
       "url": "{{ host }}/restaurants",
+      "_type": "request"
+    },
+    {
+      "_id": "req_e40a34596b4f4fb5bb9b1dfbadff95f2",
+      "authentication": {},
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"id\": 2,\n  \"description\": \"Arrrrererererererer\"\n}"
+      },
+      "created": 1576468086404,
+      "description": "",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "isPrivate": false,
+      "metaSortKey": -1576468086404,
+      "method": "PATCH",
+      "modified": 1576468329094,
+      "name": "Partial Update Payment Method",
+      "parameters": [],
+      "parentId": "fld_a7525f3c1b89470d90441bca5fc36c61",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingFollowRedirects": "global",
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host  }}/payment-methods/1",
+      "_type": "request"
+    },
+    {
+      "_id": "fld_a7525f3c1b89470d90441bca5fc36c61",
+      "created": 1576466568541,
+      "description": "",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1575513382339,
+      "modified": 1576466570871,
+      "name": "Payment Method",
+      "parentId": "wrk_54a98f6f616e4d71a13e9aff83c8fde8",
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_d2ab9335832f47af86ed5713bde91fc0",
+      "authentication": {},
+      "body": {},
+      "created": 1576467656902,
+      "description": "",
+      "headers": [],
+      "isPrivate": false,
+      "metaSortKey": -1576467656902,
+      "method": "DELETE",
+      "modified": 1576468006196,
+      "name": "Remove Payment Method",
+      "parameters": [],
+      "parentId": "fld_a7525f3c1b89470d90441bca5fc36c61",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingFollowRedirects": "global",
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host  }}/payment-methods/1",
+      "_type": "request"
+    },
+    {
+      "_id": "req_c13f274c071549c7b460e145b9fc1a48",
+      "authentication": {},
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"id\": 1,\n\t\"description\": \"Arroas\"\n}"
+      },
+      "created": 1576467342701,
+      "description": "",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "isPrivate": false,
+      "metaSortKey": -1576467342701,
+      "method": "PUT",
+      "modified": 1576467632944,
+      "name": "Update Payment Method",
+      "parameters": [],
+      "parentId": "fld_a7525f3c1b89470d90441bca5fc36c61",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingFollowRedirects": "global",
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host  }}/payment-methods/1",
+      "_type": "request"
+    },
+    {
+      "_id": "req_44a2e99667d54d86bdc82407fbc63211",
+      "authentication": {},
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"description\": \"Mandacaru\"\n}"
+      },
+      "created": 1576466750180,
+      "description": "",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "isPrivate": false,
+      "metaSortKey": -1576466750180,
+      "method": "POST",
+      "modified": 1576466817739,
+      "name": "Save Payment Method",
+      "parameters": [],
+      "parentId": "fld_a7525f3c1b89470d90441bca5fc36c61",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingFollowRedirects": "global",
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host  }}/payment-methods",
+      "_type": "request"
+    },
+    {
+      "_id": "req_6768d31e58214490b05400758a644dea",
+      "authentication": {},
+      "body": {},
+      "created": 1576467216286,
+      "description": "",
+      "headers": [],
+      "isPrivate": false,
+      "metaSortKey": -1576287466949,
+      "method": "GET",
+      "modified": 1576467259423,
+      "name": "Get Payment Method",
+      "parameters": [],
+      "parentId": "fld_a7525f3c1b89470d90441bca5fc36c61",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingFollowRedirects": "global",
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host  }}/payment-methods/2",
+      "_type": "request"
+    },
+    {
+      "_id": "req_a50c2913618441fd8d1cb75ac0d0caad",
+      "authentication": {},
+      "body": {},
+      "created": 1576466588223,
+      "description": "",
+      "headers": [],
+      "isPrivate": false,
+      "metaSortKey": -1576287466899,
+      "method": "GET",
+      "modified": 1576467231243,
+      "name": "List Payment Methods",
+      "parameters": [],
+      "parentId": "fld_a7525f3c1b89470d90441bca5fc36c61",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingFollowRedirects": "global",
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host  }}/payment-methods",
+      "_type": "request"
+    },
+    {
+      "_id": "req_4e765a256ad2496dbb16e36f6baa4f99",
+      "authentication": {},
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"name\": \"WRITE asd \",\n\t\"description\": \"-----------------\"\n}"
+      },
+      "created": 1576468994491,
+      "description": "",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "isPrivate": false,
+      "metaSortKey": -1576468086404,
+      "method": "PATCH",
+      "modified": 1576469275362,
+      "name": "Partial Update Permission",
+      "parameters": [],
+      "parentId": "fld_10c839d85c8248aa81e611c79aef06ae",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingFollowRedirects": "global",
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host  }}/permissions/2",
+      "_type": "request"
+    },
+    {
+      "_id": "fld_10c839d85c8248aa81e611c79aef06ae",
+      "created": 1576468994472,
+      "description": "",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1575469392788,
+      "modified": 1576469005663,
+      "name": "Permission",
+      "parentId": "wrk_54a98f6f616e4d71a13e9aff83c8fde8",
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_6f741cc1b8bb4cbe81cb4e8db4c98a4d",
+      "authentication": {},
+      "body": {},
+      "created": 1576468994489,
+      "description": "",
+      "headers": [],
+      "isPrivate": false,
+      "metaSortKey": -1576467656902,
+      "method": "DELETE",
+      "modified": 1576469132139,
+      "name": "Remove Permission",
+      "parameters": [],
+      "parentId": "fld_10c839d85c8248aa81e611c79aef06ae",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingFollowRedirects": "global",
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host  }}/permissions/1",
+      "_type": "request"
+    },
+    {
+      "_id": "req_013e7f54ea76414c9e7a0a83c39d3d1d",
+      "authentication": {},
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"WRITE\",\n  \"description\": \"READ and WRITE records\"\n}"
+      },
+      "created": 1576468994487,
+      "description": "",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "isPrivate": false,
+      "metaSortKey": -1576467342701,
+      "method": "PUT",
+      "modified": 1576469210380,
+      "name": "Update Permission",
+      "parameters": [],
+      "parentId": "fld_10c839d85c8248aa81e611c79aef06ae",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingFollowRedirects": "global",
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host  }}/permissions/4",
+      "_type": "request"
+    },
+    {
+      "_id": "req_926ab5a9bb4b4171be281244a9bc87e7",
+      "authentication": {},
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"name\": \"WRITE HARDER\",\n  \"description\": \"READ and WRITE records\"\n}"
+      },
+      "created": 1576468994482,
+      "description": "",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "isPrivate": false,
+      "metaSortKey": -1576466750180,
+      "method": "POST",
+      "modified": 1576469085660,
+      "name": "Save Permission",
+      "parameters": [],
+      "parentId": "fld_10c839d85c8248aa81e611c79aef06ae",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingFollowRedirects": "global",
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host  }}/permissions",
+      "_type": "request"
+    },
+    {
+      "_id": "req_e51cdd3b83b94c5c938dcdfc74dff479",
+      "authentication": {},
+      "body": {},
+      "created": 1576468994484,
+      "description": "",
+      "headers": [],
+      "isPrivate": false,
+      "metaSortKey": -1576287466949,
+      "method": "GET",
+      "modified": 1576469061335,
+      "name": "Get Permission",
+      "parameters": [],
+      "parentId": "fld_10c839d85c8248aa81e611c79aef06ae",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingFollowRedirects": "global",
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host  }}/permissions/2",
+      "_type": "request"
+    },
+    {
+      "_id": "req_665d3145ff5e4c91b6a7aa4b2a73496c",
+      "authentication": {},
+      "body": {},
+      "created": 1576468994477,
+      "description": "",
+      "headers": [],
+      "isPrivate": false,
+      "metaSortKey": -1576287466899,
+      "method": "GET",
+      "modified": 1576469048787,
+      "name": "List Permission",
+      "parameters": [],
+      "parentId": "fld_10c839d85c8248aa81e611c79aef06ae",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingFollowRedirects": "global",
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host  }}/permissions",
       "_type": "request"
     },
     {

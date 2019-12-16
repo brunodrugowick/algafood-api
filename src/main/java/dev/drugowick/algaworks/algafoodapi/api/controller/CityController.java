@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("cities")
@@ -34,15 +35,15 @@ public class CityController {
 
     @GetMapping
     public List<City> list() {
-        return cityRepository.list();
+        return cityRepository.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<City> get(@PathVariable Long id) {
-        City city = cityRepository.get(id);
+        Optional<City> city = cityRepository.findById(id);
 
-        if (city != null) {
-            return ResponseEntity.ok(city);
+        if (city.isPresent()) {
+            return ResponseEntity.ok(city.get());
         }
 
         return ResponseEntity.notFound().build();
@@ -68,37 +69,36 @@ public class CityController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody City city) {
-        City cityToUpdate = cityRepository.get(id);
+        Optional<City> cityToUpdate = cityRepository.findById(id);
 
         /**
          * Not found because the URI is not a valid resource on the application.
          */
-        if (cityToUpdate == null) {
+        if (cityToUpdate.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
         try {
-            BeanUtils.copyProperties(city, cityToUpdate, "id");
+            BeanUtils.copyProperties(city, cityToUpdate.get(), "id");
             // The save method will update when an existing ID is being passed.
-            cityToUpdate = cityCrudService.save(cityToUpdate);
-            return ResponseEntity.ok(cityToUpdate);
+            City cityUpdated = cityCrudService.save(cityToUpdate.get());
+            return ResponseEntity.ok(cityUpdated);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
-
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<?> partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> cityMap) {
-        City cityToUpdate = cityRepository.get(id);
+        Optional<City> cityToUpdate = cityRepository.findById(id);
 
-        if (cityToUpdate == null) {
+        if (cityToUpdate.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
-        ObjectMerger.mergeRequestBodyToGenericObject(cityMap, cityToUpdate, City.class);
+        ObjectMerger.mergeRequestBodyToGenericObject(cityMap, cityToUpdate.get(), City.class);
 
-        return update(id, cityToUpdate);
+        return update(id, cityToUpdate.get());
     }
 
     @DeleteMapping("/{id}")

@@ -39,14 +39,13 @@ public class CuisineController {
 	}
 
 	@PostMapping
-	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<Cuisine> save(@RequestBody Cuisine cuisine) {
 		// Temporary. Client should not send an ID when posting. See #2.
 		if (cuisine.getId() != null) {
 			return ResponseEntity.badRequest()
 					.build();
 		}
-		return ResponseEntity.ok(cuisinesCrudService.create(cuisine));
+		return ResponseEntity.status(HttpStatus.CREATED).body(cuisinesCrudService.create(cuisine));
 	}
 	
 	@GetMapping(value = { "/{id}" })
@@ -87,16 +86,14 @@ public class CuisineController {
 	}
 
 	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<Cuisine> delete(@PathVariable Long id) {
+	public ResponseEntity<?> delete(@PathVariable Long id) {
 		try {
 			cuisinesCrudService.delete(id);
 			return ResponseEntity.noContent().build();
-
 		} catch (EntityBeingUsedException e) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).build();
-
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
 		} catch (EntityNotFoundException e) {
-			return ResponseEntity.notFound().build();
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 		}
 
 	}

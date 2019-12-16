@@ -1,17 +1,8 @@
 package dev.drugowick.algaworks.algafoodapi.domain.repository;
 
 import dev.drugowick.algaworks.algafoodapi.domain.model.City;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
-
-public interface CityRepository {
-
-    City save(City city);
-
-    City get(Long id);
-
-    List<City> list();
-
-    void remove(Long id);
+public interface CityRepository extends JpaRepository<City, Long> {
 
 }

@@ -10,6 +10,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class CityCrudService {
 
@@ -23,20 +25,20 @@ public class CityCrudService {
 
     public City save(City city) {
         Long provinceId = city.getProvince().getId();
-        Province province = provinceRepository.get(provinceId);
+        Optional<Province> province = provinceRepository.findById(provinceId);
 
-        if (province == null) {
+        if (province.isEmpty()) {
             throw new EntityNotFoundException(
                     String.format("No province with ID %d", provinceId));
         }
 
-        city.setProvince(province);
+        city.setProvince(province.get());
         return cityRepository.save(city);
     }
 
     public void delete(Long id) {
         try {
-            cityRepository.remove(id);
+            cityRepository.deleteById(id);
         } catch (DataIntegrityViolationException e) {
             throw new EntityBeingUsedException(
                     String.format("City %d is being used by another entity and can not be removed.", id));

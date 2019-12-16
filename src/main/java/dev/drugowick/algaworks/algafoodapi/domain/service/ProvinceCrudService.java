@@ -23,7 +23,7 @@ public class ProvinceCrudService {
 
 	public void delete(Long id) {
 		try {
-			provinceRepository.remove(id);
+			provinceRepository.deleteById(id);
 		} catch (DataIntegrityViolationException e) {
 			throw new EntityBeingUsedException(
 					String.format("Province %d is being used by another entity and can not be removed.", id));

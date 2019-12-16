@@ -1,14 +1,8 @@
 package dev.drugowick.algaworks.algafoodapi.domain.repository;
 
-import java.util.List;
-
 import dev.drugowick.algaworks.algafoodapi.domain.model.PaymentMethod;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface PaymentMethodRepository {
-	
-	PaymentMethod save(PaymentMethod paymentMethod);
-	PaymentMethod get(Long id);
-	List<PaymentMethod> list();
-	void remove(PaymentMethod paymentMethod);
+public interface PaymentMethodRepository extends JpaRepository<PaymentMethod, Long> {
 
 }
