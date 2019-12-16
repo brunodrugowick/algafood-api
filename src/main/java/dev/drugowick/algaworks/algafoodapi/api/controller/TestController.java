@@ -5,6 +5,7 @@ import dev.drugowick.algaworks.algafoodapi.domain.model.Cuisine;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Restaurant;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.CityRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.CuisineRepository;
+import dev.drugowick.algaworks.algafoodapi.domain.repository.PermissionRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.RestaurantRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * This is a only a test class for new endpoints (to be added at some point).
@@ -26,11 +28,13 @@ public class TestController {
     private CuisineRepository cuisineRepository;
     private RestaurantRepository restaurantRepository;
     private CityRepository cityRepository;
+    private PermissionRepository permissionRepository;
 
-    public TestController(CuisineRepository cuisineRepository, RestaurantRepository restaurantRepository, CityRepository cityRepository) {
+    public TestController(CuisineRepository cuisineRepository, RestaurantRepository restaurantRepository, CityRepository cityRepository, PermissionRepository permissionRepository) {
         this.cuisineRepository = cuisineRepository;
         this.restaurantRepository = restaurantRepository;
         this.cityRepository = cityRepository;
+        this.permissionRepository = permissionRepository;
     }
 
     @GetMapping("/cuisines/by-name")
@@ -52,8 +56,8 @@ public class TestController {
     }
 
     @GetMapping("/cities/by-name-and-provinceAbbreviation")
-    public City citiesByNameAndProvinceAbbreviation(@RequestParam("cityName") String cityName,
-                                                    @RequestParam("provinceAbbreviation") String provinceAbbreviation) {
+    public Optional<City> citiesByNameAndProvinceAbbreviation(@RequestParam("cityName") String cityName,
+                                                              @RequestParam("provinceAbbreviation") String provinceAbbreviation) {
         // TODO verify if params are empty, otherwise this'll be used as findAll().
         return cityRepository.findFirstByNameContainingAndProvinceAbbreviationContaining(cityName, provinceAbbreviation);
     }
@@ -63,4 +67,15 @@ public class TestController {
         // TODO verify if params are empty, otherwise this'll be used as findAll().
         return cityRepository.findAllByNameStartingWith(cityStart);
     }
+
+    @GetMapping("/permissions/exists-by-name")
+    public boolean permissionsExistsyName(@RequestParam("permission") String name) {
+        return permissionRepository.existsByName(name);
+    }
+
+    @GetMapping("/cities/count-by-provinceAbbreviation")
+    public int countCitiesByProvince(@RequestParam("province") String provinceAbbreviation) {
+        return cityRepository.countDistinctByProvinceAbbreviation(provinceAbbreviation);
+    }
+
 }

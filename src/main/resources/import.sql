@@ -18,6 +18,7 @@ insert into province (name, abbreviation) values ('Santa Catarina', 'SC');
 insert into province (name, abbreviation) values ('Rio Grande do Sul', 'RS');
 
 insert into city (name, province_id) values ('Campinas', 1);
+insert into city (name, province_id) values ('Ribeirão Preto', 1);
 insert into city (name, province_id) values ('Belo Horizonte', 2);
 insert into city (name, province_id) values ('Florianópolis', 3);
 insert into city (name, province_id) values ('Porto Alegre', 4);
