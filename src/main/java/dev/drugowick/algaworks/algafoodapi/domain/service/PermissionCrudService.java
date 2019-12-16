@@ -26,10 +26,10 @@ public class PermissionCrudService {
             permissionRepository.deleteById(id);
         } catch (DataIntegrityViolationException e) {
             throw new EntityBeingUsedException(
-                    String.format("Payment Method %d is being used by another entity and can not be removed.", id));
+                    String.format("Permission %d is being used by another entity and can not be removed.", id));
         } catch (EmptyResultDataAccessException e) {
             throw new EntityNotFoundException(
-                    String.format("There's no Payment Method with the id %d.", id));
+                    String.format("There's no Permission with the id %d.", id));
         }
     }
 }
