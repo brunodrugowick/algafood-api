@@ -40,19 +40,19 @@ public class TestController {
     @GetMapping("/cuisines/by-name")
     public List<Cuisine> cuisinesByName(@RequestParam("name") String namePartial) {
         // TODO verify if namePartial is empty, otherwise this'll be used as findAll().
-        return cuisineRepository.findAllByNameContaining(namePartial);
+        return cuisineRepository.byNameLike(namePartial);
     }
 
     @GetMapping("/restaurants/by-cuisine")
     public List<Restaurant> restaurantsByCuisine(@RequestParam("cuisine") String cuisine) {
         // TODO verify if cuisine is empty, otherwise this'll be used as findAll().
-        return restaurantRepository.findAllByCuisineNameContaining(cuisine);
+        return restaurantRepository.byCuisineLike(cuisine);
     }
 
     @GetMapping("/restaurants/by-deliveryFee")
     public List<Restaurant> restaurantsByDeliveryFee(@RequestParam("startingFee") BigDecimal startingFee,
                                                      @RequestParam("endingFee") BigDecimal endingFee) {
-        return restaurantRepository.findAllByDeliveryFeeBetween(startingFee, endingFee);
+        return restaurantRepository.byDeliveryFee(startingFee, endingFee);
     }
 
     @GetMapping("/cities/by-name-and-provinceAbbreviation")
@@ -65,7 +65,7 @@ public class TestController {
     @GetMapping("/cities/by-name-starting-with")
     public List<City> citiesByNameStartingWith(@RequestParam("cityStart") String cityStart) {
         // TODO verify if params are empty, otherwise this'll be used as findAll().
-        return cityRepository.findAllByNameStartingWith(cityStart);
+        return cityRepository.byNameStarting(cityStart);
     }
 
     @GetMapping("/permissions/exists-by-name")
@@ -75,7 +75,7 @@ public class TestController {
 
     @GetMapping("/cities/count-by-provinceAbbreviation")
     public int countCitiesByProvince(@RequestParam("province") String provinceAbbreviation) {
-        return cityRepository.countDistinctByProvinceAbbreviation(provinceAbbreviation);
+        return cityRepository.countByProvince(provinceAbbreviation);
     }
 
 }

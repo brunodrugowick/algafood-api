@@ -1,7 +1,7 @@
 {
   "_type": "export",
   "__export_format": 4,
-  "__export_date": "2019-12-16T19:09:13.640Z",
+  "__export_date": "2019-12-16T21:50:48.371Z",
   "__export_source": "insomnia.desktop.app:v7.0.5",
   "resources": [
     {
@@ -14,7 +14,7 @@
       "isPrivate": false,
       "metaSortKey": -1576516975371,
       "method": "GET",
-      "modified": 1576517010786,
+      "modified": 1576526603397,
       "name": "Restaurants By Cuisine Name",
       "parameters": [
         {
@@ -65,20 +65,20 @@
       "isPrivate": false,
       "metaSortKey": -1576516598577,
       "method": "GET",
-      "modified": 1576520241682,
+      "modified": 1576526733962,
       "name": "Restaurants By Delivery Fee",
       "parameters": [
         {
           "description": "",
           "id": "pair_78ad26488fad4df5847e8479473dd819",
           "name": "startingFee",
-          "value": "8"
+          "value": "1"
         },
         {
           "description": "",
           "id": "pair_42957a1deade401ba9990a47aa5a6d34",
           "name": "endingFee",
-          "value": "20"
+          "value": "8"
         }
       ],
       "parentId": "fld_843be8d9a0694c5e875836589385f0e2",
@@ -101,14 +101,14 @@
       "isPrivate": false,
       "metaSortKey": -1576516221783,
       "method": "GET",
-      "modified": 1576522275337,
+      "modified": 1576531082836,
       "name": "Cuisines By Part of the Name",
       "parameters": [
         {
           "description": "",
           "id": "pair_47c646688b6b448aba6476a1be013dd6",
           "name": "name",
-          "value": "Ita"
+          "value": "Braz"
         }
       ],
       "parentId": "fld_843be8d9a0694c5e875836589385f0e2",
@@ -131,7 +131,7 @@
       "isPrivate": false,
       "metaSortKey": -1576492154093.5,
       "method": "GET",
-      "modified": 1576523117171,
+      "modified": 1576529880136,
       "name": "City by Name and Province",
       "parameters": [
         {
@@ -144,7 +144,7 @@
           "description": "",
           "id": "pair_4116780e7110488da1c21d22d3d7d686",
           "name": "provinceAbbreviation",
-          "value": "S"
+          "value": "SP"
         }
       ],
       "parentId": "fld_843be8d9a0694c5e875836589385f0e2",
@@ -185,6 +185,66 @@
       "settingSendCookies": true,
       "settingStoreCookies": true,
       "url": "{{ host_beta  }}/cities/by-name-starting-with",
+      "_type": "request"
+    },
+    {
+      "_id": "req_25a80c81c8ff48ffbebcebedda194327",
+      "authentication": {},
+      "body": {},
+      "created": 1576524462509,
+      "description": "",
+      "headers": [],
+      "isPrivate": false,
+      "metaSortKey": -1576474103326.375,
+      "method": "GET",
+      "modified": 1576532945576,
+      "name": "Permission Exists By Name",
+      "parameters": [
+        {
+          "description": "",
+          "id": "pair_47c646688b6b448aba6476a1be013dd6",
+          "name": "permission",
+          "value": "WRITE"
+        }
+      ],
+      "parentId": "fld_843be8d9a0694c5e875836589385f0e2",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingFollowRedirects": "global",
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host_beta  }}/permissions/exists-by-name",
+      "_type": "request"
+    },
+    {
+      "_id": "req_89c04847a77445608868730458a3646a",
+      "authentication": {},
+      "body": {},
+      "created": 1576524706869,
+      "description": "",
+      "headers": [],
+      "isPrivate": false,
+      "metaSortKey": -1576471094865.1875,
+      "method": "GET",
+      "modified": 1576530534025,
+      "name": "Cities Count By Province Abbreviation",
+      "parameters": [
+        {
+          "description": "",
+          "id": "pair_47c646688b6b448aba6476a1be013dd6",
+          "name": "province",
+          "value": "SP"
+        }
+      ],
+      "parentId": "fld_843be8d9a0694c5e875836589385f0e2",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingFollowRedirects": "global",
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host_beta  }}/cities/count-by-provinceAbbreviation",
       "_type": "request"
     },
     {
