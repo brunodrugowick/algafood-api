@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+        version="2.2">
+
+    <named-query name="Restaurant.byCuisineLike">
+        <query>from Restaurant r join r.cuisine c where c.name like concat('%', :name, '%')</query>
+    </named-query>
+
+    <named-query name="Restaurant.byDeliveryFee">
+        <query>from Restaurant where deliveryFee >= :initial and deliveryFee &lt;= :final</query>
+    </named-query>
+
+</entity-mappings>
