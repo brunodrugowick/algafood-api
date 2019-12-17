@@ -8,7 +8,9 @@ import org.springframework.util.StringUtils;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.Predicate;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -35,7 +37,7 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryQueries {
 
         var parameters = new HashMap<String, Object>();
 
-        if (StringUtils.hasLength(name)) {
+        if (StringUtils.hasText(name)) {
             jpql.append("and name like :name ");
             parameters.put("name", "%" + name + "%");
         }
@@ -60,5 +62,42 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryQueries {
         parameters.forEach((key, value) -> query.setParameter(key, value));
 
         return query.getResultList();
+    }
+
+    /**
+     * Although this is an ok implementation and good for the majority of use cases,
+     * this is cooler: https://gist.github.com/ulisseslima/7ff9d4ecc49470ccf5c5979b8d806eef
+     * (from https://gist.github.com/ulisseslima).
+     *
+     * @param name
+     * @param startFee
+     * @param endingFee
+     * @param cuisine
+     * @return
+     */
+    @Override
+    public List<Restaurant> findByAllCriteriaApi(String name, BigDecimal startFee, BigDecimal endingFee, String cuisine) {
+
+        // A custom method that handles querying any Restaurant field.
+
+        var builder = entityManager.getCriteriaBuilder();
+        // CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+
+        var criteriaQuery = builder.createQuery(Restaurant.class);
+        // CriteriaQuery<Restaurant> criteriaQuery = builder.createQuery(Restaurant.class);
+
+        var root = criteriaQuery.from(Restaurant.class);
+        // Root<Restaurant> root = criteriaQuery.from(Restaurant.class);
+
+        var predicates = new ArrayList<Predicate>();
+        if (StringUtils.hasText(name)) predicates.add(builder.like(root.get("name"), "%" + name + "%"));
+        if (startFee != null) predicates.add(builder.greaterThanOrEqualTo(root.get("deliveryFee"), startFee));
+        if (endingFee != null) predicates.add(builder.lessThanOrEqualTo(root.get("deliveryFee"), endingFee));
+        if (StringUtils.hasLength(cuisine))
+            predicates.add(builder.like(root.get("cuisine").get("name"), "%" + cuisine + "%"));
+
+        criteriaQuery.where(predicates.toArray(new Predicate[0]));
+        return entityManager.createQuery(criteriaQuery)
+                .getResultList();
     }
 }

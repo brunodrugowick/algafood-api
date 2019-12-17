@@ -87,4 +87,13 @@ public class TestController {
         return restaurantRepository.findByAll(name, startingFee, endingFee, cuisine);
     }
 
+    @GetMapping("/restaurants/find-alternative")
+    public List<Restaurant> findRestaurantsCriteriaApi(@RequestParam(value = "name", required = false) String name,
+                                                       @RequestParam(value = "startingFee", required = false) BigDecimal startingFee,
+                                                       @RequestParam(value = "endingFee", required = false) BigDecimal endingFee,
+                                                       @RequestParam(value = "cuisine", required = false) String cuisine) {
+        // In this case there's no need to test for null params, since I'm going to do that on the RepositoryImpl'
+        return restaurantRepository.findByAllCriteriaApi(name, startingFee, endingFee, cuisine);
+    }
+
 }

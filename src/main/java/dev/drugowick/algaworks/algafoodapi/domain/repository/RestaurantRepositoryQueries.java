@@ -8,4 +8,6 @@ import java.util.List;
 public interface RestaurantRepositoryQueries {
 
     List<Restaurant> findByAll(String name, BigDecimal startFee, BigDecimal endingFee, String cuisine);
+
+    List<Restaurant> findByAllCriteriaApi(String name, BigDecimal startFee, BigDecimal endingFee, String cuisine);
 }
