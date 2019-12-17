@@ -100,4 +100,14 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryQueries {
         return entityManager.createQuery(criteriaQuery)
                 .getResultList();
     }
+
+    @Override
+    public List<Restaurant> findByAllQueryDsl(String name, BigDecimal startFee, BigDecimal endingFee, String cuisine) {
+
+        // A custom method that handles querying any Restaurant field.
+
+        // TODO implement using Querydsl. No idea what it is...
+
+        return findByAllCriteriaApi(name, startFee, endingFee, cuisine);
+    }
 }
