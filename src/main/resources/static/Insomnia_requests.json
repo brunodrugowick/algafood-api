@@ -1,7 +1,7 @@
 {
   "_type": "export",
   "__export_format": 4,
-  "__export_date": "2019-12-16T21:50:48.371Z",
+  "__export_date": "2019-12-17T01:00:42.895Z",
   "__export_source": "insomnia.desktop.app:v7.0.5",
   "resources": [
     {
@@ -65,7 +65,7 @@
       "isPrivate": false,
       "metaSortKey": -1576516598577,
       "method": "GET",
-      "modified": 1576526733962,
+      "modified": 1576544271904,
       "name": "Restaurants By Delivery Fee",
       "parameters": [
         {
@@ -78,7 +78,7 @@
           "description": "",
           "id": "pair_42957a1deade401ba9990a47aa5a6d34",
           "name": "endingFee",
-          "value": "8"
+          "value": "9"
         }
       ],
       "parentId": "fld_843be8d9a0694c5e875836589385f0e2",
@@ -1427,16 +1427,18 @@
       "color": "#01008c",
       "created": 1576025786031,
       "data": {
-        "host": "https://algafoodapi.herokuapp.com"
+        "host": "https://algafoodapi.herokuapp.com",
+        "host_beta": "https://algafoodapi.herokuapp.com/beta"
       },
       "dataPropertyOrder": {
         "&": [
-          "host"
+          "host",
+          "host_beta"
         ]
       },
       "isPrivate": false,
       "metaSortKey": 1576025786031,
-      "modified": 1576037870810,
+      "modified": 1576544247254,
       "name": "Production",
       "parentId": "env_ab541dddf7ec4a540bcd2e585f2a482bdedf25ab",
       "_type": "environment"
