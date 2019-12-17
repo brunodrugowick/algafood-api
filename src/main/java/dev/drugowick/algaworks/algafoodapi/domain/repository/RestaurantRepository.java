@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 import java.math.BigDecimal;
 import java.util.List;
 
-public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
+public interface RestaurantRepository extends JpaRepository<Restaurant, Long>, RestaurantRepositoryQueries {
 
     List<Restaurant> byCuisineLike(@Param("name") String cuisine);
     // In Query Method would be: List<Restaurant> findAllByCuisineNameContaining(String cuisine);
