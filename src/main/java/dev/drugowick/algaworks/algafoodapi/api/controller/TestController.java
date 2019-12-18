@@ -2,11 +2,9 @@ package dev.drugowick.algaworks.algafoodapi.api.controller;
 
 import dev.drugowick.algaworks.algafoodapi.domain.model.City;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Cuisine;
+import dev.drugowick.algaworks.algafoodapi.domain.model.PaymentMethod;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Restaurant;
-import dev.drugowick.algaworks.algafoodapi.domain.repository.CityRepository;
-import dev.drugowick.algaworks.algafoodapi.domain.repository.CuisineRepository;
-import dev.drugowick.algaworks.algafoodapi.domain.repository.PermissionRepository;
-import dev.drugowick.algaworks.algafoodapi.domain.repository.RestaurantRepository;
+import dev.drugowick.algaworks.algafoodapi.domain.repository.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,12 +27,14 @@ public class TestController {
     private RestaurantRepository restaurantRepository;
     private CityRepository cityRepository;
     private PermissionRepository permissionRepository;
+    private PaymentMethodRepository paymentMethodRepository;
 
-    public TestController(CuisineRepository cuisineRepository, RestaurantRepository restaurantRepository, CityRepository cityRepository, PermissionRepository permissionRepository) {
+    public TestController(CuisineRepository cuisineRepository, RestaurantRepository restaurantRepository, CityRepository cityRepository, PermissionRepository permissionRepository, PaymentMethodRepository paymentMethodRepository) {
         this.cuisineRepository = cuisineRepository;
         this.restaurantRepository = restaurantRepository;
         this.cityRepository = cityRepository;
         this.permissionRepository = permissionRepository;
+        this.paymentMethodRepository = paymentMethodRepository;
     }
 
     @GetMapping("/cuisines/by-name")
@@ -109,6 +109,16 @@ public class TestController {
     public List<Restaurant> freeDeliveryRestaurants(String name) {
 
         return restaurantRepository.findFreeDelivery(name);
+    }
+
+    @GetMapping("/restaurants/first")
+    public Optional<Restaurant> restaurantFirst() {
+        return restaurantRepository.findFirst();
+    }
+
+    @GetMapping("/payment-method/first")
+    public Optional<PaymentMethod> paymentMethodFirst() {
+        return paymentMethodRepository.findFirst();
     }
 
 }
