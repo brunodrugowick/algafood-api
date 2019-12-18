@@ -12,4 +12,6 @@ public interface RestaurantRepositoryQueries {
     List<Restaurant> findByAllCriteriaApi(String name, BigDecimal startFee, BigDecimal endingFee, String cuisine);
 
     List<Restaurant> findByAllQueryDsl(String name, BigDecimal startFee, BigDecimal endingFee, String cuisine);
+
+    List<Restaurant> findFreeDelivery(String name);
 }

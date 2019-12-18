@@ -105,4 +105,10 @@ public class TestController {
         return restaurantRepository.findByAllQueryDsl(name, startingFee, endingFee, cuisine);
     }
 
+    @GetMapping("/restaurants/free-delivery-spec")
+    public List<Restaurant> freeDeliveryRestaurants(String name) {
+
+        return restaurantRepository.findFreeDelivery(name);
+    }
+
 }

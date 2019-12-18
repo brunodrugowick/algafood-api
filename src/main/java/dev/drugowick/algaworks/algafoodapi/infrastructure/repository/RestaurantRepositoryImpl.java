@@ -1,7 +1,9 @@
 package dev.drugowick.algaworks.algafoodapi.infrastructure.repository;
 
 import dev.drugowick.algaworks.algafoodapi.domain.model.Restaurant;
+import dev.drugowick.algaworks.algafoodapi.domain.repository.RestaurantRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.RestaurantRepositoryQueries;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
@@ -13,6 +15,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static dev.drugowick.algaworks.algafoodapi.infrastructure.repository.spec.RestaurantSpecs.withFreeDelivery;
+import static dev.drugowick.algaworks.algafoodapi.infrastructure.repository.spec.RestaurantSpecs.withSimilarName;
 
 /**
  * This is a special class that Spring Data JPA (SDJ) detects and uses. This detection is based on the class name,
@@ -27,6 +32,20 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryQueries {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    /**
+     * The {@link RestaurantRepository} is injected here but as @Lazy otherwise we'd get a circular
+     * reference error.
+     * <p>
+     * This is related to the confusing use of JpaSpecificationExecutor on the repository and the
+     * idea to still have the Repository in control of the queries (not the Controller, for example).
+     */
+    private RestaurantRepository restaurantRepository;
+
+    @Lazy
+    public RestaurantRepositoryImpl(RestaurantRepository restaurantRepository) {
+        this.restaurantRepository = restaurantRepository;
+    }
 
     @Override
     public List<Restaurant> findByAll(String name, BigDecimal startFee, BigDecimal endingFee, String cuisine) {
@@ -109,5 +128,10 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryQueries {
         // TODO implement using Querydsl. No idea what it is...
 
         return findByAllCriteriaApi(name, startFee, endingFee, cuisine);
+    }
+
+    @Override
+    public List<Restaurant> findFreeDelivery(String name) {
+        return restaurantRepository.findAll(withFreeDelivery().and(withSimilarName(name)));
     }
 }
