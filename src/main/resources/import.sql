@@ -18,7 +18,10 @@ insert into province (name, abbreviation) values ('Santa Catarina', 'SC');
 insert into province (name, abbreviation) values ('Rio Grande do Sul', 'RS');
 
 insert into city (name, province_id) values ('Campinas', 1);
+insert into city (name, province_id) values ('São José dos Campos', 1);
 insert into city (name, province_id) values ('Ribeirão Preto', 1);
 insert into city (name, province_id) values ('Belo Horizonte', 2);
 insert into city (name, province_id) values ('Florianópolis', 3);
 insert into city (name, province_id) values ('Porto Alegre', 4);
+
+insert into restaurant_payment_method (restaurant_id, payment_method_id) values (1, 1), (1, 2), (2, 1), (3, 1), (3, 2), (3, 3);

@@ -37,4 +37,10 @@ public class Restaurant {
 	@JoinColumn(name = "cuisine_id", nullable = false)
 	private Cuisine cuisine;
 
+	@ManyToMany
+	@JoinTable(name = "restaurant_payment_method",
+			joinColumns = @JoinColumn(name = "restaurant_id"),
+			inverseJoinColumns = @JoinColumn(name = "payment_method_id"))
+	private List<PaymentMethod> paymentMethods = new ArrayList<PaymentMethod>();
+
 }
