@@ -70,7 +70,7 @@ public class RestaurantController {
 		}
 
 		try {
-			BeanUtils.copyProperties(restaurant, restaurantToUpdate.get(), "id", "paymentMethods");
+			BeanUtils.copyProperties(restaurant, restaurantToUpdate.get(), "id", "paymentMethods", "address");
 			// The save method will update when an existing ID is being passed.
 			Restaurant restaurantUpdated = restaurantCrudService.save(restaurantToUpdate.get());
 			return ResponseEntity.ok(restaurantUpdated);

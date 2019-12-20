@@ -1,10 +1,6 @@
 insert into cuisine (name) values ('Italian');
 insert into cuisine (name) values ('Brazilian');
 
-insert into restaurant (name, delivery_fee, cuisine_id) values ('Bar Preste Atenção', 5.00, 2);
-insert into restaurant (name, delivery_fee, cuisine_id) values ('Pizzaria Marcante', 10.00, 1);
-insert into restaurant (name, delivery_fee, cuisine_id) values ('Mexican Crazy Hat Food', 0.00, 2);
-
 insert into payment_method (description) values ('Credit Card');
 insert into payment_method (description) values ('Cash');
 insert into payment_method (description) values ('Word');
@@ -23,5 +19,10 @@ insert into city (name, province_id) values ('Ribeirão Preto', 1);
 insert into city (name, province_id) values ('Belo Horizonte', 2);
 insert into city (name, province_id) values ('Florianópolis', 3);
 insert into city (name, province_id) values ('Porto Alegre', 4);
+
+insert into restaurant (address_address_line_1, address_address_line_2, address_postal_code, address_region, delivery_fee, name, address_city_id, cuisine_id) values ('Cocada Street, 123456', 'Neighborhood', '13020', 'Region1', 10.00, 'Pizzaria Marcante', 1, 1);
+insert into restaurant (address_address_line_1, address_address_line_2, address_postal_code, address_region, delivery_fee, name, address_city_id, cuisine_id) values ('Cocada Street, 123456', 'Neighborhood', '13020', 'Region1', 5.00, 'Bar Preste Atenção', 2, 2);
+insert into restaurant (address_address_line_1, address_address_line_2, address_postal_code, address_region, delivery_fee, name, address_city_id, cuisine_id) values ('Cocada Street, 123456', 'Neighborhood', '13020', 'Region1', 10.00, 'Pizzaria Marcante', 2, 1);
+insert into restaurant (address_address_line_1, address_address_line_2, address_postal_code, address_region, delivery_fee, name, address_city_id, cuisine_id) values ('Cocada Street, 123456', 'Neighborhood', '13020', 'Region1', 0.00, 'Mexican Crazy Hat Food', 4, 2);
 
 insert into restaurant_payment_method (restaurant_id, payment_method_id) values (1, 1), (1, 2), (2, 1), (3, 1), (3, 2), (3, 3);

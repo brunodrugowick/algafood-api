@@ -39,6 +39,10 @@ public class Restaurant {
 	private Cuisine cuisine;
 
 	@JsonIgnore
+	@Embedded
+	private Address address;
+
+	@JsonIgnore
 	@ManyToMany
 	@JoinTable(name = "restaurant_payment_method",
 			joinColumns = @JoinColumn(name = "restaurant_id"),
