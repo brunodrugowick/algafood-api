@@ -55,6 +55,7 @@ public class Restaurant {
 	@Column(nullable = false, columnDefinition = "datetime")
 	private LocalDateTime updatedDate;
 
+	@JsonIgnore
 	@ManyToMany
 	@JoinTable(name = "restaurant_payment_method",
 			joinColumns = @JoinColumn(name = "restaurant_id"),
