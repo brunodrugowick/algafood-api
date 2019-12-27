@@ -31,6 +31,8 @@ You may use it against [https://algafoodapi.herokuapp.com/](https://algafoodapi.
 Note: HATEOAS soon...
 ```
 
+You may also use Apache jMeter or Apache Bench (`ab -n <requests> -c <how-many-in-paralell> <endpoint>`)
+
 ## Media Types
 
 The API works with `application/json`.
