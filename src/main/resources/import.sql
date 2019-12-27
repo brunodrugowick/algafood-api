@@ -15,8 +15,8 @@ insert into group_permission (group_id, permission_id) values (1, 1);
 insert into group_permission (group_id, permission_id) values (2, 1);
 insert into group_permission (group_id, permission_id) values (2, 2);
 
-insert into user (name, email, password) values ('drugowick', 'bruno.drugowick@gmail.com', 'password');
-insert into user (name, email, password) values ('drugowick2', 'brunodrugowick@gmail.com', 'password');
+insert into user (name, email, password, created_date) values ('drugowick', 'bruno.drugowick@gmail.com', 'password', current_timestamp);
+insert into user (name, email, password, created_date) values ('drugowick2', 'brunodrugowick@gmail.com', 'password', current_timestamp);
 
 insert into province (name, abbreviation) values ('São Paulo', 'SP');
 insert into province (name, abbreviation) values ('Minas Gerais', 'MG');
