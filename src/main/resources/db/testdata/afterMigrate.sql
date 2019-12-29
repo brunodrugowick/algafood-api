@@ -1,4 +1,9 @@
 delete
+from order_item;
+delete
+from order_;
+
+delete
 from restaurant_payment_method;
 delete
 from payment_method;
@@ -123,3 +128,25 @@ values ((select id from restaurant where name = 'Pizzaria Marcante'),
         (select id from payment_method where description = 'Cash')),
        ((select id from restaurant where name = 'Pizzaria Embarcante'),
         (select id from payment_method where description = 'Word'));
+
+insert into order_ (subtotal, delivery_fee, total, created_date, confirmation_date, cancellation_date, delivery_date,
+                    payment_method_id, restaurant_id, client_id, status, address_address_line_1, address_address_line_2,
+                    address_postal_code, address_region, address_city_id)
+values (100.00, 12.00, 112.00, current_timestamp, null, null, null,
+        (select id from payment_method where description = 'Credit Card'),
+        (select id from restaurant where name = 'Pizzaria Marcante'), (select id from user where name = 'drugowick'),
+        'CREATED', 'Rua 1', null, '13020-240', 'Botafogo', (select id from city where name = 'Campinas'));
+insert into order_ (subtotal, delivery_fee, total, created_date, confirmation_date, cancellation_date, delivery_date,
+                    payment_method_id, restaurant_id, client_id, status, address_address_line_1, address_address_line_2,
+                    address_postal_code, address_region, address_city_id)
+values (200.00, 12.00, 212.00, current_timestamp, current_timestamp, null, current_timestamp,
+        (select id from payment_method where description = 'Cash'),
+        (select id from restaurant where name = 'Pizzaria Embarcante'), (select id from user where name = 'drugowick2'),
+        'DELIVERED', 'Rua 2', null, '13020-140', 'Guanabara', (select id from city where name = 'Campinas'));
+
+insert into order_item (amount, unit_price, total_price, notes, product_id, order_id)
+values (4, 25.00, 100.00, null, (select id from product where name = 'Potato'),
+        (select id from order_ where status = 'CREATED'));
+insert into order_item (amount, unit_price, total_price, notes, product_id, order_id)
+values (40, 5.00, 200.00, 'Lots of Nhamis', (select id from product where name = 'Nhami'),
+        (select id from order_ where status = 'DELIVERED'));
