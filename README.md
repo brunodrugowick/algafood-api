@@ -33,6 +33,23 @@ Note: HATEOAS soon...
 
 You may also use Apache jMeter or Apache Bench (`ab -n <requests> -c <how-many-in-paralell> <endpoint>`)
 
+### Flyway
+
+This application can use H2 or MySQL as database. The H2 support was designed for self-contained demonstrations on heroku, [for example](https://algafoodapi.herokuapp.com/). So you may see some limitations on SQL code.
+
+One of the limitations is the inability to set the auto_increment of MySQL to 1 when migrating sample data. H2 doesn't support this command. The consequence is that when running the application locally many times using MySQL as database, you'll have IDs incrementing through restarts (i.e., at some point you may have restaurants 57, 58, 59 and 60).
+
+Don't worry, migration scripts are designed to search the IDs when creating entries with foreign keys, but if you still want to restart your IDs, you can:
+
+- Drop the schema; OR
+- Run `./mvnw flyway:clean -Dflyway.configFiles=src/main/resources/flyway.properties` from the project root directory.
+
+In both cases, when starting the application, schema and data definition will be created and (includes or on english language) data will e migrated.
+
+```text
+Note: the second option was added to show Flyway capabilities.
+```
+
 ## Media Types
 
 The API works with `application/json`.
