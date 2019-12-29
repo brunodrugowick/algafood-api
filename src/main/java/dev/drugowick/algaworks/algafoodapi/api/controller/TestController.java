@@ -1,14 +1,9 @@
 package dev.drugowick.algaworks.algafoodapi.api.controller;
 
-import dev.drugowick.algaworks.algafoodapi.domain.model.City;
-import dev.drugowick.algaworks.algafoodapi.domain.model.Cuisine;
-import dev.drugowick.algaworks.algafoodapi.domain.model.PaymentMethod;
-import dev.drugowick.algaworks.algafoodapi.domain.model.Restaurant;
+import dev.drugowick.algaworks.algafoodapi.domain.model.*;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.*;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -28,13 +23,15 @@ public class TestController {
     private CityRepository cityRepository;
     private PermissionRepository permissionRepository;
     private PaymentMethodRepository paymentMethodRepository;
+    private OrderRepository orderRepository;
 
-    public TestController(CuisineRepository cuisineRepository, RestaurantRepository restaurantRepository, CityRepository cityRepository, PermissionRepository permissionRepository, PaymentMethodRepository paymentMethodRepository) {
+    public TestController(CuisineRepository cuisineRepository, RestaurantRepository restaurantRepository, CityRepository cityRepository, PermissionRepository permissionRepository, PaymentMethodRepository paymentMethodRepository, OrderRepository orderRepository) {
         this.cuisineRepository = cuisineRepository;
         this.restaurantRepository = restaurantRepository;
         this.cityRepository = cityRepository;
         this.permissionRepository = permissionRepository;
         this.paymentMethodRepository = paymentMethodRepository;
+        this.orderRepository = orderRepository;
     }
 
     @GetMapping("/cuisines/by-name")
@@ -119,6 +116,32 @@ public class TestController {
     @GetMapping("/payment-method/first")
     public Optional<PaymentMethod> paymentMethodFirst() {
         return paymentMethodRepository.findFirst();
+    }
+
+    /**
+     * TODO Before implementing I gotta solve the N+1 problem for this entity
+     *
+     * @return
+     */
+    @GetMapping("/orders")
+    public List<Order> list() {
+        return orderRepository.findAll();
+    }
+
+    /**
+     * TODO Before implementing I gotta solve the N+1 problem for this entity
+     *
+     * @return
+     */
+    @GetMapping("/orders/{id}")
+    public ResponseEntity<Order> get(@PathVariable Long id) {
+        Optional<Order> order = orderRepository.findById(id);
+
+        if (order.isPresent()) {
+            return ResponseEntity.ok(order.get());
+        }
+
+        return ResponseEntity.notFound().build();
     }
 
 }

@@ -1,5 +1,6 @@
 package dev.drugowick.algaworks.algafoodapi.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
@@ -39,6 +40,7 @@ public class User {
     @Column(nullable = false, columnDefinition = "datetime", updatable = false)
     private LocalDateTime createdDate;
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(name = "user_group",
             joinColumns = @JoinColumn(name = "user_id"),

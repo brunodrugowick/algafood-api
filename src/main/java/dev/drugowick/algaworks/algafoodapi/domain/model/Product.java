@@ -1,5 +1,6 @@
 package dev.drugowick.algaworks.algafoodapi.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,6 +38,7 @@ public class Product {
     @Column(nullable = false)
     private boolean active = false;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "restaurant_id", nullable = false)
     private Restaurant restaurant;

@@ -1,7 +1,7 @@
 {
   "_type": "export",
   "__export_format": 4,
-  "__export_date": "2019-12-18T21:56:25.294Z",
+  "__export_date": "2019-12-29T15:49:34.678Z",
   "__export_source": "insomnia.desktop.app:v7.0.6",
   "resources": [
     {
@@ -475,6 +475,64 @@
       "settingSendCookies": true,
       "settingStoreCookies": true,
       "url": "{{ host_beta  }}/payment-method/first",
+      "_type": "request"
+    },
+    {
+      "_id": "req_a0f8cd0cb1b548569420aba456b2bbc1",
+      "authentication": {},
+      "body": {},
+      "created": 1577630855658,
+      "description": "",
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "isPrivate": false,
+      "metaSortKey": -1576468133398.706,
+      "method": "GET",
+      "modified": 1577634408081,
+      "name": "Get Order",
+      "parameters": [],
+      "parentId": "fld_843be8d9a0694c5e875836589385f0e2",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingFollowRedirects": "global",
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host_beta  }}/orders/1",
+      "_type": "request"
+    },
+    {
+      "_id": "req_7aea21f9ae054df6962378cbf9e1068f",
+      "authentication": {},
+      "body": {},
+      "created": 1577630855643,
+      "description": "",
+      "headers": [
+        {
+          "disabled": true,
+          "id": "pair_310cf22c088c4aa48a44175c78fd7c55",
+          "name": "Accept",
+          "value": "application/xml"
+        }
+      ],
+      "isPrivate": false,
+      "metaSortKey": -1576468133386.206,
+      "method": "GET",
+      "modified": 1577634412727,
+      "name": "List Orders",
+      "parameters": [],
+      "parentId": "fld_843be8d9a0694c5e875836589385f0e2",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingFollowRedirects": "global",
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host_beta  }}/orders",
       "_type": "request"
     },
     {
@@ -1248,7 +1306,7 @@
       "isPrivate": false,
       "metaSortKey": -1574726377866.5,
       "method": "GET",
-      "modified": 1576037995309,
+      "modified": 1577399293075,
       "name": "List Restaurants",
       "parameters": [],
       "parentId": "fld_35ad49773d8748e388cbdbcd0fa76ca1",
@@ -1399,7 +1457,7 @@
       "isPrivate": false,
       "metaSortKey": -1576287466949,
       "method": "GET",
-      "modified": 1576467259423,
+      "modified": 1577617231570,
       "name": "Get Payment Method",
       "parameters": [],
       "parentId": "fld_a7525f3c1b89470d90441bca5fc36c61",
