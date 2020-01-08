@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/restaurants")
@@ -50,47 +49,27 @@ public class RestaurantController {
 	}
 
 	@GetMapping(value = {"/{id}"})
-	public ResponseEntity<Restaurant> get(@PathVariable Long id) {
-		Optional<Restaurant> restaurant = restaurantRepository.findById(id);
-
-		if (restaurant.isPresent()) {
-			return ResponseEntity.ok(restaurant.get());
-		}
-
-		return ResponseEntity.notFound().build();
+	public Restaurant get(@PathVariable Long id) {
+		return restaurantCrudService.findOrElseThrow(id);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Restaurant restaurant) {
-		Optional<Restaurant> restaurantToUpdate = restaurantRepository.findById(id);
+	public Restaurant update(@PathVariable Long id, @RequestBody Restaurant restaurant) {
+		Restaurant restaurantToUpdate = restaurantCrudService.findOrElseThrow(id);
 
-		if (restaurantToUpdate.isEmpty()) {
-			return ResponseEntity.notFound().build();
-		}
-
-		try {
-			BeanUtils.copyProperties(restaurant, restaurantToUpdate.get(),
-					"id", "paymentMethods", "address", "createdDate", "updatedDate");
-			// The save method will update when an existing ID is being passed.
-			Restaurant restaurantUpdated = restaurantCrudService.save(restaurantToUpdate.get());
-			return ResponseEntity.ok(restaurantUpdated);
-
-		} catch (EntityNotFoundException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-		}
+		BeanUtils.copyProperties(restaurant, restaurantToUpdate,
+				"id", "paymentMethods", "address", "createdDate", "updatedDate");
+		// The save method will update when an existing ID is being passed.
+		return restaurantCrudService.save(restaurantToUpdate);
 	}
 
 	@PatchMapping("/{id}")
-	public ResponseEntity<?> partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> restaurantMap) {
-		Optional<Restaurant> restaurantToUpdate = restaurantRepository.findById(id);
+	public Restaurant partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> restaurantMap) {
+		Restaurant restaurantToUpdate = restaurantCrudService.findOrElseThrow(id);
 
-		if (restaurantToUpdate.isEmpty()) {
-			return ResponseEntity.notFound().build();
-		}
+		ObjectMerger.mergeRequestBodyToGenericObject(restaurantMap, restaurantToUpdate, Restaurant.class);
 
-		ObjectMerger.mergeRequestBodyToGenericObject(restaurantMap, restaurantToUpdate.get(), Restaurant.class);
-
-		return update(id, restaurantToUpdate.get());
+		return update(id, restaurantToUpdate);
 	}
 
 	@DeleteMapping("/{id}")

@@ -1,18 +1,15 @@
 package dev.drugowick.algaworks.algafoodapi.domain.exception;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-public class EntityBeingUsedException extends ResponseStatusException {
+@ResponseStatus(code = HttpStatus.CONFLICT)
+public class EntityBeingUsedException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public EntityBeingUsedException(HttpStatus status, String reason) {
-		super(status, reason);
-	}
-
 	public EntityBeingUsedException(String message) {
-		this(HttpStatus.CONFLICT, message);
+		super(message);
 	}
 
 

@@ -15,6 +15,9 @@ import java.util.Optional;
 @Service
 public class RestaurantCrudService {
 
+	public static final String MSG_NO_RESTAURANT = "There's no Restaurant with the id %d.";
+	public static final String MSG_RESTAURANT_IN_USE = "Restaurant %d is being used by another entity and can not be removed.";
+
 	private RestaurantRepository restaurantRepository;
 	private CuisineRepository cuisineRepository;
 
@@ -41,10 +44,23 @@ public class RestaurantCrudService {
 			restaurantRepository.deleteById(id);
 		} catch (DataIntegrityViolationException exception) {
 			throw new EntityBeingUsedException(
-					String.format("Restaurant %d is being used by another entity and can not be removed.", id));
+					String.format(MSG_RESTAURANT_IN_USE, id));
 		} catch (EmptyResultDataAccessException exception) {
 			throw new EntityNotFoundException(
-					String.format("There's no Restaurant with the id %d.", id));
+					String.format(MSG_NO_RESTAURANT, id));
 		}
+	}
+
+	/**
+	 * Tries to find by ID and throws the business exception @{@link EntityNotFoundException} if not found.
+	 *
+	 * @param id of the Restaurant to find.
+	 * @return the Restaurant from the repository.
+	 */
+	public Restaurant findOrElseThrow(Long id) {
+		return restaurantRepository.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException(
+						String.format(MSG_NO_RESTAURANT, id)
+				));
 	}
 }
