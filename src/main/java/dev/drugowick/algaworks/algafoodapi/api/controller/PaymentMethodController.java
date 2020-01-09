@@ -1,8 +1,6 @@
 package dev.drugowick.algaworks.algafoodapi.api.controller;
 
 import dev.drugowick.algaworks.algafoodapi.api.controller.utils.ObjectMerger;
-import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityBeingUsedException;
-import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.PaymentMethod;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.PaymentMethodRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.PaymentMethodCrudService;
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/payment-methods")
@@ -49,51 +46,30 @@ public class PaymentMethodController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PaymentMethod> get(@PathVariable Long id) {
-        Optional<PaymentMethod> paymentMethodOptional = paymentMethodRepository.findById(id);
-
-        if (paymentMethodOptional.isPresent()) {
-            return ResponseEntity.ok(paymentMethodOptional.get());
-        }
-
-        return ResponseEntity.notFound().build();
+    public PaymentMethod get(@PathVariable Long id) {
+        return paymentMethodCrudService.findOrElseThrow(id);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<PaymentMethod> update(@PathVariable Long id, @RequestBody PaymentMethod paymentMethod) {
-        Optional<PaymentMethod> paymentMethodToUpdate = paymentMethodRepository.findById(id);
+    public PaymentMethod update(@PathVariable Long id, @RequestBody PaymentMethod paymentMethod) {
+        PaymentMethod paymentMethodToUpdate = paymentMethodCrudService.findOrElseThrow(id);
 
-        if (paymentMethodToUpdate.isPresent()) {
-            BeanUtils.copyProperties(paymentMethod, paymentMethodToUpdate.get(), "id");
-            PaymentMethod paymentMethodUpdated = paymentMethodCrudService.save(paymentMethodToUpdate.get());
-            return ResponseEntity.ok(paymentMethodUpdated);
-        }
+        BeanUtils.copyProperties(paymentMethod, paymentMethodToUpdate, "id");
 
-        return ResponseEntity.notFound().build();
+        return paymentMethodCrudService.save(paymentMethodToUpdate);
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<PaymentMethod> partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> paymentMethod) {
-        Optional<PaymentMethod> paymentMethodToUpdate = paymentMethodRepository.findById(id);
+    public PaymentMethod partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> paymentMethod) {
+        PaymentMethod paymentMethodToUpdate = paymentMethodCrudService.findOrElseThrow(id);
 
-        if (paymentMethodToUpdate.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
+        ObjectMerger.mergeRequestBodyToGenericObject(paymentMethod, paymentMethodToUpdate, PaymentMethod.class);
 
-        ObjectMerger.mergeRequestBodyToGenericObject(paymentMethod, paymentMethodToUpdate.get(), PaymentMethod.class);
-
-        return update(id, paymentMethodToUpdate.get());
+        return update(id, paymentMethodToUpdate);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
-        try {
-            paymentMethodCrudService.delete(id);
-            return ResponseEntity.noContent().build();
-        } catch (EntityBeingUsedException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    public void delete(@PathVariable Long id) {
+        paymentMethodCrudService.delete(id);
     }
 }

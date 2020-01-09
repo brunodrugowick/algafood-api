@@ -1,8 +1,6 @@
 package dev.drugowick.algaworks.algafoodapi.api.controller;
 
 import dev.drugowick.algaworks.algafoodapi.api.controller.utils.ObjectMerger;
-import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityBeingUsedException;
-import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Province;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.ProvinceRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.ProvinceCrudService;
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/provinces")
@@ -39,14 +36,8 @@ public class ProvinceController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Province> get(@PathVariable Long id) {
-		Optional<Province> province = provinceRepository.findById(id);
-
-		if (province.isPresent()) {
-			return ResponseEntity.ok(province.get());
-		}
-
-		return ResponseEntity.notFound().build();
+	public Province get(@PathVariable Long id) {
+		return provinceCrudService.findOrElseThrow(id);
 	}
 
 	@PostMapping
@@ -61,47 +52,29 @@ public class ProvinceController {
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(province);
 	}
-	
+
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<Province> update(@PathVariable Long id, @RequestBody Province province) {
-		Optional<Province> provinceToUpdate = provinceRepository.findById(id);
+	public Province update(@PathVariable Long id, @RequestBody Province province) {
+		Province provinceToUpdate = provinceCrudService.findOrElseThrow(id);
 
-		/**
-		 * Not found because the URI is not a valid resource on the application.
-		 */
-		if (provinceToUpdate.isEmpty()) {
-			return ResponseEntity.notFound().build();
-		}
+		BeanUtils.copyProperties(province, provinceToUpdate, "id");
 
-		BeanUtils.copyProperties(province, provinceToUpdate.get(), "id");
 		// The save method will update when an existing ID is being passed.
-		Province provinceUpdated = provinceRepository.save(provinceToUpdate.get());
-		return ResponseEntity.ok(provinceUpdated);
+		return provinceRepository.save(provinceToUpdate);
 	}
 
 	@PatchMapping("/{id}")
-	public ResponseEntity<?> partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> provinceMap) {
-		Optional<Province> provinceToUpdate = provinceRepository.findById(id);
+	public Province partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> provinceMap) {
+		Province provinceToUpdate = provinceCrudService.findOrElseThrow(id);
 
-		if (provinceToUpdate.isEmpty()) {
-			return ResponseEntity.notFound().build();
-		}
+		ObjectMerger.mergeRequestBodyToGenericObject(provinceMap, provinceToUpdate, Province.class);
 
-		ObjectMerger.mergeRequestBodyToGenericObject(provinceMap, provinceToUpdate.get(), Province.class);
-
-		return update(id, provinceToUpdate.get());
+		return update(id, provinceToUpdate);
 	}
 
 	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<?> delete(@PathVariable Long id) {
-		try {
-			provinceCrudService.delete(id);
-			return ResponseEntity.noContent().build();
-		} catch (EntityBeingUsedException exception) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).body(exception.getMessage());
-		} catch (EntityNotFoundException exception) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
-		}
+	public void delete(@PathVariable Long id) {
+		provinceCrudService.delete(id);
 	}
 	
 }

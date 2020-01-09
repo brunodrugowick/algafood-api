@@ -10,30 +10,31 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 public class CityCrudService {
 
-    private CityRepository cityRepository;
-    private ProvinceRepository provinceRepository;
+    public static final String MSG_NO_CITY = "There's no City with the id %d.";
+    public static final String MSG_CITY_CONFLICT = "Operation on City %d conflicts with another entity and can not be performed.";
 
-    public CityCrudService(CityRepository cityRepository, ProvinceRepository provinceRepository) {
+    private CityRepository cityRepository;
+    private ProvinceCrudService provinceCrudService;
+
+    public CityCrudService(CityRepository cityRepository, ProvinceRepository provinceRepository, ProvinceCrudService provinceCrudService) {
         this.cityRepository = cityRepository;
-        this.provinceRepository = provinceRepository;
+        this.provinceCrudService = provinceCrudService;
     }
 
     public City save(City city) {
         Long provinceId = city.getProvince().getId();
-        Optional<Province> province = provinceRepository.findById(provinceId);
+        Province province = provinceCrudService.findOrElseThrow(provinceId);
 
-        if (province.isEmpty()) {
-            throw new EntityNotFoundException(
-                    String.format("No province with ID %d", provinceId));
+        city.setProvince(province);
+        try {
+            return cityRepository.save(city);
+        } catch (DataIntegrityViolationException exception) {
+            throw new EntityBeingUsedException(
+                    String.format(MSG_CITY_CONFLICT, city.getId()));
         }
-
-        city.setProvince(province.get());
-        return cityRepository.save(city);
     }
 
     public void delete(Long id) {
@@ -41,10 +42,23 @@ public class CityCrudService {
             cityRepository.deleteById(id);
         } catch (DataIntegrityViolationException e) {
             throw new EntityBeingUsedException(
-                    String.format("City %d is being used by another entity and can not be removed.", id));
+                    String.format(MSG_CITY_CONFLICT, id));
         } catch (EmptyResultDataAccessException e) {
             throw new EntityNotFoundException(
-                    String.format("There's no City with the id %d.", id));
+                    String.format(MSG_NO_CITY, id));
         }
+    }
+
+    /**
+     * Tries to find by ID and throws the business exception @{@link EntityNotFoundException} if not found.
+     *
+     * @param id of the entity to find.
+     * @return the entity from the repository.
+     */
+    public City findOrElseThrow(Long id) {
+        return cityRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format(MSG_NO_CITY, id)
+                ));
     }
 }

@@ -10,32 +10,53 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CuisineCrudService {
-	
+
+	public static final String MSG_NO_CUISINE = "There's no Cuisine with the id %d.";
+	public static final String MSG_CUISINE_CONFLICT = "Operation on Cuisine %d conflicts with another entity and can not be performed.";
+
 	private CuisineRepository cuisineRepository;
 
 	public CuisineCrudService(CuisineRepository cuisineRepository) {
 		this.cuisineRepository = cuisineRepository;
 	}
-	
-	public Cuisine create(Cuisine cuisine) {
-		return cuisineRepository.save(cuisine);
+
+	public Cuisine save(Cuisine cuisine) {
+		try {
+			return cuisineRepository.save(cuisine);
+		} catch (DataIntegrityViolationException exception) {
+			throw new EntityBeingUsedException(
+					String.format(MSG_CUISINE_CONFLICT, cuisine.getId()));
+		}
 	}
-	
+
 	public Cuisine update(Long id, Cuisine cuisine) {
 		cuisine.setId(id);
 		return cuisineRepository.save(cuisine);
 	}
-	
+
 	public void delete(Long id) {
 		try {
 			cuisineRepository.deleteById(id);
 		} catch (DataIntegrityViolationException exception) {
 			throw new EntityBeingUsedException(
-					String.format("Cuisine %d is being used by another entity and can not be removed.", id));
+					String.format(MSG_CUISINE_CONFLICT, id));
 		} catch (EmptyResultDataAccessException exception) {
 			throw new EntityNotFoundException(
-					String.format("There's no Cuisine with the id %d.", id));
+					String.format(MSG_NO_CUISINE, id));
 		}
+	}
+
+	/**
+	 * Tries to find by ID and throws the business exception @{@link EntityNotFoundException} if not found.
+	 *
+	 * @param id of the entity to find.
+	 * @return the entity from the repository.
+	 */
+	public Cuisine findOrElseThrow(Long id) {
+		return cuisineRepository.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException(
+						String.format(MSG_NO_CUISINE, id)
+				));
 	}
 
 }

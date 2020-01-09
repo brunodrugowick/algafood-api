@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class PermissionCrudService {
 
+    public static final String MSG_NO_PERMISSION = "There's no Permission with the id %d.";
+    public static final String MSG_PERMISSION_CONFLICT = "Operation on Permission %d conflicts with another entity and can not be performed.";
+
     private PermissionRepository permissionRepository;
 
     public PermissionCrudService(PermissionRepository permissionRepository) {
@@ -18,7 +21,12 @@ public class PermissionCrudService {
     }
 
     public Permission save(Permission permission) {
-        return permissionRepository.save(permission);
+        try {
+            return permissionRepository.save(permission);
+        } catch (DataIntegrityViolationException exception) {
+            throw new EntityBeingUsedException(
+                    String.format(MSG_PERMISSION_CONFLICT, permission.getId()));
+        }
     }
 
     public void delete(Long id) {
@@ -26,10 +34,23 @@ public class PermissionCrudService {
             permissionRepository.deleteById(id);
         } catch (DataIntegrityViolationException e) {
             throw new EntityBeingUsedException(
-                    String.format("Permission %d is being used by another entity and can not be removed.", id));
+                    String.format(MSG_PERMISSION_CONFLICT, id));
         } catch (EmptyResultDataAccessException e) {
             throw new EntityNotFoundException(
-                    String.format("There's no Permission with the id %d.", id));
+                    String.format(MSG_NO_PERMISSION, id));
         }
+    }
+
+    /**
+     * Tries to find by ID and throws the business exception @{@link EntityNotFoundException} if not found.
+     *
+     * @param id of the entity to find.
+     * @return the entity from the repository.
+     */
+    public Permission findOrElseThrow(Long id) {
+        return permissionRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format(MSG_NO_PERMISSION, id)
+                ));
     }
 }
