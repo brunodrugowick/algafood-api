@@ -1,7 +1,6 @@
 package dev.drugowick.algaworks.algafoodapi.api.controller;
 
 import dev.drugowick.algaworks.algafoodapi.api.controller.utils.ObjectMerger;
-import dev.drugowick.algaworks.algafoodapi.api.exceptionhandler.ApiError;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundException;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.City;
@@ -12,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -90,23 +88,4 @@ public class CityController {
         cityCrudService.delete(id);
     }
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<?> handler(EntityNotFoundException exception) {
-        ApiError apiError = ApiError.builder()
-                .dateTime(LocalDateTime.now())
-                .message(exception.getMessage())
-                .build();
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
-    }
-
-    @ExceptionHandler(GenericBusinessException.class)
-    public ResponseEntity<?> handler(GenericBusinessException exception) {
-        ApiError apiError = ApiError.builder()
-                .dateTime(LocalDateTime.now())
-                .message(exception.getMessage())
-                .build();
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
-    }
 }
