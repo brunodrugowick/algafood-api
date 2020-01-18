@@ -1,6 +1,7 @@
 package dev.drugowick.algaworks.algafoodapi.api.controller;
 
 import dev.drugowick.algaworks.algafoodapi.api.controller.utils.ObjectMerger;
+import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Cuisine;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.CuisineRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.CuisineCrudService;
@@ -39,8 +40,7 @@ public class CuisineController {
 	public ResponseEntity<Cuisine> save(@RequestBody Cuisine cuisine) {
 		// Temporary. Client should not send an ID when posting. See #2.
 		if (cuisine.getId() != null) {
-			return ResponseEntity.badRequest()
-					.build();
+			throw new GenericBusinessException("You should not send an ID when saving or updating an entity.");
 		}
 		return ResponseEntity.status(HttpStatus.CREATED).body(cuisinesCrudService.save(cuisine));
 	}

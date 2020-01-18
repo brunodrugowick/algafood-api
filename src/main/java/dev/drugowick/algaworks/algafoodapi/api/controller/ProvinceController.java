@@ -1,6 +1,7 @@
 package dev.drugowick.algaworks.algafoodapi.api.controller;
 
 import dev.drugowick.algaworks.algafoodapi.api.controller.utils.ObjectMerger;
+import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Province;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.ProvinceRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.ProvinceCrudService;
@@ -44,9 +45,8 @@ public class ProvinceController {
 	public ResponseEntity<Province> save(@RequestBody Province province) {
 		// Temporary. Client should not send an ID when posting. See #2.
 		if (province.getId() != null) {
-			return ResponseEntity.badRequest()
-					.build();
-		}
+            throw new GenericBusinessException("You should not send an ID when saving or updating an entity.");
+        }
 
 		province = provinceCrudService.save(province);
 

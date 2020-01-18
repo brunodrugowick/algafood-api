@@ -2,6 +2,7 @@ package dev.drugowick.algaworks.algafoodapi.api.controller;
 
 import dev.drugowick.algaworks.algafoodapi.api.controller.utils.ObjectMerger;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundException;
+import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Restaurant;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.RestaurantRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.RestaurantCrudService;
@@ -34,8 +35,7 @@ public class RestaurantController {
 	public ResponseEntity<?> save(@RequestBody Restaurant restaurant) {
 		// Temporary. Client should not send an ID when posting. See #2.
 		if (restaurant.getId() != null) {
-			return ResponseEntity.badRequest()
-					.body("Invalid request body.");
+			throw new GenericBusinessException("You should not send an ID when saving or updating an entity.");
 		}
 
 		try {
@@ -44,7 +44,7 @@ public class RestaurantController {
 			return ResponseEntity.status(HttpStatus.CREATED)
 					.body(restaurant);
 		} catch (EntityNotFoundException e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
+			throw new GenericBusinessException(e.getMessage());
 		}
 	}
 
@@ -54,17 +54,22 @@ public class RestaurantController {
 	}
 
 	@PutMapping("/{id}")
-	public Restaurant update(@PathVariable Long id, @RequestBody Restaurant restaurant) {
+	public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Restaurant restaurant) {
 		Restaurant restaurantToUpdate = restaurantCrudService.findOrElseThrow(id);
 
 		BeanUtils.copyProperties(restaurant, restaurantToUpdate,
 				"id", "paymentMethods", "address", "createdDate", "updatedDate");
-		// The save method will update when an existing ID is being passed.
-		return restaurantCrudService.save(restaurantToUpdate);
+		try {
+			// The save method will update when an existing ID is being passed.
+			restaurantCrudService.save(restaurantToUpdate);
+			return ResponseEntity.ok(restaurantToUpdate);
+		} catch (EntityNotFoundException e) {
+			throw new GenericBusinessException(e.getMessage());
+		}
 	}
 
 	@PatchMapping("/{id}")
-	public Restaurant partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> restaurantMap) {
+	public ResponseEntity<?> partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> restaurantMap) {
 		Restaurant restaurantToUpdate = restaurantCrudService.findOrElseThrow(id);
 
 		ObjectMerger.mergeRequestBodyToGenericObject(restaurantMap, restaurantToUpdate, Restaurant.class);

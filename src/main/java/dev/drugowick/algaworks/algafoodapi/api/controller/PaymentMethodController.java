@@ -1,6 +1,7 @@
 package dev.drugowick.algaworks.algafoodapi.api.controller;
 
 import dev.drugowick.algaworks.algafoodapi.api.controller.utils.ObjectMerger;
+import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.PaymentMethod;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.PaymentMethodRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.PaymentMethodCrudService;
@@ -39,8 +40,7 @@ public class PaymentMethodController {
     public ResponseEntity<PaymentMethod> save(@RequestBody PaymentMethod paymentMethod) {
         // Temporary. Client should not send an ID when posting. See #2.
         if (paymentMethod.getId() != null) {
-            return ResponseEntity.badRequest()
-                    .build();
+            throw new GenericBusinessException("You should not send an ID when saving or updating an entity.");
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(paymentMethodCrudService.save(paymentMethod));
     }

@@ -2,6 +2,7 @@ package dev.drugowick.algaworks.algafoodapi.api.controller;
 
 import dev.drugowick.algaworks.algafoodapi.api.controller.utils.ObjectMerger;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundException;
+import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.City;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.CityRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.CityCrudService;
@@ -45,8 +46,7 @@ public class CityController {
     public ResponseEntity<?> save(@RequestBody City city) {
         // Temporary. Client should not send an ID when posting. See #2.
         if (city.getId() != null || city.getProvince() == null) {
-            return ResponseEntity.badRequest()
-                    .body("Invalid request body.");
+            throw new GenericBusinessException("You should not send an ID when saving or updating an entity.");
         }
 
         try {
@@ -55,7 +55,7 @@ public class CityController {
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(city);
         } catch (EntityNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            throw new GenericBusinessException(e.getMessage());
         }
     }
 
@@ -70,7 +70,7 @@ public class CityController {
             cityToUpdate = cityCrudService.save(cityToUpdate);
             return ResponseEntity.ok(cityToUpdate);
         } catch (EntityNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            throw new GenericBusinessException(e.getMessage());
         }
     }
 
