@@ -18,35 +18,44 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<?> handler(EntityNotFoundException exception, WebRequest request) {
-        return handleExceptionInternal(
-                exception,
-                exception.getMessage(),
-                new HttpHeaders(),
-                HttpStatus.NOT_FOUND,
-                request
-        );
+
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        ApiErrorType apiErrorType = ApiErrorType.ENTITY_NOT_FOUND;
+        String detail = exception.getMessage();
+
+        ApiError apiError = createApiErrorBuilder(status, apiErrorType, detail)
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return handleExceptionInternal(exception, apiError, new HttpHeaders(), status, request);
     }
 
     @ExceptionHandler(EntityBeingUsedException.class)
     public ResponseEntity<?> handler(EntityBeingUsedException exception, WebRequest request) {
-        return handleExceptionInternal(
-                exception,
-                exception.getMessage(),
-                new HttpHeaders(),
-                HttpStatus.CONFLICT,
-                request
-        );
+
+        HttpStatus status = HttpStatus.CONFLICT;
+        ApiErrorType apiErrorType = ApiErrorType.ENTITY_BEING_USED;
+        String detail = exception.getMessage();
+
+        ApiError apiError = createApiErrorBuilder(status, apiErrorType, detail)
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return handleExceptionInternal(exception, apiError, new HttpHeaders(), status, request);
     }
 
     @ExceptionHandler(GenericBusinessException.class)
     public ResponseEntity<?> handler(GenericBusinessException exception, WebRequest request) {
-        return handleExceptionInternal(
-                exception,
-                exception.getMessage(),
-                new HttpHeaders(),
-                HttpStatus.BAD_REQUEST,
-                request
-        );
+
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        ApiErrorType apiErrorType = ApiErrorType.BUSINESS_EXCEPTION;
+        String detail = exception.getMessage();
+
+        ApiError apiError = createApiErrorBuilder(status, apiErrorType, detail)
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return handleExceptionInternal(exception, apiError, new HttpHeaders(), status, request);
     }
 
     /**
@@ -66,15 +75,35 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         if (body == null) {
             body = ApiError.builder()
                     .timestamp(LocalDateTime.now())
-                    .message(status.getReasonPhrase())
+                    .title(status.getReasonPhrase())
+                    .status(status.value())
                     .build();
         } else if (body instanceof String) {
             body = ApiError.builder()
                     .timestamp(LocalDateTime.now())
-                    .message((String) body)
+                    .title((String) body)
+                    .status(status.value())
                     .build();
         }
 
         return super.handleExceptionInternal(ex, body, headers, status, request);
+    }
+
+    /**
+     * A helper method that returns an ApiErrorBuilder with the default values set primary via an ENUM ApiErrorType.
+     * <p>
+     * This allows for any additional customization/field to used together wit the builder.
+     *
+     * @param status       the HTTP Status.
+     * @param apiErrorType the ENUM with the error type information (defines type and title).
+     * @param detail       the detailed message for the error.
+     * @return an ApiError.ApiErrorBuilder to be further customized with other property values.
+     */
+    private ApiError.ApiErrorBuilder createApiErrorBuilder(HttpStatus status, ApiErrorType apiErrorType, String detail) {
+        return ApiError.builder()
+                .status(status.value())
+                .type(apiErrorType.getUri())
+                .title(apiErrorType.getTitle())
+                .detail(detail);
     }
 }
