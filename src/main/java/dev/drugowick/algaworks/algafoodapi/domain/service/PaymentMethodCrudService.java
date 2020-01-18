@@ -2,6 +2,7 @@ package dev.drugowick.algaworks.algafoodapi.domain.service;
 
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityBeingUsedException;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundException;
+import dev.drugowick.algaworks.algafoodapi.domain.exception.PaymentMethodNotFoundException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.PaymentMethod;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.PaymentMethodRepository;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class PaymentMethodCrudService {
 
-    public static final String MSG_NO_PAYMENT_METHOD = "There's no Payment Method with the id %d.";
     public static final String MSG_PAYMENT_METHOD_CONFLICT = "Operation on Payment Method %d conflicts with another entity and can not be performed.";
 
     private PaymentMethodRepository paymentMethodRepository;
@@ -36,8 +36,7 @@ public class PaymentMethodCrudService {
             throw new EntityBeingUsedException(
                     String.format(MSG_PAYMENT_METHOD_CONFLICT, id));
         } catch (EmptyResultDataAccessException e) {
-            throw new EntityNotFoundException(
-                    String.format(MSG_NO_PAYMENT_METHOD, id));
+            throw new PaymentMethodNotFoundException(id);
         }
     }
 
@@ -49,8 +48,6 @@ public class PaymentMethodCrudService {
      */
     public PaymentMethod findOrElseThrow(Long id) {
         return paymentMethodRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        String.format(MSG_NO_PAYMENT_METHOD, id)
-                ));
+                .orElseThrow(() -> new PaymentMethodNotFoundException(id));
     }
 }

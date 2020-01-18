@@ -2,6 +2,7 @@ package dev.drugowick.algaworks.algafoodapi.domain.service;
 
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityBeingUsedException;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundException;
+import dev.drugowick.algaworks.algafoodapi.domain.exception.RestaurantNotFoundException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Cuisine;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Restaurant;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.CuisineRepository;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class RestaurantCrudService {
 
-	public static final String MSG_NO_RESTAURANT = "There's no Restaurant with the id %d.";
 	public static final String MSG_RESTAURANT_CONFLICT = "Operation on Restaurant %d conflicts with another entity and can not be performed.";
 
 	private RestaurantRepository restaurantRepository;
@@ -44,8 +44,7 @@ public class RestaurantCrudService {
 			throw new EntityBeingUsedException(
 					String.format(MSG_RESTAURANT_CONFLICT, id));
 		} catch (EmptyResultDataAccessException exception) {
-			throw new EntityNotFoundException(
-					String.format(MSG_NO_RESTAURANT, id));
+			throw new RestaurantNotFoundException(id);
 		}
 	}
 
@@ -57,8 +56,6 @@ public class RestaurantCrudService {
 	 */
 	public Restaurant findOrElseThrow(Long id) {
 		return restaurantRepository.findById(id)
-				.orElseThrow(() -> new EntityNotFoundException(
-						String.format(MSG_NO_RESTAURANT, id)
-				));
+				.orElseThrow(() -> new RestaurantNotFoundException(id));
 	}
 }

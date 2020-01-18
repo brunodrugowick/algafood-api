@@ -12,5 +12,8 @@ public class GenericBusinessException extends RuntimeException {
 		super(message);
 	}
 
+	public GenericBusinessException(String message, Throwable cause) {
+		super(message, cause);
+	}
 
 }

@@ -1,5 +1,6 @@
 package dev.drugowick.algaworks.algafoodapi.domain.service;
 
+import dev.drugowick.algaworks.algafoodapi.domain.exception.CityNotFoundException;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityBeingUsedException;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.City;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class CityCrudService {
 
-    public static final String MSG_NO_CITY = "There's no City with the id %d.";
     public static final String MSG_CITY_CONFLICT = "Operation on City %d conflicts with another entity and can not be performed.";
 
     private CityRepository cityRepository;
@@ -44,8 +44,7 @@ public class CityCrudService {
             throw new EntityBeingUsedException(
                     String.format(MSG_CITY_CONFLICT, id));
         } catch (EmptyResultDataAccessException e) {
-            throw new EntityNotFoundException(
-                    String.format(MSG_NO_CITY, id));
+            throw new CityNotFoundException(id);
         }
     }
 
@@ -57,8 +56,6 @@ public class CityCrudService {
      */
     public City findOrElseThrow(Long id) {
         return cityRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        String.format(MSG_NO_CITY, id)
-                ));
+                .orElseThrow(() -> new CityNotFoundException(id));
     }
 }

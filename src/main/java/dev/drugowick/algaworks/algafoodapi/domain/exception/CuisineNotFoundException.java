@@ -4,12 +4,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(code = HttpStatus.NOT_FOUND)
-public abstract class EntityNotFoundException extends GenericBusinessException {
+public class CuisineNotFoundException extends EntityNotFoundException {
 
 	private static final long serialVersionUID = 1L;
 
-	public EntityNotFoundException(String message) {
+	public CuisineNotFoundException(String message) {
 		super(message);
+	}
+
+	public CuisineNotFoundException(Long id) {
+		this(String.format("There's no Cuisine with the id %d.", id));
 	}
 
 }

@@ -55,7 +55,7 @@ public class CityController {
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(city);
         } catch (EntityNotFoundException e) {
-            throw new GenericBusinessException(e.getMessage());
+            throw new GenericBusinessException(e.getMessage(), e);
         }
     }
 
@@ -70,7 +70,7 @@ public class CityController {
             cityToUpdate = cityCrudService.save(cityToUpdate);
             return ResponseEntity.ok(cityToUpdate);
         } catch (EntityNotFoundException e) {
-            throw new GenericBusinessException(e.getMessage());
+            throw new GenericBusinessException(e.getMessage(), e);
         }
     }
 

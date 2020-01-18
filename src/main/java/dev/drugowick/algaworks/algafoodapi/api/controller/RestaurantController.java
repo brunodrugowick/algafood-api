@@ -44,7 +44,7 @@ public class RestaurantController {
 			return ResponseEntity.status(HttpStatus.CREATED)
 					.body(restaurant);
 		} catch (EntityNotFoundException e) {
-			throw new GenericBusinessException(e.getMessage());
+			throw new GenericBusinessException(e.getMessage(), e);
 		}
 	}
 
@@ -64,7 +64,7 @@ public class RestaurantController {
 			restaurantCrudService.save(restaurantToUpdate);
 			return ResponseEntity.ok(restaurantToUpdate);
 		} catch (EntityNotFoundException e) {
-			throw new GenericBusinessException(e.getMessage());
+			throw new GenericBusinessException(e.getMessage(), e);
 		}
 	}
 

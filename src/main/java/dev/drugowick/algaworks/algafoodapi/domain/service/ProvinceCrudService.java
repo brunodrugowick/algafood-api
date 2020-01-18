@@ -2,6 +2,7 @@ package dev.drugowick.algaworks.algafoodapi.domain.service;
 
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityBeingUsedException;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundException;
+import dev.drugowick.algaworks.algafoodapi.domain.exception.ProvinceNotFoundException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Province;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.ProvinceRepository;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProvinceCrudService {
 
-	public static final String MSG_NO_PROVINCE = "There's no Province with the id %d.";
 	public static final String MSG_PROVINCE_CONFLICT = "Operation on Province %d conflicts with another entity and can not be performed.";
 
 	private ProvinceRepository provinceRepository;
@@ -36,8 +36,7 @@ public class ProvinceCrudService {
 			throw new EntityBeingUsedException(
 					String.format(MSG_PROVINCE_CONFLICT, id));
 		} catch (EmptyResultDataAccessException e) {
-			throw new EntityNotFoundException(
-					String.format(MSG_NO_PROVINCE, id));
+			throw new ProvinceNotFoundException(id);
 		}
 	}
 
@@ -49,9 +48,7 @@ public class ProvinceCrudService {
 	 */
 	public Province findOrElseThrow(Long id) {
 		return provinceRepository.findById(id)
-				.orElseThrow(() -> new EntityNotFoundException(
-						String.format(MSG_NO_PROVINCE, id)
-				));
+				.orElseThrow(() -> new ProvinceNotFoundException(id));
 	}
 
 }

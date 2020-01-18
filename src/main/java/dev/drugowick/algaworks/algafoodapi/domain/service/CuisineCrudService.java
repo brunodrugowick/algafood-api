@@ -1,5 +1,6 @@
 package dev.drugowick.algaworks.algafoodapi.domain.service;
 
+import dev.drugowick.algaworks.algafoodapi.domain.exception.CuisineNotFoundException;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityBeingUsedException;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Cuisine;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class CuisineCrudService {
 
-	public static final String MSG_NO_CUISINE = "There's no Cuisine with the id %d.";
 	public static final String MSG_CUISINE_CONFLICT = "Operation on Cuisine %d conflicts with another entity and can not be performed.";
 
 	private CuisineRepository cuisineRepository;
@@ -41,8 +41,7 @@ public class CuisineCrudService {
 			throw new EntityBeingUsedException(
 					String.format(MSG_CUISINE_CONFLICT, id));
 		} catch (EmptyResultDataAccessException exception) {
-			throw new EntityNotFoundException(
-					String.format(MSG_NO_CUISINE, id));
+			throw new CuisineNotFoundException(id);
 		}
 	}
 
@@ -54,9 +53,7 @@ public class CuisineCrudService {
 	 */
 	public Cuisine findOrElseThrow(Long id) {
 		return cuisineRepository.findById(id)
-				.orElseThrow(() -> new EntityNotFoundException(
-						String.format(MSG_NO_CUISINE, id)
-				));
+				.orElseThrow(() -> new CuisineNotFoundException(id));
 	}
 
 }
