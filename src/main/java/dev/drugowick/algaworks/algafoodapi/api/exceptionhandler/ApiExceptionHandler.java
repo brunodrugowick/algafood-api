@@ -70,7 +70,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         }
 
         ApiErrorType apiErrorType = ApiErrorType.MESSAGE_NOT_READABLE;
-        String detail = "Invalid request body. Check your syntax.";
+        String detail = "Invalid request body. Check the syntax and properties of your request body" +
+                ".";
 
         ApiError problem = createApiErrorBuilder(status, apiErrorType, detail)
                 .build();
