@@ -65,6 +65,32 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @Override
+    protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers,
+                                                        HttpStatus status, WebRequest request) {
+
+        if (ex instanceof MethodArgumentTypeMismatchException) {
+            return handleMethodArgumentTypeMismatch((MethodArgumentTypeMismatchException) ex, headers, status, request);
+        }
+
+        return super.handleTypeMismatch(ex, headers, status, request);
+    }
+
+    private ResponseEntity<Object> handleMethodArgumentTypeMismatch(
+            MethodArgumentTypeMismatchException ex, HttpHeaders headers,
+            HttpStatus status, WebRequest request) {
+
+        ApiErrorType problemType = ApiErrorType.INVALID_PARAMETER;
+
+        String detail = String.format("The URL param '%s' with value '%s', "
+                        + "is invalid. The value must be compatible with the type %s.",
+                ex.getName(), ex.getValue(), ex.getRequiredType().getSimpleName());
+
+        ApiError apiError = createApiErrorBuilder(status, problemType, detail).build();
+
+        return handleExceptionInternal(ex, apiError, headers, status, request);
+    }
+
+    @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
                                                                   HttpHeaders headers, HttpStatus status, WebRequest request) {
         Throwable rootCause = ExceptionUtils.getRootCause(ex);

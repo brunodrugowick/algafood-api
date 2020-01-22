@@ -11,8 +11,9 @@ import lombok.Getter;
 @Getter
 public enum ApiErrorType {
 
+    INVALID_PARAMETER("/invalid-parameter", "Invalid Parameter"),
     MESSAGE_NOT_READABLE("/message-not-readable", "Message Not Readable"),
-    ENTITY_NOT_FOUND("/entity-not-found", "Entity Not Found"),
+    RESOURCE_NOT_FOUND("/resource-not-found", "Resource Not Found"),
     ENTITY_BEING_USED("/entity-being-used", "Entity Being Used"),
     BUSINESS_EXCEPTION("/business-exception", "Business Exception");
 
