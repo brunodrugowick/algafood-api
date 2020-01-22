@@ -25,6 +25,20 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> handler(Exception exception, WebRequest request) {
+
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        ApiErrorType apiErrorType = ApiErrorType.INTERNAL_SERVER_ERROR;
+        String detail = exception.getMessage();
+
+        exception.printStackTrace();
+
+        ApiError apiError = createApiErrorBuilder(status, apiErrorType, detail).build();
+
+        return handleExceptionInternal(exception, apiError, new HttpHeaders(), status, request);
+    }
+
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<?> handler(EntityNotFoundException exception, WebRequest request) {
 

@@ -11,6 +11,7 @@ import lombok.Getter;
 @Getter
 public enum ApiErrorType {
 
+    INTERNAL_SERVER_ERROR("/internal-server-error", "Internal Server Error"),
     INVALID_PARAMETER("/invalid-parameter", "Invalid Parameter"),
     MESSAGE_NOT_READABLE("/message-not-readable", "Message Not Readable"),
     RESOURCE_NOT_FOUND("/resource-not-found", "Resource Not Found"),
