@@ -6,11 +6,15 @@ import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessExcep
 import dev.drugowick.algaworks.algafoodapi.domain.model.Restaurant;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.RestaurantRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.RestaurantCrudService;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -69,10 +73,17 @@ public class RestaurantController {
 	}
 
 	@PatchMapping("/{id}")
-	public ResponseEntity<?> partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> restaurantMap) {
+	public ResponseEntity<?> partialUpdate(@PathVariable Long id, @RequestBody Map<String,
+			Object> restaurantMap, HttpServletRequest request) {
 		Restaurant restaurantToUpdate = restaurantCrudService.findOrElseThrow(id);
 
-		ObjectMerger.mergeRequestBodyToGenericObject(restaurantMap, restaurantToUpdate, Restaurant.class);
+		try {
+			ObjectMerger.mergeRequestBodyToGenericObject(restaurantMap, restaurantToUpdate, Restaurant.class);
+		} catch (IllegalArgumentException e) {
+			Throwable rootCause = ExceptionUtils.getRootCause(e);
+			var servletServerHttpRequest = new ServletServerHttpRequest(request);
+			throw new HttpMessageNotReadableException(e.getMessage(), rootCause, servletServerHttpRequest);
+		}
 
 		return update(id, restaurantToUpdate);
 	}

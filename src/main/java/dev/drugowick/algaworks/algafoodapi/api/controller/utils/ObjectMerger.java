@@ -1,5 +1,6 @@
 package dev.drugowick.algaworks.algafoodapi.api.controller.utils;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.util.ReflectionUtils;
 
@@ -24,6 +25,8 @@ public class ObjectMerger {
      */
     public static void mergeRequestBodyToGenericObject(Map<String, Object> objectMap, Object objectToUpdate, Class type) {
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, true);
         Object newObject = objectMapper.convertValue(objectMap, type);
 
         objectMap.forEach((fieldProp, valueProp) -> {

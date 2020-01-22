@@ -2,10 +2,12 @@ package dev.drugowick.algaworks.algafoodapi.api.exceptionhandler;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityBeingUsedException;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundException;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +15,11 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
@@ -25,7 +29,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<?> handler(EntityNotFoundException exception, WebRequest request) {
 
         HttpStatus status = HttpStatus.NOT_FOUND;
-        ApiErrorType apiErrorType = ApiErrorType.ENTITY_NOT_FOUND;
+        ApiErrorType apiErrorType = ApiErrorType.RESOURCE_NOT_FOUND;
         String detail = exception.getMessage();
 
         ApiError apiError = createApiErrorBuilder(status, apiErrorType, detail)
@@ -67,6 +71,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         if (rootCause instanceof InvalidFormatException) {
             return handleInvalidFormatException((InvalidFormatException) rootCause, headers, status, request);
+        } else if (rootCause instanceof PropertyBindingException) {
+            return handlePropertyBindingException((PropertyBindingException) rootCause, headers, status, request);
         }
 
         ApiErrorType apiErrorType = ApiErrorType.MESSAGE_NOT_READABLE;
@@ -79,15 +85,26 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, problem, headers, status, request);
     }
 
+    private ResponseEntity<Object> handlePropertyBindingException(PropertyBindingException ex,
+                                                                  HttpHeaders headers, HttpStatus status, WebRequest request) {
+        String path = joinPath(ex.getPath());
+
+        ApiErrorType apiErrorType = ApiErrorType.MESSAGE_NOT_READABLE;
+        String detail = String.format("The property '%s' does not exist. Remove or fix it and try again",
+                path);
+
+        ApiError apiError = createApiErrorBuilder(status, apiErrorType, detail).build();
+
+        return handleExceptionInternal(ex, apiError, headers, status, request);
+    }
+
     private ResponseEntity<Object> handleInvalidFormatException(InvalidFormatException ex,
                                                                 HttpHeaders headers, HttpStatus status, WebRequest request) {
-        String path = ex.getPath().stream()
-                .map(JsonMappingException.Reference::getFieldName)
-                .collect(Collectors.joining("."));
+        String path = joinPath(ex.getPath());
 
         ApiErrorType apiErrorType = ApiErrorType.MESSAGE_NOT_READABLE;
         String detail = String.format("The property '%s' with value '%s', "
-                        + "in invalid. The value must be compatible with the type %s.",
+                        + "is invalid. The value must be compatible with the type %s.",
                 path, ex.getValue(), ex.getTargetType().getSimpleName());
 
         ApiError apiError = createApiErrorBuilder(status, apiErrorType, detail).build();
@@ -143,5 +160,17 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 .title(apiErrorType.getTitle())
                 .detail(detail)
                 .timestamp(LocalDateTime.now());
+    }
+
+    /**
+     * A helper method to join property names with a dot.
+     *
+     * @param references
+     * @return
+     */
+    private String joinPath(List<JsonMappingException.Reference> references) {
+        return references.stream()
+                .map(ref -> ref.getFieldName())
+                .collect(Collectors.joining("."));
     }
 }
