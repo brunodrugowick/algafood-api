@@ -25,6 +25,8 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
+    public static final String DEFAULT_USER_MESSAGE = "Internal error. Please try again or contact the system administrator.";
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handler(Exception exception, WebRequest request) {
 
@@ -34,7 +36,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         exception.printStackTrace();
 
-        ApiError apiError = createApiErrorBuilder(status, apiErrorType, detail).build();
+        ApiError apiError = createApiErrorBuilder(status, apiErrorType, detail)
+                .build();
 
         return handleExceptionInternal(exception, apiError, new HttpHeaders(), status, request);
     }
@@ -47,6 +50,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         String detail = exception.getMessage();
 
         ApiError apiError = createApiErrorBuilder(status, apiErrorType, detail)
+                .userMessage(detail)
                 .build();
 
         return handleExceptionInternal(exception, apiError, new HttpHeaders(), status, request);
@@ -60,6 +64,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         String detail = exception.getMessage();
 
         ApiError apiError = createApiErrorBuilder(status, apiErrorType, detail)
+                .userMessage(detail)
                 .build();
 
         return handleExceptionInternal(exception, apiError, new HttpHeaders(), status, request);
@@ -73,6 +78,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         String detail = exception.getMessage();
 
         ApiError apiError = createApiErrorBuilder(status, apiErrorType, detail)
+                .userMessage(detail)
                 .build();
 
         return handleExceptionInternal(exception, apiError, new HttpHeaders(), status, request);
@@ -99,7 +105,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                         + "is invalid. The value must be compatible with the type %s.",
                 ex.getName(), ex.getValue(), ex.getRequiredType().getSimpleName());
 
-        ApiError apiError = createApiErrorBuilder(status, problemType, detail).build();
+        ApiError apiError = createApiErrorBuilder(status, problemType, detail)
+                .build();
 
         return handleExceptionInternal(ex, apiError, headers, status, request);
     }
@@ -133,7 +140,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         String detail = String.format("The property '%s' does not exist. Remove or fix it and try again",
                 path);
 
-        ApiError apiError = createApiErrorBuilder(status, apiErrorType, detail).build();
+        ApiError apiError = createApiErrorBuilder(status, apiErrorType, detail)
+                .build();
 
         return handleExceptionInternal(ex, apiError, headers, status, request);
     }
@@ -147,7 +155,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                         + "is invalid. The value must be compatible with the type %s.",
                 path, ex.getValue(), ex.getTargetType().getSimpleName());
 
-        ApiError apiError = createApiErrorBuilder(status, apiErrorType, detail).build();
+        ApiError apiError = createApiErrorBuilder(status, apiErrorType, detail)
+                .build();
 
         return handleExceptionInternal(ex, apiError, headers, status, request);
     }
@@ -171,12 +180,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                     .timestamp(LocalDateTime.now())
                     .title(status.getReasonPhrase())
                     .status(status.value())
+                    .userMessage(DEFAULT_USER_MESSAGE)
                     .build();
         } else if (body instanceof String) {
             body = ApiError.builder()
                     .timestamp(LocalDateTime.now())
                     .title((String) body)
                     .status(status.value())
+                    .userMessage(DEFAULT_USER_MESSAGE)
                     .build();
         }
 
@@ -199,6 +210,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 .type(apiErrorType.getUri())
                 .title(apiErrorType.getTitle())
                 .detail(detail)
+                .userMessage(DEFAULT_USER_MESSAGE)
                 .timestamp(LocalDateTime.now());
     }
 
