@@ -1,8 +1,7 @@
 package dev.drugowick.algaworks.algafoodapi.api.controller;
 
 import dev.drugowick.algaworks.algafoodapi.api.controller.utils.ObjectMerger;
-import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityBeingUsedException;
-import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundException;
+import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Permission;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.PermissionRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.PermissionCrudService;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/permissions")
@@ -42,58 +40,36 @@ public class PermissionController {
     public ResponseEntity<Permission> save(@RequestBody Permission permission) {
         // Temporary. Client should not send an ID when posting. See #2.
         if (permission.getId() != null) {
-            return ResponseEntity.badRequest()
-                    .build();
+            throw new GenericBusinessException("You should not send an ID when saving or updating an entity.");
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(permissionCrudService.save(permission));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Permission> get(@PathVariable Long id) {
-        Optional<Permission> permissionOptional = permissionRepository.findById(id);
-
-        if (permissionOptional.isPresent()) {
-            return ResponseEntity.ok(permissionOptional.get());
-        }
-
-        return ResponseEntity.notFound().build();
+    public Permission get(@PathVariable Long id) {
+        return permissionCrudService.findOrElseThrow(id);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Permission> update(@PathVariable Long id, @RequestBody Permission permission) {
-        Optional<Permission> permissionToUpdate = permissionRepository.findById(id);
+    public Permission update(@PathVariable Long id, @RequestBody Permission permission) {
+        Permission permissionToUpdate = permissionCrudService.findOrElseThrow(id);
 
-        if (permissionToUpdate.isPresent()) {
-            BeanUtils.copyProperties(permission, permissionToUpdate.get(), "id");
-            Permission permissionUpdated = permissionCrudService.save(permissionToUpdate.get());
-            return ResponseEntity.ok(permissionUpdated);
-        }
+        BeanUtils.copyProperties(permission, permissionToUpdate, "id");
 
-        return ResponseEntity.notFound().build();
+        return permissionCrudService.save(permissionToUpdate);
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<Permission> partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> permission) {
-        Optional<Permission> permissionToUpdate = permissionRepository.findById(id);
+    public Permission partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> permission) {
+        Permission permissionToUpdate = permissionCrudService.findOrElseThrow(id);
 
-        if (permissionToUpdate.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
+        ObjectMerger.mergeRequestBodyToGenericObject(permission, permissionToUpdate, Permission.class);
 
-        ObjectMerger.mergeRequestBodyToGenericObject(permission, permissionToUpdate.get(), Permission.class);
-
-        return update(id, permissionToUpdate.get());
+        return update(id, permissionToUpdate);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
-        try {
-            permissionCrudService.delete(id);
-            return ResponseEntity.noContent().build();
-        } catch (EntityBeingUsedException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    public void delete(@PathVariable Long id) {
+        permissionCrudService.delete(id);
     }
 }

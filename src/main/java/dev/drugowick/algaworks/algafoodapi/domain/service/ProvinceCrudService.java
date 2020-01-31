@@ -2,6 +2,7 @@ package dev.drugowick.algaworks.algafoodapi.domain.service;
 
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityBeingUsedException;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundException;
+import dev.drugowick.algaworks.algafoodapi.domain.exception.ProvinceNotFoundException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Province;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.ProvinceRepository;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProvinceCrudService {
 
+	public static final String MSG_PROVINCE_CONFLICT = "Operation on Province %d conflicts with another entity and can not be performed.";
+
 	private ProvinceRepository provinceRepository;
 
 	public ProvinceCrudService(ProvinceRepository provinceRepository) {
@@ -18,7 +21,12 @@ public class ProvinceCrudService {
 	}
 
 	public Province save(Province province) {
-		return provinceRepository.save(province);
+		try {
+			return provinceRepository.save(province);
+		} catch (DataIntegrityViolationException exception) {
+			throw new EntityBeingUsedException(
+					String.format(MSG_PROVINCE_CONFLICT, province.getId()));
+		}
 	}
 
 	public void delete(Long id) {
@@ -26,11 +34,21 @@ public class ProvinceCrudService {
 			provinceRepository.deleteById(id);
 		} catch (DataIntegrityViolationException e) {
 			throw new EntityBeingUsedException(
-					String.format("Province %d is being used by another entity and can not be removed.", id));
+					String.format(MSG_PROVINCE_CONFLICT, id));
 		} catch (EmptyResultDataAccessException e) {
-			throw new EntityNotFoundException(
-					String.format("There's no Province with the id %d.", id));
+			throw new ProvinceNotFoundException(id);
 		}
+	}
+
+	/**
+	 * Tries to find by ID and throws the business exception @{@link EntityNotFoundException} if not found.
+	 *
+	 * @param id of the entity to find.
+	 * @return the entity from the repository.
+	 */
+	public Province findOrElseThrow(Long id) {
+		return provinceRepository.findById(id)
+				.orElseThrow(() -> new ProvinceNotFoundException(id));
 	}
 
 }

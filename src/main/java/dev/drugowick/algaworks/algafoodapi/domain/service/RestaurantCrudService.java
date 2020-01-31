@@ -2,6 +2,7 @@ package dev.drugowick.algaworks.algafoodapi.domain.service;
 
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityBeingUsedException;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundException;
+import dev.drugowick.algaworks.algafoodapi.domain.exception.RestaurantNotFoundException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Cuisine;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Restaurant;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.CuisineRepository;
@@ -10,30 +11,30 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 public class RestaurantCrudService {
 
-	private RestaurantRepository restaurantRepository;
-	private CuisineRepository cuisineRepository;
+	public static final String MSG_RESTAURANT_CONFLICT = "Operation on Restaurant %d conflicts with another entity and can not be performed.";
 
-	public RestaurantCrudService(RestaurantRepository restaurantRepository, CuisineRepository cuisineRepository) {
+	private RestaurantRepository restaurantRepository;
+	private CuisineCrudService cuisineCrudService;
+
+	public RestaurantCrudService(RestaurantRepository restaurantRepository, CuisineRepository cuisineRepository, CuisineCrudService cuisineCrudService) {
 		this.restaurantRepository = restaurantRepository;
-		this.cuisineRepository = cuisineRepository;
+		this.cuisineCrudService = cuisineCrudService;
 	}
 
 	public Restaurant save(Restaurant restaurant) {
 		Long cuisineId = restaurant.getCuisine().getId();
-		Optional<Cuisine> cuisine = cuisineRepository.findById(cuisineId);
+		Cuisine cuisine = cuisineCrudService.findOrElseThrow(cuisineId);
 
-		if (cuisine.isEmpty()) {
-			throw new EntityNotFoundException(
-					String.format("No cuisine with ID %d", cuisineId));
+		restaurant.setCuisine(cuisine);
+		try {
+			return restaurantRepository.save(restaurant);
+		} catch (DataIntegrityViolationException exception) {
+			throw new EntityBeingUsedException(
+					String.format(MSG_RESTAURANT_CONFLICT, restaurant.getId()));
 		}
-
-		restaurant.setCuisine(cuisine.get());
-		return restaurantRepository.save(restaurant);
 	}
 
 	public void delete(Long id) {
@@ -41,10 +42,20 @@ public class RestaurantCrudService {
 			restaurantRepository.deleteById(id);
 		} catch (DataIntegrityViolationException exception) {
 			throw new EntityBeingUsedException(
-					String.format("Restaurant %d is being used by another entity and can not be removed.", id));
+					String.format(MSG_RESTAURANT_CONFLICT, id));
 		} catch (EmptyResultDataAccessException exception) {
-			throw new EntityNotFoundException(
-					String.format("There's no Restaurant with the id %d.", id));
+			throw new RestaurantNotFoundException(id);
 		}
+	}
+
+	/**
+	 * Tries to find by ID and throws the business exception @{@link EntityNotFoundException} if not found.
+	 *
+	 * @param id of the entity to find.
+	 * @return the entity from the repository.
+	 */
+	public Restaurant findOrElseThrow(Long id) {
+		return restaurantRepository.findById(id)
+				.orElseThrow(() -> new RestaurantNotFoundException(id));
 	}
 }

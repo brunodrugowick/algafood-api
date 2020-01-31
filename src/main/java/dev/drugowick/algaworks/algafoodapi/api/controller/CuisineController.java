@@ -1,8 +1,7 @@
 package dev.drugowick.algaworks.algafoodapi.api.controller;
 
 import dev.drugowick.algaworks.algafoodapi.api.controller.utils.ObjectMerger;
-import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityBeingUsedException;
-import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundException;
+import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Cuisine;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.CuisineRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.CuisineCrudService;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/cuisines")
@@ -42,65 +40,42 @@ public class CuisineController {
 	public ResponseEntity<Cuisine> save(@RequestBody Cuisine cuisine) {
 		// Temporary. Client should not send an ID when posting. See #2.
 		if (cuisine.getId() != null) {
-			return ResponseEntity.badRequest()
-					.build();
+			throw new GenericBusinessException("You should not send an ID when saving or updating an entity.");
 		}
-		return ResponseEntity.status(HttpStatus.CREATED).body(cuisinesCrudService.create(cuisine));
+		return ResponseEntity.status(HttpStatus.CREATED).body(cuisinesCrudService.save(cuisine));
 	}
-	
-	@GetMapping(value = { "/{id}" })
-	public ResponseEntity<Cuisine> get(@PathVariable Long id) {
-		Optional<Cuisine> cuisine = cuisineRepository.findById(id);
 
-		if (cuisine.isPresent()) {
-			return ResponseEntity.ok(cuisine.get());
-		}
-
-		return ResponseEntity.notFound().build();
+	@GetMapping(value = {"/{id}"})
+	public Cuisine get(@PathVariable Long id) {
+		return cuisinesCrudService.findOrElseThrow(id);
 	}
-	
+
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<Cuisine> update(@PathVariable Long id, @RequestBody Cuisine cuisine) {
-		Optional<Cuisine> cuisineToUpdate = cuisineRepository.findById(id);
+	public Cuisine update(@PathVariable Long id, @RequestBody Cuisine cuisine) {
+		Cuisine cuisineToUpdate = cuisinesCrudService.findOrElseThrow(id);
 
-		if (cuisineToUpdate.isPresent()) {
-			BeanUtils.copyProperties(cuisine, cuisineToUpdate.get(), "id");
-			Cuisine cuisineUpdated = cuisinesCrudService.update(id, cuisineToUpdate.get());
-			return ResponseEntity.ok(cuisineUpdated);
-		}
-
-		return ResponseEntity.notFound().build();
+		BeanUtils.copyProperties(cuisine, cuisineToUpdate, "id");
+		// The save method will update when an existing ID is being passed.
+		return cuisinesCrudService.save(cuisineToUpdate);
 	}
 
 	@PatchMapping("/{id}")
-	public ResponseEntity<?> partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> cuisineMap) {
-		Optional<Cuisine> cuisineToUpdate = cuisineRepository.findById(id);
+	public Cuisine partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> cuisineMap) {
+		Cuisine cuisineToUpdate = cuisinesCrudService.findOrElseThrow(id);
 
-		if (cuisineToUpdate.isEmpty()) {
-			return ResponseEntity.notFound().build();
-		}
+		ObjectMerger.mergeRequestBodyToGenericObject(cuisineMap, cuisineToUpdate, Cuisine.class);
 
-		ObjectMerger.mergeRequestBodyToGenericObject(cuisineMap, cuisineToUpdate.get(), Cuisine.class);
-
-		return update(id, cuisineToUpdate.get());
+		return update(id, cuisineToUpdate);
 	}
 
 	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<?> delete(@PathVariable Long id) {
-		try {
-			cuisinesCrudService.delete(id);
-			return ResponseEntity.noContent().build();
-		} catch (EntityBeingUsedException e) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-		} catch (EntityNotFoundException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-		}
-
+	public void delete(@PathVariable Long id) {
+		cuisinesCrudService.delete(id);
 	}
-/**
+
 	@GetMapping(value = "/by-name")
 	public List<Cuisine> cuisinesByName(@RequestParam("name") String name) {
-		return cuisineRepository.listByName(name);
+		return cuisineRepository.byNameLike(name);
 	}
- */
+
 }
