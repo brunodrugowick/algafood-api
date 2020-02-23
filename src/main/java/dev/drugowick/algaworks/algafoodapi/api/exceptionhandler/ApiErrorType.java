@@ -16,7 +16,8 @@ public enum ApiErrorType {
     MESSAGE_NOT_READABLE("/message-not-readable", "Message Not Readable"),
     RESOURCE_NOT_FOUND("/resource-not-found", "Resource Not Found"),
     ENTITY_BEING_USED("/entity-being-used", "Entity Being Used"),
-    BUSINESS_EXCEPTION("/business-exception", "Business Exception");
+    BUSINESS_EXCEPTION("/business-exception", "Business Exception"),
+    INVALID_DATA("/invalid-data", "Invalid Data");
 
     private String title;
     private String uri;

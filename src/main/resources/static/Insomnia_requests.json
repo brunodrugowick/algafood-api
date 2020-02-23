@@ -1,8 +1,8 @@
 {
   "_type": "export",
   "__export_format": 4,
-  "__export_date": "2019-12-29T15:49:34.678Z",
-  "__export_source": "insomnia.desktop.app:v7.0.6",
+  "__export_date": "2020-02-23T19:53:51.606Z",
+  "__export_source": "insomnia.desktop.app:v7.1.1",
   "resources": [
     {
       "_id": "req_642812f5cae146239a29d754374b8ace",
@@ -1248,8 +1248,40 @@
       "isPrivate": false,
       "metaSortKey": -1574726377966.5,
       "method": "POST",
-      "modified": 1576037985990,
+      "modified": 1582487050794,
       "name": "Save Restaurant",
+      "parameters": [],
+      "parentId": "fld_35ad49773d8748e388cbdbcd0fa76ca1",
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingFollowRedirects": "global",
+      "settingRebuildPath": true,
+      "settingSendCookies": true,
+      "settingStoreCookies": true,
+      "url": "{{ host }}/restaurants",
+      "_type": "request"
+    },
+    {
+      "_id": "req_5746ae24a8b7485abffbe1c4a44bacb6",
+      "authentication": {},
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\n\t\"cuisine\": {\n    \"id\": 2\n  }\n}"
+      },
+      "created": 1582487357616,
+      "description": "This request purposely does not send \"name\" and \"deliveryFee\" to show how Bean Validation works. \n\nError message should be:\n\n```json\n{\n  \"status\": 400,\n  \"type\": \"https://drugo.dev/algafoodapi/invalid-data\",\n  \"title\": \"Invalid Data\",\n  \"detail\": \"One or more fields are invalid or missing. Please, make sure you're sending the data according the API standards and try again.\",\n  \"userMessage\": \"One or more fields are invalid or missing. Please, make sure you're sending the data according the API standards and try again.\",\n  \"timestamp\": \"2020-02-23T16:52:16.161013\",\n  \"fieldsList\": [\n    {\n      \"name\": \"deliveryFee\",\n      \"userMessage\": \"must not be null\"\n    },\n    {\n      \"name\": \"name\",\n      \"userMessage\": \"must not be null\"\n    }\n  ]\n}\n```",
+      "headers": [
+        {
+          "id": "pair_7d52c896db2d441d87615b41a8851b40",
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "isPrivate": false,
+      "metaSortKey": -1574726377941.5,
+      "method": "POST",
+      "modified": 1582487610646,
+      "name": "Simulate Error on POST",
       "parameters": [],
       "parentId": "fld_35ad49773d8748e388cbdbcd0fa76ca1",
       "settingDisableRenderRequestBody": false,

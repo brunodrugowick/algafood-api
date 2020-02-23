@@ -6,12 +6,15 @@ import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityBeingUsedException;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundException;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessException;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -23,6 +26,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
+@Log4j2
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     public static final String DEFAULT_USER_MESSAGE = "Internal error. Please try again or contact the system administrator.";
@@ -40,6 +44,32 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 .build();
 
         return handleExceptionInternal(exception, apiError, new HttpHeaders(), status, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception, HttpHeaders headers, HttpStatus status, WebRequest request) {
+
+        HttpStatus stats = HttpStatus.BAD_REQUEST;
+        ApiErrorType apiErrorType = ApiErrorType.INVALID_DATA;
+        String detail = "One or more fields are invalid or missing. Please, make sure you're sending the data " +
+                "according the API standards and try again.";
+
+        BindingResult bindingResult = exception.getBindingResult();
+        List<ApiError.Field> fieldsList = bindingResult.getFieldErrors().stream()
+                .map(fieldError -> ApiError.Field.builder()
+                        .name(fieldError.getField())
+                        .userMessage(fieldError.getDefaultMessage())
+                        .build())
+                .collect(Collectors.toList());
+
+        exception.printStackTrace();
+
+        ApiError apiError = createApiErrorBuilder(status, apiErrorType, detail)
+                .userMessage(detail)
+                .fieldsList(fieldsList)
+                .build();
+
+        return handleExceptionInternal(exception, apiError, headers, status, request);
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
