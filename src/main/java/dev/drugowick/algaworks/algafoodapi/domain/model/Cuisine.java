@@ -18,7 +18,7 @@ import java.util.List;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 public class Cuisine {
 
-	@NotNull(groups = ValidationGroups.RestaurantOperations.class)
+	@NotNull(groups = ValidationGroups.CuisineId.class)
 	@EqualsAndHashCode.Include
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +34,7 @@ public class Cuisine {
 	 * only a constraint on the database.
 	 */
 
-	@NotBlank(groups = ValidationGroups.CuisineOperations.class)
+	@NotBlank
 	@Column(nullable = false)
 	private String name;
 

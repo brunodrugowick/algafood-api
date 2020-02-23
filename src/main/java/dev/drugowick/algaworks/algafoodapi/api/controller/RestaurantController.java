@@ -17,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +39,7 @@ public class RestaurantController {
 	}
 
 	@PostMapping
-	public ResponseEntity<?> save(@RequestBody @Validated(ValidationGroups.RestaurantOperations.class) Restaurant restaurant) {
+	public ResponseEntity<?> save(@RequestBody @Validated(ValidationGroups.CuisineId.class) Restaurant restaurant) {
 		// Temporary. Client should not send an ID when posting. See #2.
 		if (restaurant.getId() != null) {
 			throw new GenericBusinessException("You should not send an ID when saving or updating an entity.");
@@ -61,7 +62,7 @@ public class RestaurantController {
 
 	@PutMapping("/{id}")
 	public ResponseEntity<?> update(@PathVariable Long id,
-									@RequestBody @Validated(ValidationGroups.RestaurantOperations.class) Restaurant restaurant) {
+									@RequestBody @Valid Restaurant restaurant) {
 		Restaurant restaurantToUpdate = restaurantCrudService.findOrElseThrow(id);
 
 		BeanUtils.copyProperties(restaurant, restaurantToUpdate,

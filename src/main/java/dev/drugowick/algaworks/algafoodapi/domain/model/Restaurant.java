@@ -13,6 +13,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
+import javax.validation.groups.ConvertGroup;
+import javax.validation.groups.Default;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -36,17 +38,18 @@ public class Restaurant {
 	 * only a constraint on the database.
 	 */
 
-	@NotBlank(groups = ValidationGroups.RestaurantOperations.class)
+	@NotBlank
 	@Column(nullable = false)
 	private String name;
 
-	@NotNull(groups = ValidationGroups.RestaurantOperations.class)
+	@NotNull
 	@PositiveOrZero
 	@Column(nullable = false)
 	private BigDecimal deliveryFee;
 
-	@NotNull(groups = ValidationGroups.RestaurantOperations.class)
+	@NotNull
 	@Valid
+	@ConvertGroup(from = Default.class, to = ValidationGroups.CuisineId.class)
 	@ManyToOne
 	@JoinColumn(name = "cuisine_id", nullable = false)
 	private Cuisine cuisine;
