@@ -15,6 +15,7 @@ import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +37,7 @@ public class RestaurantController {
 	}
 
 	@PostMapping
-	public ResponseEntity<?> save(@RequestBody Restaurant restaurant) {
+	public ResponseEntity<?> save(@RequestBody @Valid Restaurant restaurant) {
 		// Temporary. Client should not send an ID when posting. See #2.
 		if (restaurant.getId() != null) {
 			throw new GenericBusinessException("You should not send an ID when saving or updating an entity.");
@@ -58,7 +59,7 @@ public class RestaurantController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Restaurant restaurant) {
+	public ResponseEntity<?> update(@PathVariable Long id, @RequestBody @Valid Restaurant restaurant) {
 		Restaurant restaurantToUpdate = restaurantCrudService.findOrElseThrow(id);
 
 		BeanUtils.copyProperties(restaurant, restaurantToUpdate,

@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -23,14 +24,15 @@ public class Restaurant {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	/**
-	 * @Column is included to exemplify its use, but it's not 
-	 * recommended here since the database will be generated 
-	 * via script and this is not a validation for the object, 
+	 * @Column is included to exemplify its use, but it's not
+	 * recommended here since the database will be generated
+	 * via script and this is not a validation for the object,
 	 * only a constraint on the database.
 	 */
 
+	@NotNull
 	@Column(nullable = false)
 	private String name;
 
