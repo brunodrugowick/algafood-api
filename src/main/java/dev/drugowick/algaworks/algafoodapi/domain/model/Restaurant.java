@@ -1,6 +1,7 @@
 package dev.drugowick.algaworks.algafoodapi.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import dev.drugowick.algaworks.algafoodapi.api.validation.ValidationGroups;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,16 +36,16 @@ public class Restaurant {
 	 * only a constraint on the database.
 	 */
 
-	@NotBlank
+	@NotBlank(groups = ValidationGroups.RestaurantOperations.class)
 	@Column(nullable = false)
 	private String name;
 
-	@NotNull
+	@NotNull(groups = ValidationGroups.RestaurantOperations.class)
 	@PositiveOrZero
 	@Column(nullable = false)
 	private BigDecimal deliveryFee;
 
-	@NotNull
+	@NotNull(groups = ValidationGroups.RestaurantOperations.class)
 	@Valid
 	@ManyToOne
 	@JoinColumn(name = "cuisine_id", nullable = false)

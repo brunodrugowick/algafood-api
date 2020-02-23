@@ -1,6 +1,7 @@
 package dev.drugowick.algaworks.algafoodapi.api.controller;
 
 import dev.drugowick.algaworks.algafoodapi.api.controller.utils.ObjectMerger;
+import dev.drugowick.algaworks.algafoodapi.api.validation.ValidationGroups;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Cuisine;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.CuisineRepository;
@@ -8,6 +9,7 @@ import dev.drugowick.algaworks.algafoodapi.domain.service.CuisineCrudService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,7 +39,7 @@ public class CuisineController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Cuisine> save(@RequestBody Cuisine cuisine) {
+	public ResponseEntity<Cuisine> save(@RequestBody @Validated(ValidationGroups.CuisineOperations.class) Cuisine cuisine) {
 		// Temporary. Client should not send an ID when posting. See #2.
 		if (cuisine.getId() != null) {
 			throw new GenericBusinessException("You should not send an ID when saving or updating an entity.");
@@ -51,7 +53,8 @@ public class CuisineController {
 	}
 
 	@PutMapping(value = "/{id}")
-	public Cuisine update(@PathVariable Long id, @RequestBody Cuisine cuisine) {
+	public Cuisine update(@PathVariable Long id,
+						  @RequestBody @Validated(ValidationGroups.CuisineOperations.class) Cuisine cuisine) {
 		Cuisine cuisineToUpdate = cuisinesCrudService.findOrElseThrow(id);
 
 		BeanUtils.copyProperties(cuisine, cuisineToUpdate, "id");

@@ -1,11 +1,13 @@
 package dev.drugowick.algaworks.algafoodapi.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import dev.drugowick.algaworks.algafoodapi.api.validation.ValidationGroups;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -16,7 +18,7 @@ import java.util.List;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 public class Cuisine {
 
-	@NotNull
+	@NotNull(groups = ValidationGroups.RestaurantOperations.class)
 	@EqualsAndHashCode.Include
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,6 +34,7 @@ public class Cuisine {
 	 * only a constraint on the database.
 	 */
 
+	@NotBlank(groups = ValidationGroups.CuisineOperations.class)
 	@Column(nullable = false)
 	private String name;
 
