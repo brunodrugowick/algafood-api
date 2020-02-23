@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -43,7 +44,7 @@ public class CityController {
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody City city) {
+    public ResponseEntity<?> save(@RequestBody @Valid City city) {
         // Temporary. Client should not send an ID when posting. See #2.
         if (city.getId() != null || city.getProvince() == null) {
             throw new GenericBusinessException("You should not send an ID when saving or updating an entity.");
@@ -60,7 +61,7 @@ public class CityController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody City city) {
+    public ResponseEntity<?> update(@PathVariable @Valid Long id, @RequestBody City city) {
         City cityToUpdate = cityCrudService.findOrElseThrow(id);
 
         BeanUtils.copyProperties(city, cityToUpdate, "id");

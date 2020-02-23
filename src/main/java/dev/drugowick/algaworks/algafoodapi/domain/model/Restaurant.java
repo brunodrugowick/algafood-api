@@ -25,7 +25,8 @@ import java.util.List;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 public class Restaurant {
-	
+
+	@NotNull(groups = ValidationGroups.RestaurantId.class)
 	@EqualsAndHashCode.Include
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

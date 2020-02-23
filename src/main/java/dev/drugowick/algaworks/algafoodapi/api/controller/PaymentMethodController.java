@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +38,7 @@ public class PaymentMethodController {
     }
 
     @PostMapping
-    public ResponseEntity<PaymentMethod> save(@RequestBody PaymentMethod paymentMethod) {
+    public ResponseEntity<PaymentMethod> save(@RequestBody @Valid PaymentMethod paymentMethod) {
         // Temporary. Client should not send an ID when posting. See #2.
         if (paymentMethod.getId() != null) {
             throw new GenericBusinessException("You should not send an ID when saving or updating an entity.");
@@ -51,7 +52,7 @@ public class PaymentMethodController {
     }
 
     @PutMapping("{id}")
-    public PaymentMethod update(@PathVariable Long id, @RequestBody PaymentMethod paymentMethod) {
+    public PaymentMethod update(@PathVariable Long id, @RequestBody @Valid PaymentMethod paymentMethod) {
         PaymentMethod paymentMethodToUpdate = paymentMethodCrudService.findOrElseThrow(id);
 
         BeanUtils.copyProperties(paymentMethod, paymentMethodToUpdate, "id");

@@ -1,11 +1,15 @@
 package dev.drugowick.algaworks.algafoodapi.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import dev.drugowick.algaworks.algafoodapi.api.validation.ValidationGroups;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +19,7 @@ import java.util.List;
 @Entity
 public class User {
 
+    @NotNull(groups = ValidationGroups.UserId.class)
     @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,12 +32,16 @@ public class User {
      * only a constraint on the database.
      */
 
+    @NotBlank
     @Column(nullable = false)
     private String name;
 
+    @Email
+    @NotBlank
     @Column(nullable = false, unique = true)
     private String email;
 
+    @NotBlank
     @Column(nullable = false)
     private String password;
 

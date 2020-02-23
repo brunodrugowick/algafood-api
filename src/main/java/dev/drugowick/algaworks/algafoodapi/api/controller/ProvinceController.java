@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -42,11 +43,11 @@ public class ProvinceController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Province> save(@RequestBody Province province) {
+	public ResponseEntity<Province> save(@RequestBody @Valid Province province) {
 		// Temporary. Client should not send an ID when posting. See #2.
 		if (province.getId() != null) {
-            throw new GenericBusinessException("You should not send an ID when saving or updating an entity.");
-        }
+			throw new GenericBusinessException("You should not send an ID when saving or updating an entity.");
+		}
 
 		province = provinceCrudService.save(province);
 
@@ -54,7 +55,7 @@ public class ProvinceController {
 	}
 
 	@PutMapping(value = "/{id}")
-	public Province update(@PathVariable Long id, @RequestBody Province province) {
+	public Province update(@PathVariable Long id, @RequestBody @Valid Province province) {
 		Province provinceToUpdate = provinceCrudService.findOrElseThrow(id);
 
 		BeanUtils.copyProperties(province, provinceToUpdate, "id");
