@@ -1,7 +1,6 @@
 package dev.drugowick.algaworks.algafoodapi.api.controller;
 
 import dev.drugowick.algaworks.algafoodapi.api.controller.utils.ObjectMerger;
-import dev.drugowick.algaworks.algafoodapi.api.validation.ValidationGroups;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundException;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Restaurant;
@@ -13,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,7 +37,7 @@ public class RestaurantController {
 	}
 
 	@PostMapping
-	public ResponseEntity<?> save(@RequestBody @Validated(ValidationGroups.CuisineId.class) Restaurant restaurant) {
+	public ResponseEntity<?> save(@RequestBody @Valid Restaurant restaurant) {
 		// Temporary. Client should not send an ID when posting. See #2.
 		if (restaurant.getId() != null) {
 			throw new GenericBusinessException("You should not send an ID when saving or updating an entity.");
