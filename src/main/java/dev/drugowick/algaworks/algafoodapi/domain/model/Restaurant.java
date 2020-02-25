@@ -2,6 +2,7 @@ package dev.drugowick.algaworks.algafoodapi.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.drugowick.algaworks.algafoodapi.api.validation.DeliveryFee;
+import dev.drugowick.algaworks.algafoodapi.api.validation.Multiple;
 import dev.drugowick.algaworks.algafoodapi.api.validation.ValidationGroups;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -43,6 +44,7 @@ public class Restaurant {
 	@Column(nullable = false)
 	private String name;
 
+	@Multiple(number = 2)
 	@DeliveryFee
 	@Column(nullable = false)
 	private BigDecimal deliveryFee;
