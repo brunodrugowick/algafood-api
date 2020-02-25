@@ -1,6 +1,7 @@
 package dev.drugowick.algaworks.algafoodapi.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import dev.drugowick.algaworks.algafoodapi.api.validation.DeliveryFee;
 import dev.drugowick.algaworks.algafoodapi.api.validation.ValidationGroups;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -12,7 +13,6 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
 import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 import java.math.BigDecimal;
@@ -43,8 +43,7 @@ public class Restaurant {
 	@Column(nullable = false)
 	private String name;
 
-	@NotNull
-	@PositiveOrZero
+	@DeliveryFee
 	@Column(nullable = false)
 	private BigDecimal deliveryFee;
 
