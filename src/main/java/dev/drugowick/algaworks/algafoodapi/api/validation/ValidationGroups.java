@@ -28,4 +28,13 @@ public interface ValidationGroups {
 
     interface AddresMandatoryInfo {
     }
+
+    interface GroupId {
+    }
+
+    interface OrderItemId {
+    }
+
+    interface ProductId {
+    }
 }

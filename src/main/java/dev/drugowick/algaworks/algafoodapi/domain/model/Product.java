@@ -1,11 +1,15 @@
 package dev.drugowick.algaworks.algafoodapi.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import dev.drugowick.algaworks.algafoodapi.api.validation.ValidationGroups;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 
 @Getter
@@ -14,6 +18,7 @@ import java.math.BigDecimal;
 @Entity
 public class Product {
 
+    @NotNull(groups = ValidationGroups.ProductId.class)
     @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,15 +31,20 @@ public class Product {
      * only a constraint on the database.
      */
 
+    @NotBlank
     @Column(nullable = false)
     private String name;
 
+    @NotBlank
     @Column(nullable = false)
     private String description;
 
+    @NotNull
+    @PositiveOrZero
     @Column(nullable = false)
     private BigDecimal price;
 
+    @NotNull
     @Column(nullable = false)
     private boolean active = false;
 

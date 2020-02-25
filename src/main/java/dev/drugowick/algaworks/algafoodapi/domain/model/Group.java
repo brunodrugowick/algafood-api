@@ -1,9 +1,12 @@
 package dev.drugowick.algaworks.algafoodapi.domain.model;
 
+import dev.drugowick.algaworks.algafoodapi.api.validation.ValidationGroups;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +15,7 @@ import java.util.List;
 @Entity(name = "group_")
 public class Group {
 
+    @NotNull(groups = ValidationGroups.GroupId.class)
     @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,9 +28,11 @@ public class Group {
      * only a constraint on the database.
      */
 
+    @NotBlank
     @Column(nullable = false)
     private String name;
 
+    @NotNull
     @ManyToMany
     @JoinTable(name = "group_permission",
             joinColumns = @JoinColumn(name = "group_id"),

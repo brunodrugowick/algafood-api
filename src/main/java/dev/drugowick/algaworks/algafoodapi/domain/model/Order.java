@@ -36,14 +36,17 @@ public class Order {
      * It's used, though, if you want to re-generate the ddl from JPA entities.
      */
 
+    @NotNull
     @PositiveOrZero
     @Column(nullable = false)
     private BigDecimal subtotal;
 
+    @NotNull
     @PositiveOrZero
     @Column(nullable = false)
     private BigDecimal deliveryFee;
 
+    @NotNull
     @PositiveOrZero
     @Column(nullable = false)
     private BigDecimal total;
