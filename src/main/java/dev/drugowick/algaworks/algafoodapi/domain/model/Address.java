@@ -2,7 +2,10 @@ package dev.drugowick.algaworks.algafoodapi.domain.model;
 
 import lombok.Data;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Data
 @Embeddable
@@ -20,7 +23,7 @@ public class Address {
     @Column(name = "address_region", nullable = false)
     private String region;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "address_city_id")
     private City city;
 }

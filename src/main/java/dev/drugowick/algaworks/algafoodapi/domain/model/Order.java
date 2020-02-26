@@ -1,6 +1,6 @@
 package dev.drugowick.algaworks.algafoodapi.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import dev.drugowick.algaworks.algafoodapi.api.validation.IfFreeDeliverySubtotalEqualsTotal;
 import dev.drugowick.algaworks.algafoodapi.api.validation.ValidationGroups;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,6 +16,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+// A custom annotation that validates if subtotal equals total when deliveryFee equals 0.
+@IfFreeDeliverySubtotalEqualsTotal(fieldDeliveryFee = "deliveryFee", fieldSubtotal = "subtotal", fieldTotal = "total")
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity(name = "order_")
@@ -89,7 +91,6 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    @JsonIgnore
     @Embedded
     private Address deliveryAddress;
 
