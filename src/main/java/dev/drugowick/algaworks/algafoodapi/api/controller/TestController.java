@@ -1,10 +1,13 @@
 package dev.drugowick.algaworks.algafoodapi.api.controller;
 
+import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.*;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -142,6 +145,23 @@ public class TestController {
         }
 
         return ResponseEntity.notFound().build();
+    }
+
+    /**
+     * POST to test the class-level annotation I created
+     * at {@link dev.drugowick.algaworks.algafoodapi.domain.validation.IfFreeDeliverySubtotalEqualsTotal}
+     */
+    @PostMapping("/orders")
+    public ResponseEntity<?> saveOrder(@RequestBody @Valid Order order) {
+        // Temporary. Client should not send an ID when posting. See #2.
+        if (order.getId() != null) {
+            throw new GenericBusinessException("You should not send an ID when saving or updating an entity.");
+        }
+
+        order = orderRepository.save(order);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(order);
     }
 
 }

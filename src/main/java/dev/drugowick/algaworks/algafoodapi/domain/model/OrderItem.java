@@ -1,10 +1,13 @@
 package dev.drugowick.algaworks.algafoodapi.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import dev.drugowick.algaworks.algafoodapi.domain.validation.ValidationGroups;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 
 @Data
@@ -12,6 +15,7 @@ import java.math.BigDecimal;
 @Entity(name = "order_item")
 public class OrderItem {
 
+    @NotNull(groups = ValidationGroups.OrderItemId.class)
     @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,18 +30,25 @@ public class OrderItem {
      * It's used, though, if you want to re-generate the ddl from JPA entities.
      */
 
+    @NotNull
+    @PositiveOrZero
     @Column(name = "amount", nullable = false)
     private Integer amount;
 
+    @NotNull
+    @PositiveOrZero
     @Column(name = "unit_price", nullable = false)
     private BigDecimal unitPrice;
 
+    @NotNull
+    @PositiveOrZero
     @Column(name = "total_price", nullable = false)
     private BigDecimal totalPrice;
 
     @Column(name = "notes")
     private String notes;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;

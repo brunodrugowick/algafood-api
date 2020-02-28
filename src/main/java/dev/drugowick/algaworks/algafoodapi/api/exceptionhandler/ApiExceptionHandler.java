@@ -3,15 +3,23 @@ package dev.drugowick.algaworks.algafoodapi.api.exceptionhandler;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
+import dev.drugowick.algaworks.algafoodapi.domain.exception.ApiValidationException;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityBeingUsedException;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundException;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessException;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -23,9 +31,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
+@Log4j2
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     public static final String DEFAULT_USER_MESSAGE = "Internal error. Please try again or contact the system administrator.";
+
+    @Autowired
+    private MessageSource messageSource;
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handler(Exception exception, WebRequest request) {
@@ -40,6 +52,16 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 .build();
 
         return handleExceptionInternal(exception, apiError, new HttpHeaders(), status, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        return handleValidationInternal(exception, exception.getBindingResult(), headers, status, request);
+    }
+
+    @ExceptionHandler(ApiValidationException.class)
+    public ResponseEntity<Object> handleApiValidationException(ApiValidationException exception, WebRequest request) {
+        return handleValidationInternal(exception, exception.getBindingResult(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
@@ -192,6 +214,36 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         }
 
         return super.handleExceptionInternal(ex, body, headers, status, request);
+    }
+
+    private ResponseEntity<Object> handleValidationInternal(Exception exception, BindingResult bindingResult,
+                                                            HttpHeaders headers, HttpStatus status, WebRequest request) {
+        ApiErrorType apiErrorType = ApiErrorType.INVALID_DATA;
+        String detail = "One or more fields are invalid or missing. Please, make sure you're sending the data " +
+                "according the API standards and try again.";
+
+        List<ApiError.Object> errorsList = bindingResult.getAllErrors().stream()
+                .map(objectError -> {
+                    String message = messageSource.getMessage(objectError, LocaleContextHolder.getLocale());
+
+                    String name = objectError.getObjectName();
+                    if (objectError instanceof FieldError) name = ((FieldError) objectError).getField();
+
+                    return ApiError.Object.builder()
+                            .name(name)
+                            .userMessage(message)
+                            .build();
+                })
+                .collect(Collectors.toList());
+
+        exception.printStackTrace();
+
+        ApiError apiError = createApiErrorBuilder(status, apiErrorType, detail)
+                .userMessage(detail)
+                .errorObjects(errorsList)
+                .build();
+
+        return handleExceptionInternal(exception, apiError, headers, status, request);
     }
 
     /**

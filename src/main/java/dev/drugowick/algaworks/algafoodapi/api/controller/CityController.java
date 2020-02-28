@@ -6,11 +6,13 @@ import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessExcep
 import dev.drugowick.algaworks.algafoodapi.domain.model.City;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.CityRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.CityCrudService;
+import dev.drugowick.algaworks.algafoodapi.domain.service.ValidationService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -26,10 +28,12 @@ public class CityController {
 
     private CityRepository cityRepository;
     private CityCrudService cityCrudService;
+    private ValidationService validationService;
 
-    public CityController(CityRepository cityRepository, CityCrudService cityCrudService) {
+    public CityController(CityRepository cityRepository, CityCrudService cityCrudService, ValidationService validationService) {
         this.cityRepository = cityRepository;
         this.cityCrudService = cityCrudService;
+        this.validationService = validationService;
     }
 
     @GetMapping
@@ -43,7 +47,7 @@ public class CityController {
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody City city) {
+    public ResponseEntity<?> save(@RequestBody @Valid City city) {
         // Temporary. Client should not send an ID when posting. See #2.
         if (city.getId() != null || city.getProvince() == null) {
             throw new GenericBusinessException("You should not send an ID when saving or updating an entity.");
@@ -60,7 +64,7 @@ public class CityController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody City city) {
+    public ResponseEntity<?> update(@PathVariable @Valid Long id, @RequestBody City city) {
         City cityToUpdate = cityCrudService.findOrElseThrow(id);
 
         BeanUtils.copyProperties(city, cityToUpdate, "id");
@@ -79,6 +83,7 @@ public class CityController {
         City cityToUpdate = cityCrudService.findOrElseThrow(id);
 
         ObjectMerger.mergeRequestBodyToGenericObject(cityMap, cityToUpdate, City.class);
+        validationService.validate(cityToUpdate, "city");
 
         return update(id, cityToUpdate);
     }

@@ -5,11 +5,13 @@ import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessExcep
 import dev.drugowick.algaworks.algafoodapi.domain.model.Cuisine;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.CuisineRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.CuisineCrudService;
+import dev.drugowick.algaworks.algafoodapi.domain.service.ValidationService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -25,10 +27,12 @@ public class CuisineController {
 
 	private CuisineRepository cuisineRepository;
 	private CuisineCrudService cuisinesCrudService;
+	private ValidationService validationService;
 
-	public CuisineController(CuisineRepository cuisineRepository, CuisineCrudService cuisinesCrudService) {
+	public CuisineController(CuisineRepository cuisineRepository, CuisineCrudService cuisinesCrudService, ValidationService validationService) {
 		this.cuisineRepository = cuisineRepository;
 		this.cuisinesCrudService = cuisinesCrudService;
+		this.validationService = validationService;
 	}
 
 	@GetMapping
@@ -37,7 +41,7 @@ public class CuisineController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Cuisine> save(@RequestBody Cuisine cuisine) {
+	public ResponseEntity<Cuisine> save(@RequestBody @Valid Cuisine cuisine) {
 		// Temporary. Client should not send an ID when posting. See #2.
 		if (cuisine.getId() != null) {
 			throw new GenericBusinessException("You should not send an ID when saving or updating an entity.");
@@ -51,7 +55,8 @@ public class CuisineController {
 	}
 
 	@PutMapping(value = "/{id}")
-	public Cuisine update(@PathVariable Long id, @RequestBody Cuisine cuisine) {
+	public Cuisine update(@PathVariable Long id,
+						  @RequestBody @Valid Cuisine cuisine) {
 		Cuisine cuisineToUpdate = cuisinesCrudService.findOrElseThrow(id);
 
 		BeanUtils.copyProperties(cuisine, cuisineToUpdate, "id");
@@ -64,6 +69,7 @@ public class CuisineController {
 		Cuisine cuisineToUpdate = cuisinesCrudService.findOrElseThrow(id);
 
 		ObjectMerger.mergeRequestBodyToGenericObject(cuisineMap, cuisineToUpdate, Cuisine.class);
+		validationService.validate(cuisineToUpdate, "cuisine");
 
 		return update(id, cuisineToUpdate);
 	}

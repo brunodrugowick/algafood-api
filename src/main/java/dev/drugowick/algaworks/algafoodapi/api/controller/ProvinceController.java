@@ -5,11 +5,13 @@ import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessExcep
 import dev.drugowick.algaworks.algafoodapi.domain.model.Province;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.ProvinceRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.ProvinceCrudService;
+import dev.drugowick.algaworks.algafoodapi.domain.service.ValidationService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -25,10 +27,12 @@ public class ProvinceController {
 
 	private ProvinceRepository provinceRepository;
 	private ProvinceCrudService provinceCrudService;
+	private ValidationService validationService;
 
-	public ProvinceController(ProvinceRepository provinceRepository, ProvinceCrudService provinceCrudService) {
+	public ProvinceController(ProvinceRepository provinceRepository, ProvinceCrudService provinceCrudService, ValidationService validationService) {
 		this.provinceRepository = provinceRepository;
 		this.provinceCrudService = provinceCrudService;
+		this.validationService = validationService;
 	}
 
 	@GetMapping
@@ -42,11 +46,11 @@ public class ProvinceController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Province> save(@RequestBody Province province) {
+	public ResponseEntity<Province> save(@RequestBody @Valid Province province) {
 		// Temporary. Client should not send an ID when posting. See #2.
 		if (province.getId() != null) {
-            throw new GenericBusinessException("You should not send an ID when saving or updating an entity.");
-        }
+			throw new GenericBusinessException("You should not send an ID when saving or updating an entity.");
+		}
 
 		province = provinceCrudService.save(province);
 
@@ -54,7 +58,7 @@ public class ProvinceController {
 	}
 
 	@PutMapping(value = "/{id}")
-	public Province update(@PathVariable Long id, @RequestBody Province province) {
+	public Province update(@PathVariable Long id, @RequestBody @Valid Province province) {
 		Province provinceToUpdate = provinceCrudService.findOrElseThrow(id);
 
 		BeanUtils.copyProperties(province, provinceToUpdate, "id");
@@ -68,6 +72,7 @@ public class ProvinceController {
 		Province provinceToUpdate = provinceCrudService.findOrElseThrow(id);
 
 		ObjectMerger.mergeRequestBodyToGenericObject(provinceMap, provinceToUpdate, Province.class);
+		validationService.validate(provinceToUpdate, "province");
 
 		return update(id, provinceToUpdate);
 	}
