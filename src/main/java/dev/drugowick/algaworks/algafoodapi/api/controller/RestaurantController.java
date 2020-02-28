@@ -6,6 +6,7 @@ import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessExcep
 import dev.drugowick.algaworks.algafoodapi.domain.model.Restaurant;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.RestaurantRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.RestaurantCrudService;
+import dev.drugowick.algaworks.algafoodapi.domain.service.ValidationService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
@@ -25,10 +26,12 @@ public class RestaurantController {
 
 	private RestaurantRepository restaurantRepository;
 	private RestaurantCrudService restaurantCrudService;
+	private ValidationService validationService;
 
-	public RestaurantController(RestaurantRepository restaurantRepository, RestaurantCrudService restaurantCrudService) {
+	public RestaurantController(RestaurantRepository restaurantRepository, RestaurantCrudService restaurantCrudService, ValidationService validationService) {
 		this.restaurantRepository = restaurantRepository;
 		this.restaurantCrudService = restaurantCrudService;
+		this.validationService = validationService;
 	}
 
 	@GetMapping
@@ -87,6 +90,7 @@ public class RestaurantController {
 			throw new HttpMessageNotReadableException(e.getMessage(), rootCause, servletServerHttpRequest);
 		}
 
+		validationService.validate(restaurantToUpdate, "restaurant");
 		return update(id, restaurantToUpdate);
 	}
 

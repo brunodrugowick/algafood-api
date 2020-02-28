@@ -1,6 +1,6 @@
 package dev.drugowick.algaworks.algafoodapi.domain.model;
 
-import dev.drugowick.algaworks.algafoodapi.api.validation.ValidationGroups;
+import dev.drugowick.algaworks.algafoodapi.domain.validation.ValidationGroups;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

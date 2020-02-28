@@ -5,6 +5,7 @@ import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessExcep
 import dev.drugowick.algaworks.algafoodapi.domain.model.PaymentMethod;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.PaymentMethodRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.PaymentMethodCrudService;
+import dev.drugowick.algaworks.algafoodapi.domain.service.ValidationService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,10 +27,12 @@ public class PaymentMethodController {
 
     private PaymentMethodRepository paymentMethodRepository;
     private PaymentMethodCrudService paymentMethodCrudService;
+    private ValidationService validationService;
 
-    public PaymentMethodController(PaymentMethodRepository paymentMethodRepository, PaymentMethodCrudService paymentMethodCrudService) {
+    public PaymentMethodController(PaymentMethodRepository paymentMethodRepository, PaymentMethodCrudService paymentMethodCrudService, ValidationService validationService) {
         this.paymentMethodRepository = paymentMethodRepository;
         this.paymentMethodCrudService = paymentMethodCrudService;
+        this.validationService = validationService;
     }
 
     @GetMapping
@@ -65,6 +68,7 @@ public class PaymentMethodController {
         PaymentMethod paymentMethodToUpdate = paymentMethodCrudService.findOrElseThrow(id);
 
         ObjectMerger.mergeRequestBodyToGenericObject(paymentMethod, paymentMethodToUpdate, PaymentMethod.class);
+        validationService.validate(paymentMethodToUpdate, "paymentMethod");
 
         return update(id, paymentMethodToUpdate);
     }

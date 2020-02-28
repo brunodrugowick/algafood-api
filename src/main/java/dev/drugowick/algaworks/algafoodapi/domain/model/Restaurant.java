@@ -1,9 +1,9 @@
 package dev.drugowick.algaworks.algafoodapi.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import dev.drugowick.algaworks.algafoodapi.api.validation.DeliveryFee;
-import dev.drugowick.algaworks.algafoodapi.api.validation.Multiple;
-import dev.drugowick.algaworks.algafoodapi.api.validation.ValidationGroups;
+import dev.drugowick.algaworks.algafoodapi.domain.validation.DeliveryFee;
+import dev.drugowick.algaworks.algafoodapi.domain.validation.Multiple;
+import dev.drugowick.algaworks.algafoodapi.domain.validation.ValidationGroups;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;

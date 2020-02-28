@@ -1,6 +1,6 @@
 package dev.drugowick.algaworks.algafoodapi.domain.model;
 
-import dev.drugowick.algaworks.algafoodapi.api.validation.ValidationGroups;
+import dev.drugowick.algaworks.algafoodapi.domain.validation.ValidationGroups;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,6 +8,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Getter
 @Setter
@@ -33,7 +34,8 @@ public class Province {
 	@Column(nullable = false)
 	private String name;
 
-	@NotBlank
+	@NotBlank // Maybe not necessary with the size validation
+	@Size(min = 1, max = 2)
 	@Column(nullable = false)
 	private String abbreviation;
 

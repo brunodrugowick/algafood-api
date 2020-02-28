@@ -5,6 +5,7 @@ import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessExcep
 import dev.drugowick.algaworks.algafoodapi.domain.model.Cuisine;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.CuisineRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.CuisineCrudService;
+import dev.drugowick.algaworks.algafoodapi.domain.service.ValidationService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,10 +27,12 @@ public class CuisineController {
 
 	private CuisineRepository cuisineRepository;
 	private CuisineCrudService cuisinesCrudService;
+	private ValidationService validationService;
 
-	public CuisineController(CuisineRepository cuisineRepository, CuisineCrudService cuisinesCrudService) {
+	public CuisineController(CuisineRepository cuisineRepository, CuisineCrudService cuisinesCrudService, ValidationService validationService) {
 		this.cuisineRepository = cuisineRepository;
 		this.cuisinesCrudService = cuisinesCrudService;
+		this.validationService = validationService;
 	}
 
 	@GetMapping
@@ -66,6 +69,7 @@ public class CuisineController {
 		Cuisine cuisineToUpdate = cuisinesCrudService.findOrElseThrow(id);
 
 		ObjectMerger.mergeRequestBodyToGenericObject(cuisineMap, cuisineToUpdate, Cuisine.class);
+		validationService.validate(cuisineToUpdate, "cuisine");
 
 		return update(id, cuisineToUpdate);
 	}

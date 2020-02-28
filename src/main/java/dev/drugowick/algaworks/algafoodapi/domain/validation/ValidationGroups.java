@@ -1,4 +1,4 @@
-package dev.drugowick.algaworks.algafoodapi.api.validation;
+package dev.drugowick.algaworks.algafoodapi.domain.validation;
 
 public interface ValidationGroups {
 

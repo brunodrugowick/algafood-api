@@ -5,6 +5,7 @@ import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessExcep
 import dev.drugowick.algaworks.algafoodapi.domain.model.Province;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.ProvinceRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.ProvinceCrudService;
+import dev.drugowick.algaworks.algafoodapi.domain.service.ValidationService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,10 +27,12 @@ public class ProvinceController {
 
 	private ProvinceRepository provinceRepository;
 	private ProvinceCrudService provinceCrudService;
+	private ValidationService validationService;
 
-	public ProvinceController(ProvinceRepository provinceRepository, ProvinceCrudService provinceCrudService) {
+	public ProvinceController(ProvinceRepository provinceRepository, ProvinceCrudService provinceCrudService, ValidationService validationService) {
 		this.provinceRepository = provinceRepository;
 		this.provinceCrudService = provinceCrudService;
+		this.validationService = validationService;
 	}
 
 	@GetMapping
@@ -69,6 +72,7 @@ public class ProvinceController {
 		Province provinceToUpdate = provinceCrudService.findOrElseThrow(id);
 
 		ObjectMerger.mergeRequestBodyToGenericObject(provinceMap, provinceToUpdate, Province.class);
+		validationService.validate(provinceToUpdate, "province");
 
 		return update(id, provinceToUpdate);
 	}

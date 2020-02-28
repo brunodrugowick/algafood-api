@@ -1,7 +1,7 @@
 package dev.drugowick.algaworks.algafoodapi.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import dev.drugowick.algaworks.algafoodapi.api.validation.ValidationGroups;
+import dev.drugowick.algaworks.algafoodapi.domain.validation.ValidationGroups;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;

@@ -5,6 +5,7 @@ import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessExcep
 import dev.drugowick.algaworks.algafoodapi.domain.model.Permission;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.PermissionRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.PermissionCrudService;
+import dev.drugowick.algaworks.algafoodapi.domain.service.ValidationService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,10 +27,12 @@ public class PermissionController {
 
     private PermissionRepository permissionRepository;
     private PermissionCrudService permissionCrudService;
+    private ValidationService validationService;
 
-    public PermissionController(PermissionRepository permissionRepository, PermissionCrudService permissionCrudService) {
+    public PermissionController(PermissionRepository permissionRepository, PermissionCrudService permissionCrudService, ValidationService validationService) {
         this.permissionRepository = permissionRepository;
         this.permissionCrudService = permissionCrudService;
+        this.validationService = validationService;
     }
 
     @GetMapping
@@ -65,6 +68,7 @@ public class PermissionController {
         Permission permissionToUpdate = permissionCrudService.findOrElseThrow(id);
 
         ObjectMerger.mergeRequestBodyToGenericObject(permission, permissionToUpdate, Permission.class);
+        validationService.validate(permissionToUpdate, "permission");
 
         return update(id, permissionToUpdate);
     }

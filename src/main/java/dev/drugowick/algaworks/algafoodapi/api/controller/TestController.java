@@ -149,7 +149,7 @@ public class TestController {
 
     /**
      * POST to test the class-level annotation I created
-     * at {@link dev.drugowick.algaworks.algafoodapi.api.validation.IfFreeDeliverySubtotalEqualsTotal}
+     * at {@link dev.drugowick.algaworks.algafoodapi.domain.validation.IfFreeDeliverySubtotalEqualsTotal}
      */
     @PostMapping("/orders")
     public ResponseEntity<?> saveOrder(@RequestBody @Valid Order order) {

@@ -6,6 +6,7 @@ import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessExcep
 import dev.drugowick.algaworks.algafoodapi.domain.model.City;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.CityRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.CityCrudService;
+import dev.drugowick.algaworks.algafoodapi.domain.service.ValidationService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +28,12 @@ public class CityController {
 
     private CityRepository cityRepository;
     private CityCrudService cityCrudService;
+    private ValidationService validationService;
 
-    public CityController(CityRepository cityRepository, CityCrudService cityCrudService) {
+    public CityController(CityRepository cityRepository, CityCrudService cityCrudService, ValidationService validationService) {
         this.cityRepository = cityRepository;
         this.cityCrudService = cityCrudService;
+        this.validationService = validationService;
     }
 
     @GetMapping
@@ -80,6 +83,7 @@ public class CityController {
         City cityToUpdate = cityCrudService.findOrElseThrow(id);
 
         ObjectMerger.mergeRequestBodyToGenericObject(cityMap, cityToUpdate, City.class);
+        validationService.validate(cityToUpdate, "city");
 
         return update(id, cityToUpdate);
     }
