@@ -10,6 +10,7 @@ import dev.drugowick.algaworks.algafoodapi.domain.repository.RestaurantRepositor
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class RestaurantCrudService {
@@ -24,6 +25,7 @@ public class RestaurantCrudService {
 		this.cuisineCrudService = cuisineCrudService;
 	}
 
+	@Transactional
 	public Restaurant save(Restaurant restaurant) {
 		Long cuisineId = restaurant.getCuisine().getId();
 		Cuisine cuisine = cuisineCrudService.findOrElseThrow(cuisineId);
@@ -37,6 +39,7 @@ public class RestaurantCrudService {
 		}
 	}
 
+	@Transactional
 	public void delete(Long id) {
 		try {
 			restaurantRepository.deleteById(id);

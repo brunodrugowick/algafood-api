@@ -10,6 +10,7 @@ import dev.drugowick.algaworks.algafoodapi.domain.repository.ProvinceRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CityCrudService {
@@ -24,6 +25,7 @@ public class CityCrudService {
         this.provinceCrudService = provinceCrudService;
     }
 
+    @Transactional
     public City save(City city) {
         Long provinceId = city.getProvince().getId();
         Province province = provinceCrudService.findOrElseThrow(provinceId);
@@ -37,6 +39,7 @@ public class CityCrudService {
         }
     }
 
+    @Transactional
     public void delete(Long id) {
         try {
             cityRepository.deleteById(id);

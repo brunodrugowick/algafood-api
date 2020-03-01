@@ -8,6 +8,7 @@ import dev.drugowick.algaworks.algafoodapi.domain.repository.PermissionRepositor
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PermissionCrudService {
@@ -20,6 +21,7 @@ public class PermissionCrudService {
         this.permissionRepository = permissionRepository;
     }
 
+    @Transactional
     public Permission save(Permission permission) {
         try {
             return permissionRepository.save(permission);
@@ -29,6 +31,7 @@ public class PermissionCrudService {
         }
     }
 
+    @Transactional
     public void delete(Long id) {
         try {
             permissionRepository.deleteById(id);

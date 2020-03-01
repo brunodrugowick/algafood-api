@@ -8,6 +8,7 @@ import dev.drugowick.algaworks.algafoodapi.domain.repository.PaymentMethodReposi
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PaymentMethodCrudService {
@@ -20,6 +21,7 @@ public class PaymentMethodCrudService {
         this.paymentMethodRepository = paymentMethodRepository;
     }
 
+    @Transactional
     public PaymentMethod save(PaymentMethod paymentMethod) {
         try {
             return paymentMethodRepository.save(paymentMethod);
@@ -29,6 +31,7 @@ public class PaymentMethodCrudService {
         }
     }
 
+    @Transactional
     public void delete(Long id) {
         try {
             paymentMethodRepository.deleteById(id);
