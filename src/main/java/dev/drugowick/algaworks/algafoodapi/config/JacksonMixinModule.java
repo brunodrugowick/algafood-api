@@ -22,5 +22,6 @@ public class JacksonMixinModule extends SimpleModule {
         setMixInAnnotation(OrderItem.class, OrderItemMixin.class);
         setMixInAnnotation(Product.class, ProductMixin.class);
         setMixInAnnotation(User.class, UserMixin.class);
+        setMixInAnnotation(City.class, CityMixin.class);
     }
 }
