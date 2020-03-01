@@ -1,6 +1,7 @@
 package dev.drugowick.algaworks.algafoodapi.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import dev.drugowick.algaworks.algafoodapi.domain.validation.DeliveryFee;
 import dev.drugowick.algaworks.algafoodapi.domain.validation.Multiple;
 import dev.drugowick.algaworks.algafoodapi.domain.validation.ValidationGroups;
@@ -49,6 +50,7 @@ public class Restaurant {
 	@Column(nullable = false)
 	private BigDecimal deliveryFee;
 
+	@JsonIgnoreProperties(value = "name", allowGetters = true)
 	@NotNull
 	@Valid
 	@ConvertGroup(from = Default.class, to = ValidationGroups.CuisineId.class)
