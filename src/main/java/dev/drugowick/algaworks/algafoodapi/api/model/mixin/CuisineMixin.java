@@ -5,7 +5,7 @@ import dev.drugowick.algaworks.algafoodapi.domain.model.Restaurant;
 
 import java.util.List;
 
-public class CuisineMixin {
+public abstract class CuisineMixin {
 
     @JsonIgnore
     List<Restaurant> restaurants;

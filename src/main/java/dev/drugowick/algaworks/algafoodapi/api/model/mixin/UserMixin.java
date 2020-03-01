@@ -6,7 +6,7 @@ import dev.drugowick.algaworks.algafoodapi.domain.model.Permission;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserMixin {
+public abstract class UserMixin {
 
     @JsonIgnore
     private List<Permission> groups = new ArrayList<>();
