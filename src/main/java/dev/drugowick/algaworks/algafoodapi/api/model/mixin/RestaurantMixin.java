@@ -7,7 +7,7 @@ import dev.drugowick.algaworks.algafoodapi.domain.model.Cuisine;
 import dev.drugowick.algaworks.algafoodapi.domain.model.PaymentMethod;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Product;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,10 +20,10 @@ public abstract class RestaurantMixin {
     private Address address;
 
     @JsonIgnore
-    private LocalDateTime createdDate;
+    private OffsetDateTime createdDate;
 
     @JsonIgnore
-    private LocalDateTime updatedDate;
+    private OffsetDateTime updatedDate;
 
     @JsonIgnore
     private List<PaymentMethod> paymentMethods = new ArrayList<PaymentMethod>();

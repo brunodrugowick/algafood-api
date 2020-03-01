@@ -9,7 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +46,7 @@ public class User {
 
     @CreationTimestamp
     @Column(nullable = false, columnDefinition = "datetime", updatable = false)
-    private LocalDateTime createdDate;
+    private OffsetDateTime createdDate;
 
     @ManyToMany
     @JoinTable(name = "user_group",

@@ -26,7 +26,8 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -142,6 +143,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
             return handleInvalidFormatException((InvalidFormatException) rootCause, headers, status, request);
         } else if (rootCause instanceof PropertyBindingException) {
             return handlePropertyBindingException((PropertyBindingException) rootCause, headers, status, request);
+        } else if (rootCause instanceof DateTimeParseException) {
+            return handleDateTimeParseException((DateTimeParseException) rootCause, headers, status, request);
         }
 
         ApiErrorType apiErrorType = ApiErrorType.MESSAGE_NOT_READABLE;
@@ -183,6 +186,21 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, apiError, headers, status, request);
     }
 
+    public ResponseEntity<Object> handleDateTimeParseException(DateTimeParseException exception,
+                                                               HttpHeaders headers, HttpStatus status, WebRequest request) {
+
+        ApiErrorType apiErrorType = ApiErrorType.MESSAGE_NOT_READABLE;
+        // TODO customize message... maybe.
+        String detail = exception.getMessage();
+
+        exception.printStackTrace();
+
+        ApiError apiError = createApiErrorBuilder(status, apiErrorType, detail)
+                .build();
+
+        return handleExceptionInternal(exception, apiError, new HttpHeaders(), status, request);
+    }
+
     /**
      * Customizes Spring's handleExceptionInternal to create a default body for all possible exceptions already
      * handled by ResponseEntityExceptionHandler class that we extend here.
@@ -199,14 +217,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         if (body == null) {
             body = ApiError.builder()
-                    .timestamp(LocalDateTime.now())
+                    .timestamp(OffsetDateTime.now())
                     .title(status.getReasonPhrase())
                     .status(status.value())
                     .userMessage(DEFAULT_USER_MESSAGE)
                     .build();
         } else if (body instanceof String) {
             body = ApiError.builder()
-                    .timestamp(LocalDateTime.now())
+                    .timestamp(OffsetDateTime.now())
                     .title((String) body)
                     .status(status.value())
                     .userMessage(DEFAULT_USER_MESSAGE)
@@ -263,7 +281,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 .title(apiErrorType.getTitle())
                 .detail(detail)
                 .userMessage(DEFAULT_USER_MESSAGE)
-                .timestamp(LocalDateTime.now());
+                .timestamp(OffsetDateTime.now());
     }
 
     /**

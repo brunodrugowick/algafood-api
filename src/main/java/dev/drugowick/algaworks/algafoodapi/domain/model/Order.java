@@ -13,7 +13,7 @@ import javax.validation.constraints.PositiveOrZero;
 import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 // A custom annotation that validates if subtotal equals total when deliveryFee equals 0.
@@ -55,16 +55,16 @@ public class Order {
 
     @CreationTimestamp
     @Column(nullable = false, columnDefinition = "datetime", updatable = false)
-    private LocalDateTime createdDate;
+    private OffsetDateTime createdDate;
 
     @Column(nullable = true, columnDefinition = "datetime")
-    private LocalDateTime confirmationDate;
+    private OffsetDateTime confirmationDate;
 
     @Column(nullable = true, columnDefinition = "datetime")
-    private LocalDateTime cancellationDate;
+    private OffsetDateTime cancellationDate;
 
     @Column(nullable = true, columnDefinition = "datetime")
-    private LocalDateTime deliveryDate;
+    private OffsetDateTime deliveryDate;
 
     @NotNull
     @Valid
