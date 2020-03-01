@@ -1,0 +1,7 @@
+{
+  "name": "Restaurante Test 2",
+  "deliveryFee": 12.00,
+  "cuisine": {
+    "id": __cuisine_id__
+  }
+}
