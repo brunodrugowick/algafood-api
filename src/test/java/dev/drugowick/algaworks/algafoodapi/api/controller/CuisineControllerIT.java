@@ -1,28 +1,34 @@
 package dev.drugowick.algaworks.algafoodapi.api.controller;
 
+import dev.drugowick.algaworks.algafoodapi.domain.model.Cuisine;
+import dev.drugowick.algaworks.algafoodapi.domain.repository.CuisineRepository;
+import dev.drugowick.algaworks.algafoodapi.util.DatabaseCleaner;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.TestPropertySource;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-//@TestPropertySource("/application-test.properties")
+@TestPropertySource("/application-test.properties")
 class CuisineControllerIT {
 
     @LocalServerPort
     private int port;
 
     @Autowired
-    private Flyway flyway;
+    private DatabaseCleaner databaseCleaner;
+
+    @Autowired
+    private CuisineRepository cuisineRepository;
 
     @BeforeEach
     void setUp() {
@@ -30,7 +36,18 @@ class CuisineControllerIT {
         RestAssured.port = port;
         RestAssured.basePath = "cuisines";
 
-        flyway.migrate();
+        databaseCleaner.clearTables();
+        insertData();
+    }
+
+    private void insertData() {
+        Cuisine cuisine1 = new Cuisine();
+        cuisine1.setName("Italian");
+        cuisineRepository.save(cuisine1);
+
+        Cuisine cuisine2 = new Cuisine();
+        cuisine2.setName("Brazilian");
+        cuisineRepository.save(cuisine2);
     }
 
     @Test
@@ -44,7 +61,7 @@ class CuisineControllerIT {
     }
 
     @Test
-    public void shouldReturn4Items_WhenListingCuisines() {
+    public void shouldReturn2Items_WhenListingCuisines() {
         given()
                 .accept(ContentType.JSON)
         .when()
