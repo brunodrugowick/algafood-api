@@ -1,6 +1,5 @@
 package dev.drugowick.algaworks.algafoodapi.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.drugowick.algaworks.algafoodapi.domain.validation.ValidationGroups;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -49,7 +48,6 @@ public class User {
     @Column(nullable = false, columnDefinition = "datetime", updatable = false)
     private LocalDateTime createdDate;
 
-    @JsonIgnore
     @ManyToMany
     @JoinTable(name = "user_group",
             joinColumns = @JoinColumn(name = "user_id"),

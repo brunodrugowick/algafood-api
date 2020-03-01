@@ -1,8 +1,8 @@
 package dev.drugowick.algaworks.algafoodapi.config;
 
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import dev.drugowick.algaworks.algafoodapi.api.model.mixin.RestaurantMixin;
-import dev.drugowick.algaworks.algafoodapi.domain.model.Restaurant;
+import dev.drugowick.algaworks.algafoodapi.api.model.mixin.*;
+import dev.drugowick.algaworks.algafoodapi.domain.model.*;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,5 +18,9 @@ public class JacksonMixinModule extends SimpleModule {
 
     public JacksonMixinModule() {
         setMixInAnnotation(Restaurant.class, RestaurantMixin.class);
+        setMixInAnnotation(Cuisine.class, CuisineMixin.class);
+        setMixInAnnotation(OrderItem.class, OrderItemMixin.class);
+        setMixInAnnotation(Product.class, ProductMixin.class);
+        setMixInAnnotation(User.class, UserMixin.class);
     }
 }
