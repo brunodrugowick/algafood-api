@@ -1,0 +1,7 @@
+{
+  "name": "Restaurante Test 2",
+  "deliveryFee": 11.00,
+  "cuisine": {
+    "id": 1
+  }
+}
