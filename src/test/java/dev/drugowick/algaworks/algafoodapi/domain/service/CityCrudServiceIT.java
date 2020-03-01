@@ -34,10 +34,6 @@ class CityCrudServiceIT {
     }
 
     @Test
-    void save() {
-    }
-
-    @Test
     void saveWithoutName() {
         City city = new City();
         city.setProvince(province);
@@ -49,22 +45,9 @@ class CityCrudServiceIT {
     }
 
     @Test
-    void delete() {
-    }
-
-    @Test
-    void deleteInUse() {
-
-    }
-
-    @Test
     void deleteNonExistent() {
         assertThrows(CityNotFoundException.class, () -> {
             cityCrudService.delete(-10L);
         });
-    }
-
-    @Test
-    void findOrElseThrow() {
     }
 }
