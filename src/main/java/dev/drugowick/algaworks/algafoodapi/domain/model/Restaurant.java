@@ -43,7 +43,7 @@ public class Restaurant {
 	@Column(nullable = false)
 	private String name;
 
-	@Multiple(number = 2)
+	@Multiple(number = 3)
 	@DeliveryFee
 	@Column(nullable = false)
 	private BigDecimal deliveryFee;

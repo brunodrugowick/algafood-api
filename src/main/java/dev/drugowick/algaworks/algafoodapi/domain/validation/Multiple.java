@@ -18,7 +18,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Constraint(validatedBy = { MultipleValidator.class })
 public @interface Multiple {
 
-    String message() default "is not multiple";
+    String message() default "must be multiple of {number}";
 
     Class<?>[] groups() default { };
 
