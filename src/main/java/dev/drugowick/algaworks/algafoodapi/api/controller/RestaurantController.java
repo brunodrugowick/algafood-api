@@ -10,7 +10,6 @@ import dev.drugowick.algaworks.algafoodapi.domain.model.Restaurant;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.RestaurantRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.RestaurantCrudService;
 import dev.drugowick.algaworks.algafoodapi.domain.service.ValidationService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -61,24 +60,32 @@ public class RestaurantController {
 	@PutMapping("/{id}")
 	public ResponseEntity<?> update(@PathVariable Long id,
 									@RequestBody @Valid RestaurantInput restaurantInput) {
-
-		Restaurant restaurant = restaurantInputDisassembler.toDomain(restaurantInput);
-		Restaurant restaurantToUpdate = restaurantCrudService.findOrElseThrow(id);
-
-		BeanUtils.copyProperties(restaurant, restaurantToUpdate,
-				"id", "paymentMethods", "address", "createdDate", "updatedDate");
 		try {
+			Restaurant restaurantToUpdate = restaurantCrudService.findOrElseThrow(id);
+			restaurantInputDisassembler.copyToDomainObject(restaurantInput, restaurantToUpdate);
 			// The save method will update when an existing ID is being passed.
-			restaurantCrudService.save(restaurantToUpdate);
-			return ResponseEntity.ok(restaurantModelAssembler.toModel(restaurantToUpdate));
+			return ResponseEntity.ok(restaurantModelAssembler.toModel(restaurantCrudService.save(restaurantToUpdate)));
 		} catch (EntityNotFoundException e) {
 			throw new GenericBusinessException(e.getMessage(), e);
 		}
 	}
 
+//	@PatchMapping("/{id}")
+//	public ResponseEntity<?> partialUpdate(@PathVariable Long id, @RequestBody Map<String,
+//			Object> restaurantMap, HttpServletRequest request) {
+//		Restaurant restaurantToUpdate = restaurantCrudService.findOrElseThrow(id);
 //
-
-
+//		try {
+//			ObjectMerger.mergeRequestBodyToGenericObject(restaurantMap, restaurantToUpdate, Restaurant.class);
+//		} catch (IllegalArgumentException e) {
+//			Throwable rootCause = ExceptionUtils.getRootCause(e);
+//			var servletServerHttpRequest = new ServletServerHttpRequest(request);
+//			throw new HttpMessageNotReadableException(e.getMessage(), rootCause, servletServerHttpRequest);
+//		}
+//
+//		validationService.validate(restaurantToUpdate, "restaurant");
+//		return update(id, restaurantToUpdate);
+//	}
 
 	@DeleteMapping("/{id}")
 	public void delete(@PathVariable Long id) {
