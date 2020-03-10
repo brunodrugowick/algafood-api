@@ -14,8 +14,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/restaurants")
@@ -70,9 +72,10 @@ public class RestaurantController {
 		}
 	}
 
-//	@PatchMapping("/{id}")
-//	public ResponseEntity<?> partialUpdate(@PathVariable Long id, @RequestBody Map<String,
-//			Object> restaurantMap, HttpServletRequest request) {
+	@PatchMapping("/{id}")
+	public ResponseEntity<?> partialUpdate(@PathVariable Long id, @RequestBody Map<String,
+				Object> restaurantMap, HttpServletRequest request) {
+		throw new GenericBusinessException("This method is temporarily not allowed.");
 //		Restaurant restaurantToUpdate = restaurantCrudService.findOrElseThrow(id);
 //
 //		try {
@@ -85,7 +88,7 @@ public class RestaurantController {
 //
 //		validationService.validate(restaurantToUpdate, "restaurant");
 //		return update(id, restaurantToUpdate);
-//	}
+	}
 
 	@DeleteMapping("/{id}")
 	public void delete(@PathVariable Long id) {
