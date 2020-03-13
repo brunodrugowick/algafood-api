@@ -1,12 +1,14 @@
 package dev.drugowick.algaworks.algafoodapi.api.controller;
 
-import dev.drugowick.algaworks.algafoodapi.api.controller.utils.ObjectMerger;
+import dev.drugowick.algaworks.algafoodapi.api.assembler.GenericInputDisassembler;
+import dev.drugowick.algaworks.algafoodapi.api.assembler.GenericModelAssembler;
+import dev.drugowick.algaworks.algafoodapi.api.model.ProvinceModel;
+import dev.drugowick.algaworks.algafoodapi.api.model.input.ProvinceInput;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Province;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.ProvinceRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.ProvinceCrudService;
 import dev.drugowick.algaworks.algafoodapi.domain.service.ValidationService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,53 +30,57 @@ public class ProvinceController {
 	private ProvinceRepository provinceRepository;
 	private ProvinceCrudService provinceCrudService;
 	private ValidationService validationService;
+	private GenericModelAssembler<Province, ProvinceModel> genericModelAssembler;
+	private GenericInputDisassembler<ProvinceInput, Province> genericInputDisassembler;
 
-	public ProvinceController(ProvinceRepository provinceRepository, ProvinceCrudService provinceCrudService, ValidationService validationService) {
+	public ProvinceController(ProvinceRepository provinceRepository,
+							  ProvinceCrudService provinceCrudService,
+							  ValidationService validationService,
+							  GenericModelAssembler<Province, ProvinceModel> genericModelAssembler,
+							  GenericInputDisassembler<ProvinceInput, Province> genericInputDisassembler) {
 		this.provinceRepository = provinceRepository;
 		this.provinceCrudService = provinceCrudService;
 		this.validationService = validationService;
+		this.genericModelAssembler = genericModelAssembler;
+		this.genericInputDisassembler = genericInputDisassembler;
 	}
 
 	@GetMapping
-	public List<Province> list() {
-		return provinceRepository.findAll();
+	public List<ProvinceModel> list() {
+		return genericModelAssembler.toCollectionModel(provinceRepository.findAll(), ProvinceModel.class);
 	}
 
 	@GetMapping("/{id}")
-	public Province get(@PathVariable Long id) {
-		return provinceCrudService.findOrElseThrow(id);
+	public ProvinceModel get(@PathVariable Long id) {
+		return genericModelAssembler.toModel(provinceCrudService.findOrElseThrow(id), ProvinceModel.class);
 	}
 
 	@PostMapping
-	public ResponseEntity<Province> save(@RequestBody @Valid Province province) {
-		// Temporary. Client should not send an ID when posting. See #2.
-		if (province.getId() != null) {
-			throw new GenericBusinessException("You should not send an ID when saving or updating an entity.");
-		}
+	public ResponseEntity<ProvinceModel> save(@RequestBody @Valid ProvinceInput provinceInput) {
 
-		province = provinceCrudService.save(province);
+		Province province = genericInputDisassembler.toDomain(provinceInput, Province.class);
 
-		return ResponseEntity.status(HttpStatus.CREATED).body(province);
+		return ResponseEntity.status(HttpStatus.CREATED)
+				.body(genericModelAssembler.toModel(provinceRepository.save(province), ProvinceModel.class));
 	}
 
 	@PutMapping(value = "/{id}")
-	public Province update(@PathVariable Long id, @RequestBody @Valid Province province) {
+	public ProvinceModel update(@PathVariable Long id, @RequestBody @Valid ProvinceInput provinceInput) {
 		Province provinceToUpdate = provinceCrudService.findOrElseThrow(id);
-
-		BeanUtils.copyProperties(province, provinceToUpdate, "id");
-
+		genericInputDisassembler.copyToDomainObject(provinceInput, provinceToUpdate);
 		// The save method will update when an existing ID is being passed.
-		return provinceRepository.save(provinceToUpdate);
+		return genericModelAssembler.toModel(provinceRepository.save(provinceToUpdate), ProvinceModel.class);
 	}
 
 	@PatchMapping("/{id}")
 	public Province partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> provinceMap) {
-		Province provinceToUpdate = provinceCrudService.findOrElseThrow(id);
-
-		ObjectMerger.mergeRequestBodyToGenericObject(provinceMap, provinceToUpdate, Province.class);
-		validationService.validate(provinceToUpdate, "province");
-
-		return update(id, provinceToUpdate);
+		throw new GenericBusinessException("This method is temporarily not allowed.");
+//		Province provinceToUpdate = provinceCrudService.findOrElseThrow(id);
+//
+//		ObjectMerger.mergeRequestBodyToGenericObject(provinceMap, provinceToUpdate, Province.class);
+//		validationService.validate(provinceToUpdate, "province");
+//
+//		return update(id, provinceToUpdate);
 	}
 
 	@DeleteMapping(value = "/{id}")

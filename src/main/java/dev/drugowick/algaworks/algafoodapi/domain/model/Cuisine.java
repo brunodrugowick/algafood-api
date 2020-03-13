@@ -10,6 +10,13 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
+/**
+ * I'm choosing to keep the domain objects validation prone. This is a project decision considering there may e some
+ * for of integration that's not via the API we are providing ourselves.
+ *
+ * For example, if this application has a CLI or if another module or app access the domain directly (without using the
+ * controllers) validation may come in handy.
+ */
 @Getter
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
