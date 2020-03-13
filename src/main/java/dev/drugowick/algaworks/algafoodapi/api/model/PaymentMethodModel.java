@@ -6,13 +6,13 @@ import lombok.Setter;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-@Setter
 @Getter
-public class CuisineModel {
+@Setter
+public class PaymentMethodModel {
 
     @NotNull
     private Long id;
 
     @NotBlank
-    private String name;
+    private String description;
 }

@@ -1,7 +1,7 @@
 package dev.drugowick.algaworks.algafoodapi.api.controller;
 
-import dev.drugowick.algaworks.algafoodapi.api.assembler.CuisineInputDisassembler;
-import dev.drugowick.algaworks.algafoodapi.api.assembler.CuisineModelAssembler;
+import dev.drugowick.algaworks.algafoodapi.api.assembler.GenericInputDisassembler;
+import dev.drugowick.algaworks.algafoodapi.api.assembler.GenericModelAssembler;
 import dev.drugowick.algaworks.algafoodapi.api.model.CuisineModel;
 import dev.drugowick.algaworks.algafoodapi.api.model.input.CuisineInput;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessException;
@@ -30,41 +30,45 @@ public class CuisineController {
 	private CuisineRepository cuisineRepository;
 	private CuisineCrudService cuisinesCrudService;
 	private ValidationService validationService;
-	private CuisineModelAssembler cuisineModelAssembler;
-	private CuisineInputDisassembler cuisineInputDisassembler;
+	private GenericModelAssembler<Cuisine, CuisineModel> genericModelAssembler;
+	private GenericInputDisassembler<CuisineInput, Cuisine> genericInputDisassembler;
 
-	public CuisineController(CuisineRepository cuisineRepository, CuisineCrudService cuisinesCrudService, ValidationService validationService, CuisineModelAssembler cuisineModelAssembler, CuisineInputDisassembler cuisineInputDisassembler) {
+	public CuisineController(CuisineRepository cuisineRepository,
+							 CuisineCrudService cuisinesCrudService,
+							 ValidationService validationService,
+							 GenericModelAssembler<Cuisine, CuisineModel> genericModelAssembler,
+							 GenericInputDisassembler<CuisineInput, Cuisine> genericInputDisassembler) {
 		this.cuisineRepository = cuisineRepository;
 		this.cuisinesCrudService = cuisinesCrudService;
 		this.validationService = validationService;
-		this.cuisineModelAssembler = cuisineModelAssembler;
-		this.cuisineInputDisassembler = cuisineInputDisassembler;
+		this.genericModelAssembler = genericModelAssembler;
+		this.genericInputDisassembler = genericInputDisassembler;
 	}
 
 	@GetMapping
 	public List<CuisineModel> list() {
-		return cuisineModelAssembler.toCollectionModel(cuisineRepository.findAll());
+		return genericModelAssembler.toCollectionModel(cuisineRepository.findAll(), CuisineModel.class);
 	}
 
 	@PostMapping
 	public ResponseEntity<CuisineModel> save(@RequestBody @Valid CuisineInput cuisineInput) {
-		Cuisine cuisine = cuisineInputDisassembler.toDomain(cuisineInput);
+		Cuisine cuisine = genericInputDisassembler.toDomain(cuisineInput, Cuisine.class);
 		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(cuisineModelAssembler.toModel(cuisinesCrudService.save(cuisine)));
+				.body(genericModelAssembler.toModel(cuisinesCrudService.save(cuisine), CuisineModel.class));
 	}
 
 	@GetMapping(value = {"/{id}"})
 	public CuisineModel get(@PathVariable Long id) {
-		return cuisineModelAssembler.toModel(cuisinesCrudService.findOrElseThrow(id));
+		return genericModelAssembler.toModel(cuisinesCrudService.findOrElseThrow(id), CuisineModel.class);
 	}
 
 	@PutMapping(value = "/{id}")
 	public CuisineModel update(@PathVariable Long id,
 						  @RequestBody @Valid CuisineInput cuisineInput) {
 		Cuisine cuisineToUpdate = cuisinesCrudService.findOrElseThrow(id);
-		cuisineInputDisassembler.copyToDomainObject(cuisineInput, cuisineToUpdate);
+		genericInputDisassembler.copyToDomainObject(cuisineInput, cuisineToUpdate);
 		// The save method will update when an existing ID is being passed.
-		return cuisineModelAssembler.toModel(cuisinesCrudService.save(cuisineToUpdate));
+		return genericModelAssembler.toModel(cuisinesCrudService.save(cuisineToUpdate), CuisineModel.class);
 	}
 
 	@PatchMapping("/{id}")
@@ -85,7 +89,7 @@ public class CuisineController {
 
 	@GetMapping(value = "/by-name")
 	public List<CuisineModel> cuisinesByName(@RequestParam("name") String name) {
-		return cuisineModelAssembler.toCollectionModel(cuisineRepository.byNameLike(name));
+		return genericModelAssembler.toCollectionModel(cuisineRepository.byNameLike(name), CuisineModel.class);
 	}
 
 }
