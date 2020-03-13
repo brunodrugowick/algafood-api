@@ -43,6 +43,8 @@ public class RestaurantCrudService {
 	public void delete(Long id) {
 		try {
 			restaurantRepository.deleteById(id);
+			// Flushing here guarantees the DB exceptions below can be caught.
+			restaurantRepository.flush();
 		} catch (DataIntegrityViolationException exception) {
 			throw new EntityBeingUsedException(
 					String.format(MSG_RESTAURANT_CONFLICT, id));

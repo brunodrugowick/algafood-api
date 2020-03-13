@@ -35,6 +35,8 @@ public class PaymentMethodCrudService {
     public void delete(Long id) {
         try {
             paymentMethodRepository.deleteById(id);
+            // Flushing here guarantees the DB exceptions below can be caught.
+            paymentMethodRepository.flush();
         } catch (DataIntegrityViolationException e) {
             throw new EntityBeingUsedException(
                     String.format(MSG_PAYMENT_METHOD_CONFLICT, id));

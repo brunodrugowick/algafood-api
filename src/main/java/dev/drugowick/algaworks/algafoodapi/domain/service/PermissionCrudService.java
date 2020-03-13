@@ -35,6 +35,8 @@ public class PermissionCrudService {
     public void delete(Long id) {
         try {
             permissionRepository.deleteById(id);
+            // Flushing here guarantees the DB exceptions below can be caught.
+            permissionRepository.flush();
         } catch (DataIntegrityViolationException e) {
             throw new EntityBeingUsedException(
                     String.format(MSG_PERMISSION_CONFLICT, id));

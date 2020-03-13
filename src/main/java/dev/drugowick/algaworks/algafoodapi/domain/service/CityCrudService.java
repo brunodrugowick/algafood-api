@@ -43,6 +43,8 @@ public class CityCrudService {
     public void delete(Long id) {
         try {
             cityRepository.deleteById(id);
+            // Flushing here guarantees the DB exceptions below can be caught.
+            cityRepository.flush();
         } catch (DataIntegrityViolationException e) {
             throw new EntityBeingUsedException(
                     String.format(MSG_CITY_CONFLICT, id));

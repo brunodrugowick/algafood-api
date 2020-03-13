@@ -35,6 +35,8 @@ public class ProvinceCrudService {
 	public void delete(Long id) {
 		try {
 			provinceRepository.deleteById(id);
+			// Flushing here guarantees the DB exceptions below can be caught.
+			provinceRepository.flush();
 		} catch (DataIntegrityViolationException e) {
 			throw new EntityBeingUsedException(
 					String.format(MSG_PROVINCE_CONFLICT, id));
