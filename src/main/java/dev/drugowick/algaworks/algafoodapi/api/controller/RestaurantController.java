@@ -95,5 +95,16 @@ public class RestaurantController {
 		restaurantCrudService.delete(id);
 	}
 
+	@PutMapping("/{restaurantId}/active")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void activate(@PathVariable Long restaurantId) {
+		restaurantCrudService.activate(restaurantId);
+	}
+
+	@DeleteMapping("/{restaurantId}/active")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void deactivate(@PathVariable Long restaurantId) {
+		restaurantCrudService.deactivate(restaurantId);
+	}
 
 }

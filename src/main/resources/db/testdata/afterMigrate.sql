@@ -86,24 +86,24 @@ insert into city (name, province_id)
 values ('Porto Alegre', (select id from province where name = 'Rio Grande do Sul'));
 
 insert into restaurant (address_address_line_1, address_address_line_2, address_postal_code, address_region,
-                        delivery_fee, name, created_date, updated_date, address_city_id, cuisine_id)
-values ('Cocada Street, 123456', 'Neighborhood', '13020', 'Region1', 10.00, 'Pizzaria Marcante', current_timestamp,
-        current_timestamp, (select id from city where name = 'Campinas'),
+                        delivery_fee, name, created_date, updated_date, active, address_city_id, cuisine_id)
+values ('Cocada Street, 123456', 'Neighborhood', '13020', 'Region1', 12.00, 'Pizzaria Marcante', current_timestamp,
+        current_timestamp, true, (select id from city where name = 'Campinas'),
         (select id from cuisine where name = 'Italian'));
 insert into restaurant (address_address_line_1, address_address_line_2, address_postal_code, address_region,
-                        delivery_fee, name, created_date, updated_date, address_city_id, cuisine_id)
-values ('Cocada Street, 123456', 'Neighborhood', '13020', 'Region1', 5.00, 'Bar Preste Atenção', current_timestamp,
-        current_timestamp, (select id from city where name = 'São José dos Campos'),
+                        delivery_fee, name, created_date, updated_date, active, address_city_id, cuisine_id)
+values ('Cocada Street, 123456', 'Neighborhood', '13020', 'Region1', 6.00, 'Bar Preste Atenção', current_timestamp,
+        current_timestamp, true, (select id from city where name = 'São José dos Campos'),
         (select id from cuisine where name = 'Brazilian'));
 insert into restaurant (address_address_line_1, address_address_line_2, address_postal_code, address_region,
-                        delivery_fee, name, created_date, updated_date, address_city_id, cuisine_id)
-values ('Cocada Street, 123456', 'Neighborhood', '13020', 'Region1', 10.00, 'Pizzaria Embarcante', current_timestamp,
-        current_timestamp, (select id from city where name = 'São José dos Campos'),
+                        delivery_fee, name, created_date, updated_date, active, address_city_id, cuisine_id)
+values ('Cocada Street, 123456', 'Neighborhood', '13020', 'Region1', 9.00, 'Pizzaria Embarcante', current_timestamp,
+        current_timestamp, true, (select id from city where name = 'São José dos Campos'),
         (select id from cuisine where name = 'Italian'));
 insert into restaurant (address_address_line_1, address_address_line_2, address_postal_code, address_region,
-                        delivery_fee, name, created_date, updated_date, address_city_id, cuisine_id)
+                        delivery_fee, name, created_date, updated_date, active, address_city_id, cuisine_id)
 values ('Cocada Street, 123456', 'Neighborhood', '13020', 'Region1', 0.00, 'Mexican Crazy Hat Food', current_timestamp,
-        current_timestamp, (select id from city where name = 'Belo Horizonte'),
+        current_timestamp, false, (select id from city where name = 'Belo Horizonte'),
         (select id from cuisine where name = 'Brazilian'));
 
 INSERT INTO product (active, description, name, price, restaurant_id)

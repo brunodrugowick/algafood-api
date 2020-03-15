@@ -27,4 +27,7 @@ public class RestaurantModel {
     @NotNull
     @Valid
     private CuisineModel cuisine;
+
+    @NotNull
+    private Boolean active;
 }

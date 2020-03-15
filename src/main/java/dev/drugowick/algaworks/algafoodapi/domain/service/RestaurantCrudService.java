@@ -53,6 +53,18 @@ public class RestaurantCrudService {
 		}
 	}
 
+	@Transactional
+	public void activate(Long restaurantId) {
+		Restaurant restaurant = findOrElseThrow(restaurantId);
+		restaurant.activate();
+	}
+
+	@Transactional
+	public void deactivate(Long restaurantId) {
+		Restaurant restaurant = findOrElseThrow(restaurantId);
+		restaurant.deactivate();
+	}
+
 	/**
 	 * Tries to find by ID and throws the business exception @{@link EntityNotFoundException} if not found.
 	 *
