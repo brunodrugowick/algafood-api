@@ -3,6 +3,7 @@ package dev.drugowick.algaworks.algafoodapi.domain.service;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityBeingUsedException;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundException;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.RestaurantNotFoundException;
+import dev.drugowick.algaworks.algafoodapi.domain.model.City;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Cuisine;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Restaurant;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.CuisineRepository;
@@ -19,18 +20,25 @@ public class RestaurantCrudService {
 
 	private RestaurantRepository restaurantRepository;
 	private CuisineCrudService cuisineCrudService;
+	private CityCrudService cityCrudService;
 
-	public RestaurantCrudService(RestaurantRepository restaurantRepository, CuisineRepository cuisineRepository, CuisineCrudService cuisineCrudService) {
+	public RestaurantCrudService(RestaurantRepository restaurantRepository, CuisineRepository cuisineRepository, CuisineCrudService cuisineCrudService, CityCrudService cityCrudService) {
 		this.restaurantRepository = restaurantRepository;
 		this.cuisineCrudService = cuisineCrudService;
+		this.cityCrudService = cityCrudService;
 	}
 
 	@Transactional
 	public Restaurant save(Restaurant restaurant) {
 		Long cuisineId = restaurant.getCuisine().getId();
+		Long cityId = restaurant.getAddress().getCity().getId();
+
 		Cuisine cuisine = cuisineCrudService.findOrElseThrow(cuisineId);
+		City city = cityCrudService.findOrElseThrow(cityId);
 
 		restaurant.setCuisine(cuisine);
+		restaurant.getAddress().setCity(city);
+
 		try {
 			return restaurantRepository.save(restaurant);
 		} catch (DataIntegrityViolationException exception) {
