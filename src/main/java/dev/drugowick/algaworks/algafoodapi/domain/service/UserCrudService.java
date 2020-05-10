@@ -1,0 +1,73 @@
+package dev.drugowick.algaworks.algafoodapi.domain.service;
+
+import dev.drugowick.algaworks.algafoodapi.domain.exception.*;
+import dev.drugowick.algaworks.algafoodapi.domain.model.User;
+import dev.drugowick.algaworks.algafoodapi.domain.repository.UserRespository;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.validation.constraints.NotBlank;
+
+@Service
+public class UserCrudService {
+
+    private static final String MSG_USER_CONFLICT = "Operation on User %d conflicts with another entity and can not be performed.";
+    private final UserRespository userRepository;
+
+    public UserCrudService(UserRespository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @Transactional
+    public User save(User user) {
+        try {
+            return userRepository.save(user);
+        } catch (DataIntegrityViolationException exception) {
+            throw new EntityBeingUsedException(
+                    String.format(MSG_USER_CONFLICT, user.getId()));
+        }
+    }
+
+    @Transactional
+    public User update(Long id, User user) {
+        user.setId(id);
+        return userRepository.save(user);
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        try {
+            userRepository.deleteById(id);
+            // Flushing here guarantees the DB exceptions below can be caught.
+            userRepository.flush();
+        } catch (DataIntegrityViolationException exception) {
+            throw new EntityBeingUsedException(
+                    String.format(MSG_USER_CONFLICT, id));
+        } catch (EmptyResultDataAccessException exception) {
+            throw new UserNotFoundException(id);
+        }
+    }
+
+    @Transactional
+    public void updatePassword(Long userId, String newPassword, String password) {
+        User userToUpdatePassword = findOrElseThrow(userId);
+        if (userToUpdatePassword.passwordDoesNotMatch(password)) {
+            throw new GenericBusinessException("Wrong password");
+        }
+        userToUpdatePassword.setPassword(newPassword);
+        // transaction takes care of commiting the changes
+    }
+
+    /**
+     * Tries to find by ID and throws the business exception @{@link EntityNotFoundException} if not found.
+     *
+     * @param id of the entity to find.
+     * @return the entity from the repository.
+     */
+    public User findOrElseThrow(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+    }
+}

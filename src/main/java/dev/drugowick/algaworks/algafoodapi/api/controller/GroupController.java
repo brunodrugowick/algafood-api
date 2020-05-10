@@ -54,8 +54,7 @@ public class GroupController {
                              @RequestBody @Valid GroupInput groupInput) {
         Group groupToUpdate = groupService.findOrElseThrow(id);
         genericInputDisassembler.copyToDomainObject(groupInput, groupToUpdate);
-        // The save method will update when an existing ID is being passed.
-        return genericModelAssembler.toModel(groupService.save(groupToUpdate), GroupModel.class);
+        return genericModelAssembler.toModel(groupService.update(id, groupToUpdate), GroupModel.class);
     }
 
     @PatchMapping("/{id}")
