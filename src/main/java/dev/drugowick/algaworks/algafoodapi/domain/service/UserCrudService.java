@@ -8,7 +8,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.NotBlank;
+import java.util.Optional;
 
 @Service
 public class UserCrudService {
@@ -22,6 +22,16 @@ public class UserCrudService {
 
     @Transactional
     public User save(User user) {
+        // It's necessary to detach the user from the EntityManager to avoid unplanned sync with DB by JPA
+        userRepository.detach(user);
+        Optional<User> optionalUser = userRepository.findByEmail(user.getEmail());
+
+        if (optionalUser.isPresent() && !optionalUser.get().equals(user)) {
+            throw new GenericBusinessException(
+                    String.format("There's already a user with the email %s", user.getEmail())
+            );
+        }
+
         try {
             return userRepository.save(user);
         } catch (DataIntegrityViolationException exception) {
@@ -30,10 +40,9 @@ public class UserCrudService {
         }
     }
 
-    @Transactional
     public User update(Long id, User user) {
         user.setId(id);
-        return userRepository.save(user);
+        return save(user);
     }
 
     @Transactional
