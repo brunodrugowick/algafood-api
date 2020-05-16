@@ -5,6 +5,7 @@ import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundExcept
 import dev.drugowick.algaworks.algafoodapi.domain.exception.RestaurantNotFoundException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.City;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Cuisine;
+import dev.drugowick.algaworks.algafoodapi.domain.model.PaymentMethod;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Restaurant;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.CuisineRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.RestaurantRepository;
@@ -21,11 +22,13 @@ public class RestaurantCrudService {
 	private RestaurantRepository restaurantRepository;
 	private CuisineCrudService cuisineCrudService;
 	private CityCrudService cityCrudService;
+	private PaymentMethodCrudService paymentMethodCrudService;
 
-	public RestaurantCrudService(RestaurantRepository restaurantRepository, CuisineRepository cuisineRepository, CuisineCrudService cuisineCrudService, CityCrudService cityCrudService) {
+	public RestaurantCrudService(RestaurantRepository restaurantRepository, CuisineRepository cuisineRepository, CuisineCrudService cuisineCrudService, CityCrudService cityCrudService, PaymentMethodCrudService paymentMethodCrudService) {
 		this.restaurantRepository = restaurantRepository;
 		this.cuisineCrudService = cuisineCrudService;
 		this.cityCrudService = cityCrudService;
+		this.paymentMethodCrudService = paymentMethodCrudService;
 	}
 
 	@Transactional
@@ -72,6 +75,23 @@ public class RestaurantCrudService {
 		Restaurant restaurant = findOrElseThrow(restaurantId);
 		restaurant.deactivate();
 	}
+
+	@Transactional
+	public void unbindPaymentMethod(Long restaurantId, Long paymentMethodId) {
+		Restaurant restaurant = findOrElseThrow(restaurantId);
+		PaymentMethod paymentMethod = paymentMethodCrudService.findOrElseThrow(paymentMethodId);
+
+		restaurant.removePaymentMethod(paymentMethod);
+	}
+
+	@Transactional
+	public void bindPaymentMethod(Long restaurantId, Long paymentMethodId) {
+		Restaurant restaurant = findOrElseThrow(restaurantId);
+		PaymentMethod paymentMethod = paymentMethodCrudService.findOrElseThrow(paymentMethodId);
+
+		restaurant.addPaymentMethod(paymentMethod);
+	}
+
 
 	/**
 	 * Tries to find by ID and throws the business exception @{@link EntityNotFoundException} if not found.

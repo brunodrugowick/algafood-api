@@ -18,7 +18,9 @@ import javax.validation.groups.Default;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * I'm choosing to keep the domain objects validation prone. This is a project decision considering there may e some
@@ -80,7 +82,7 @@ public class Restaurant {
 	@JoinTable(name = "restaurant_payment_method",
 			joinColumns = @JoinColumn(name = "restaurant_id"),
 			inverseJoinColumns = @JoinColumn(name = "payment_method_id"))
-	private List<PaymentMethod> paymentMethods = new ArrayList<PaymentMethod>();
+	private Set<PaymentMethod> paymentMethods = new HashSet<>();
 
 	@OneToMany(mappedBy = "restaurant")
 	private List<Product> products = new ArrayList<>();
@@ -93,4 +95,11 @@ public class Restaurant {
 		setActive(false);
 	}
 
+	public boolean addPaymentMethod(PaymentMethod paymentMethod) {
+		return getPaymentMethods().add(paymentMethod);
+	}
+
+	public boolean removePaymentMethod(PaymentMethod paymentMethod) {
+		return getPaymentMethods().remove(paymentMethod);
+	}
 }

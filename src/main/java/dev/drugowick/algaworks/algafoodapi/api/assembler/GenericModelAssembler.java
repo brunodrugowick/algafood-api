@@ -3,6 +3,7 @@ package dev.drugowick.algaworks.algafoodapi.api.assembler;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,7 +26,7 @@ public class GenericModelAssembler<T, S> {
         return modelMapper.map(domainObject, type);
     }
 
-    public List<S> toCollectionModel(List<T> objects, Class<S> type) {
+    public List<S> toCollectionModel(Collection<T> objects, Class<S> type) {
         return objects.stream()
                 .map(object -> toModel(object, type))
                 .collect(Collectors.toList());
