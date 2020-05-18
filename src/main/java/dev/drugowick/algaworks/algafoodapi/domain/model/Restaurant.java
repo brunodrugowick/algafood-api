@@ -17,9 +17,7 @@ import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -85,7 +83,7 @@ public class Restaurant {
 	private Set<PaymentMethod> paymentMethods = new HashSet<>();
 
 	@OneToMany(mappedBy = "restaurant")
-	private List<Product> products = new ArrayList<>();
+	private Set<Product> products = new HashSet<>();
 
 	public void activate() {
 		setActive(true);
@@ -101,5 +99,13 @@ public class Restaurant {
 
 	public boolean removePaymentMethod(PaymentMethod paymentMethod) {
 		return getPaymentMethods().remove(paymentMethod);
+	}
+
+	public boolean addProduct(Product product) {
+		return getProducts().add(product);
+	}
+
+	public boolean removeProduct(Product product) {
+		return getProducts().remove(product);
 	}
 }
