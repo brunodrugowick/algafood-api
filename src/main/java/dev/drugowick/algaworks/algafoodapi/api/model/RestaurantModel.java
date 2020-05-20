@@ -31,5 +31,8 @@ public class RestaurantModel {
     @NotNull
     private Boolean active;
 
+    @NotNull
+    private Boolean opened;
+
     private AddressModel address;
 }

@@ -77,6 +77,18 @@ public class RestaurantCrudService {
 	}
 
 	@Transactional
+	public void open(Long restaurantId) {
+		Restaurant restaurant = findOrElseThrow(restaurantId);
+		restaurant.open();
+	}
+
+	@Transactional
+	public void close(Long restaurantId) {
+		Restaurant restaurant = findOrElseThrow(restaurantId);
+		restaurant.close();
+	}
+
+	@Transactional
 	public void unbindPaymentMethod(Long restaurantId, Long paymentMethodId) {
 		Restaurant restaurant = findOrElseThrow(restaurantId);
 		PaymentMethod paymentMethod = paymentMethodCrudService.findOrElseThrow(paymentMethodId);
