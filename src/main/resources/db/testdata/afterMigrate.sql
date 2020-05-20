@@ -63,6 +63,13 @@ values ('drugowick', 'bruno.drugowick@gmail.com', 'password', current_timestamp)
 insert into user (name, email, password, created_date)
 values ('drugowick2', 'brunodrugowick@gmail.com', 'password', current_timestamp);
 
+insert into user_group (user_id, group_id)
+values ((select id from user where name = 'drugowick'), (select id from group_ where name = 'Group 1'));
+insert into user_group (user_id, group_id)
+values ((select id from user where name = 'drugowick'), (select id from group_ where name = 'Group 2'));
+insert into user_group (user_id, group_id)
+values ((select id from user where name = 'drugowick2'), (select id from group_ where name = 'Group 1'));
+
 insert into province (name, abbreviation)
 values ('São Paulo', 'SP');
 insert into province (name, abbreviation)

@@ -2,10 +2,12 @@ package dev.drugowick.algaworks.algafoodapi.api.controller;
 
 import dev.drugowick.algaworks.algafoodapi.api.assembler.GenericInputDisassembler;
 import dev.drugowick.algaworks.algafoodapi.api.assembler.GenericModelAssembler;
+import dev.drugowick.algaworks.algafoodapi.api.model.GroupModel;
 import dev.drugowick.algaworks.algafoodapi.api.model.UserModel;
 import dev.drugowick.algaworks.algafoodapi.api.model.input.PasswordChangeInput;
 import dev.drugowick.algaworks.algafoodapi.api.model.input.UserInput;
 import dev.drugowick.algaworks.algafoodapi.api.model.input.UserNoPasswordInput;
+import dev.drugowick.algaworks.algafoodapi.domain.model.Group;
 import dev.drugowick.algaworks.algafoodapi.domain.model.User;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.UserRespository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.UserCrudService;
@@ -15,21 +17,22 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
     private final GenericModelAssembler<User, UserModel> genericModelAssembler;
+    private final GenericModelAssembler<Group, GroupModel> groupModelAssembler;
     private final GenericInputDisassembler<UserInput, User> genericInputDisassembler;
     private final GenericInputDisassembler<UserNoPasswordInput, User> genericNoPasswordInputDisassembler;
 
     private final UserRespository userRespository;
     private final UserCrudService userService;
 
-    public UserController(GenericModelAssembler<User, UserModel> genericModelAssembler, GenericInputDisassembler<UserInput, User> genericInputDisassembler, GenericInputDisassembler<UserNoPasswordInput, User> genericNoPasswordInputDisassembler, UserRespository userRespository, UserCrudService userService) {
+    public UserController(GenericModelAssembler<User, UserModel> genericModelAssembler, GenericModelAssembler<Group, GroupModel> groupModelAssembler, GenericInputDisassembler<UserInput, User> genericInputDisassembler, GenericInputDisassembler<UserNoPasswordInput, User> genericNoPasswordInputDisassembler, UserRespository userRespository, UserCrudService userService) {
         this.genericModelAssembler = genericModelAssembler;
+        this.groupModelAssembler = groupModelAssembler;
         this.genericInputDisassembler = genericInputDisassembler;
         this.genericNoPasswordInputDisassembler = genericNoPasswordInputDisassembler;
         this.userRespository = userRespository;
@@ -73,6 +76,27 @@ public class UserController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         userService.delete(id);
+    }
+
+    @GetMapping("/{userId}/groups")
+    public List<GroupModel> listGroups(@PathVariable Long userId) {
+        User user = userService.findOrElseThrow(userId);
+
+        return groupModelAssembler.toCollectionModel(user.getGroups(), GroupModel.class);
+    }
+
+    @PutMapping("/{userId}/groups/{groupId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void bindGroup(@PathVariable Long userId,
+                          @PathVariable Long groupId) {
+        userService.bindGroup(userId, groupId);
+    }
+
+    @DeleteMapping("/{userId}/groups/{groupId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void unbindGroup(@PathVariable Long userId,
+                          @PathVariable Long groupId) {
+        userService.unbindGroup(userId, groupId);
     }
 
 }

@@ -10,8 +10,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -52,7 +52,7 @@ public class User {
     @JoinTable(name = "user_group",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "group_id"))
-    private List<Permission> groups = new ArrayList<>();
+    private Set<Group> groups = new HashSet<>();
 
     public boolean passwordMatches(String password) {
         return getPassword().equals(password);
@@ -60,5 +60,13 @@ public class User {
 
     public boolean passwordDoesNotMatch(String password) {
         return !passwordMatches(password);
+    }
+
+    public boolean addGroup(Group group) {
+        return getGroups().add(group);
+    }
+
+    public boolean removeGroup(Group group) {
+        return getGroups().remove(group);
     }
 }

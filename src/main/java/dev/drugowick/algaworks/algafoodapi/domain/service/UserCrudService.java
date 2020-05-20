@@ -1,6 +1,10 @@
 package dev.drugowick.algaworks.algafoodapi.domain.service;
 
-import dev.drugowick.algaworks.algafoodapi.domain.exception.*;
+import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityBeingUsedException;
+import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundException;
+import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessException;
+import dev.drugowick.algaworks.algafoodapi.domain.exception.UserNotFoundException;
+import dev.drugowick.algaworks.algafoodapi.domain.model.Group;
 import dev.drugowick.algaworks.algafoodapi.domain.model.User;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.UserRespository;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -14,10 +18,13 @@ import java.util.Optional;
 public class UserCrudService {
 
     private static final String MSG_USER_CONFLICT = "Operation on User %d conflicts with another entity and can not be performed.";
-    private final UserRespository userRepository;
 
-    public UserCrudService(UserRespository userRepository) {
+    private final UserRespository userRepository;
+    private final GroupCrudService groupCrudService;
+
+    public UserCrudService(UserRespository userRepository, GroupCrudService groupCrudService) {
         this.userRepository = userRepository;
+        this.groupCrudService = groupCrudService;
     }
 
     @Transactional
@@ -68,6 +75,23 @@ public class UserCrudService {
         userToUpdatePassword.setPassword(newPassword);
         // transaction takes care of commiting the changes
     }
+
+    @Transactional
+    public boolean bindGroup(Long userId, Long groupId) {
+        User user = findOrElseThrow(userId);
+        Group group = groupCrudService.findOrElseThrow(groupId);
+
+        return user.addGroup(group);
+    }
+
+    @Transactional
+    public boolean unbindGroup(Long userId, Long groupId) {
+        User user = findOrElseThrow(userId);
+        Group group = groupCrudService.findOrElseThrow(groupId);
+
+        return user.removeGroup(group);
+    }
+
 
     /**
      * Tries to find by ID and throws the business exception @{@link EntityNotFoundException} if not found.
