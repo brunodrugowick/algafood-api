@@ -4,6 +4,7 @@ import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityBeingUsedExcep
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundException;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.GroupNotFoundException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Group;
+import dev.drugowick.algaworks.algafoodapi.domain.model.Permission;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.GroupRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -16,9 +17,11 @@ public class GroupCrudService {
     public static final String MSG_GROUP_CONFLICT = "Operation on Group %d conflicts with another entity and can not be performed.";
 
     private GroupRepository groupRepository;
+    private PermissionCrudService permissionCrudService;
 
-    public GroupCrudService(GroupRepository groupRepository) {
+    public GroupCrudService(GroupRepository groupRepository, PermissionCrudService permissionCrudService) {
         this.groupRepository = groupRepository;
+        this.permissionCrudService = permissionCrudService;
     }
 
     @Transactional
@@ -49,6 +52,22 @@ public class GroupCrudService {
         } catch (EmptyResultDataAccessException exception) {
             throw new GroupNotFoundException(id);
         }
+    }
+
+    @Transactional
+    public void bindPermission(Long groupId, Long permissionId) {
+        Group group = findOrElseThrow(groupId);
+        Permission permission = permissionCrudService.findOrElseThrow(permissionId);
+
+        group.addPermission(permission);
+    }
+
+    @Transactional
+    public void unbindPermission(Long groupId, Long permissionId) {
+        Group group = findOrElseThrow(groupId);
+        Permission permission = permissionCrudService.findOrElseThrow(permissionId);
+
+        group.removePermission(permission);
     }
 
     /**

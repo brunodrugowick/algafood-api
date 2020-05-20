@@ -3,11 +3,14 @@ package dev.drugowick.algaworks.algafoodapi.api.controller;
 import dev.drugowick.algaworks.algafoodapi.api.assembler.GenericInputDisassembler;
 import dev.drugowick.algaworks.algafoodapi.api.assembler.GenericModelAssembler;
 import dev.drugowick.algaworks.algafoodapi.api.model.GroupModel;
+import dev.drugowick.algaworks.algafoodapi.api.model.PermissionModel;
 import dev.drugowick.algaworks.algafoodapi.api.model.input.GroupInput;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Group;
+import dev.drugowick.algaworks.algafoodapi.domain.model.Permission;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.GroupRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.GroupCrudService;
+import dev.drugowick.algaworks.algafoodapi.domain.service.PermissionCrudService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,13 +25,21 @@ public class GroupController {
 
     private GroupRepository groupRepository;
     private GroupCrudService groupService;
+    private PermissionCrudService permissionCrudService;
     private GenericModelAssembler<Group, GroupModel> genericModelAssembler;
+    private GenericModelAssembler<Permission, PermissionModel> permissionModelAssembler;
     private GenericInputDisassembler<GroupInput, Group> genericInputDisassembler;
 
-    public GroupController(GroupRepository groupRepository, GroupCrudService groupService, GenericModelAssembler<Group, GroupModel> genericModelAssembler, GenericInputDisassembler<GroupInput, Group> genericInputDisassembler) {
+    public GroupController(GroupRepository groupRepository,
+                           GroupCrudService groupService,
+                           PermissionCrudService permissionCrudService, GenericModelAssembler<Group, GroupModel> genericModelAssembler,
+                           GenericModelAssembler<Permission, PermissionModel> permissionModelAssembler,
+                           GenericInputDisassembler<GroupInput, Group> genericInputDisassembler) {
         this.groupRepository = groupRepository;
         this.groupService = groupService;
+        this.permissionCrudService = permissionCrudService;
         this.genericModelAssembler = genericModelAssembler;
+        this.permissionModelAssembler = permissionModelAssembler;
         this.genericInputDisassembler = genericInputDisassembler;
     }
 
@@ -66,5 +77,27 @@ public class GroupController {
     public void delete(@PathVariable Long id) {
         groupService.delete(id);
     }
+
+    @GetMapping("/{groupId}/permissions")
+    public List<PermissionModel> listPermissions(@PathVariable Long groupId) {
+        Group group = groupService.findOrElseThrow(groupId);
+
+        return permissionModelAssembler.toCollectionModel(group.getPermissions(), PermissionModel.class);
+    }
+
+    @PutMapping("/{groupId}/permissions/{permissionId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void bindPermission(@PathVariable Long groupId,
+                               @PathVariable Long permissionId) {
+        groupService.bindPermission(groupId, permissionId);
+    }
+
+    @DeleteMapping("/{groupId}/permissions/{permissionId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void unbindPermission(@PathVariable Long groupId,
+                               @PathVariable Long permissionId) {
+        groupService.unbindPermission(groupId, permissionId);
+    }
+
 
 }
