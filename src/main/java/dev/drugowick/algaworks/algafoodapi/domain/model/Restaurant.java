@@ -88,6 +88,12 @@ public class Restaurant {
 	@OneToMany(mappedBy = "restaurant")
 	private Set<Product> products = new HashSet<>();
 
+	@ManyToMany
+	@JoinTable(name = "restaurant_manager",
+			joinColumns = @JoinColumn(name = "restaurant_id"),
+			inverseJoinColumns = @JoinColumn(name = "manager_id"))
+	private Set<User> managers = new HashSet<>();
+
 	public void activate() {
 		setActive(true);
 	}
@@ -118,5 +124,13 @@ public class Restaurant {
 
 	public boolean removeProduct(Product product) {
 		return getProducts().remove(product);
+	}
+
+	public boolean removeManager(User manager) {
+		return getManagers().remove(manager);
+	}
+
+	public boolean addManager(User manager) {
+		return getManagers().add(manager);
 	}
 }

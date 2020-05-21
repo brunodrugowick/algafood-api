@@ -3,10 +3,7 @@ package dev.drugowick.algaworks.algafoodapi.domain.service;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityBeingUsedException;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundException;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.RestaurantNotFoundException;
-import dev.drugowick.algaworks.algafoodapi.domain.model.City;
-import dev.drugowick.algaworks.algafoodapi.domain.model.Cuisine;
-import dev.drugowick.algaworks.algafoodapi.domain.model.PaymentMethod;
-import dev.drugowick.algaworks.algafoodapi.domain.model.Restaurant;
+import dev.drugowick.algaworks.algafoodapi.domain.model.*;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.CuisineRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.RestaurantRepository;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -23,12 +20,14 @@ public class RestaurantCrudService {
 	private CuisineCrudService cuisineCrudService;
 	private CityCrudService cityCrudService;
 	private PaymentMethodCrudService paymentMethodCrudService;
+	private final UserCrudService userCrudService;
 
-	public RestaurantCrudService(RestaurantRepository restaurantRepository, CuisineRepository cuisineRepository, CuisineCrudService cuisineCrudService, CityCrudService cityCrudService, PaymentMethodCrudService paymentMethodCrudService) {
+	public RestaurantCrudService(RestaurantRepository restaurantRepository, CuisineRepository cuisineRepository, CuisineCrudService cuisineCrudService, CityCrudService cityCrudService, PaymentMethodCrudService paymentMethodCrudService, UserCrudService userCrudService) {
 		this.restaurantRepository = restaurantRepository;
 		this.cuisineCrudService = cuisineCrudService;
 		this.cityCrudService = cityCrudService;
 		this.paymentMethodCrudService = paymentMethodCrudService;
+		this.userCrudService = userCrudService;
 	}
 
 	@Transactional
@@ -104,6 +103,21 @@ public class RestaurantCrudService {
 		restaurant.addPaymentMethod(paymentMethod);
 	}
 
+	@Transactional
+	public void unbindManager(Long restaurantId, Long managerId) {
+		Restaurant restaurant = findOrElseThrow(restaurantId);
+		User manager = userCrudService.findOrElseThrow(managerId);
+
+		restaurant.removeManager(manager);
+	}
+
+	@Transactional
+	public void bindManager(Long restaurantId, Long managerId) {
+		Restaurant restaurant = findOrElseThrow(restaurantId);
+		User manager = userCrudService.findOrElseThrow(managerId);
+
+		restaurant.addManager(manager);
+	}
 
 	/**
 	 * Tries to find by ID and throws the business exception @{@link EntityNotFoundException} if not found.

@@ -108,6 +108,14 @@ values
         current_timestamp, false, (select id from city where name = 'Belo Horizonte'),
         (select id from cuisine where name = 'Brazilian'), false);
 
+insert into restaurant_manager (restaurant_id, manager_id)
+values
+    ((select id from user where name = 'drugowick'), (select id from restaurant where name = 'Pizzaria Marcante')),
+    ((select id from user where name = 'drugowick2'), (select id from restaurant where name = 'Pizzaria Marcante')),
+    ((select id from user where name = 'drugowick'), (select id from restaurant where name = 'Bar Preste Atenção')),
+    ((select id from user where name = 'drugowick'), (select id from restaurant where name = 'Pizzaria Embarcante')),
+    ((select id from user where name = 'drugowick2'), (select id from restaurant where name = 'Mexican Crazy Hat Food'));
+
 INSERT INTO product (active, description, name, price, restaurant_id)
 VALUES (1, 'Delicious potato', 'Potato', 25.00, (select id from restaurant where name = 'Pizzaria Marcante'));
 INSERT INTO product (active, description, name, price, restaurant_id)
