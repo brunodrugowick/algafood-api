@@ -6,6 +6,7 @@ import dev.drugowick.algaworks.algafoodapi.api.model.RestaurantModel;
 import dev.drugowick.algaworks.algafoodapi.api.model.input.RestaurantInput;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundException;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessException;
+import dev.drugowick.algaworks.algafoodapi.domain.exception.RestaurantNotFoundException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Restaurant;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.RestaurantRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.RestaurantCrudService;
@@ -99,6 +100,26 @@ public class RestaurantController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void activate(@PathVariable Long restaurantId) {
 		restaurantCrudService.activate(restaurantId);
+	}
+
+	@PutMapping("/activation")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void activateList(@RequestBody List<Long> restaurantIds) {
+		try {
+			restaurantCrudService.activate(restaurantIds);
+		} catch (RestaurantNotFoundException e) {
+			throw new GenericBusinessException(e.getMessage(), e);
+		}
+	}
+
+	@DeleteMapping("/activation")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void deactivateList(@RequestBody List<Long> restaurantIds) {
+		try {
+			restaurantCrudService.deactivate(restaurantIds);
+		} catch (RestaurantNotFoundException e) {
+			throw new GenericBusinessException(e.getMessage(), e);
+		}
 	}
 
 	@DeleteMapping("/{restaurantId}/active")
