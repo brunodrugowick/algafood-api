@@ -69,7 +69,7 @@ public class Order {
     @NotNull
     @Valid
     @ConvertGroup(from = Default.class, to = ValidationGroups.PaymentMethodId.class)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_method_id", nullable = false)
     private PaymentMethod paymentMethod;
 
@@ -96,5 +96,4 @@ public class Order {
 
     @OneToMany(mappedBy = "order")
     private List<OrderItem> orderItems;
-
 }

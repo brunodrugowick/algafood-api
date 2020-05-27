@@ -1,9 +1,15 @@
 package dev.drugowick.algaworks.algafoodapi.domain.repository;
 
 import dev.drugowick.algaworks.algafoodapi.domain.model.Order;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface OrderRepository extends CustomJpaRepository<Order, Long> {
 
+    @Query("from order_ o join fetch o.client join fetch o.restaurant r join fetch r.cuisine join fetch r.address a " +
+            "join fetch a.city c join fetch c.province")
+    List<Order> findAll();
 }
