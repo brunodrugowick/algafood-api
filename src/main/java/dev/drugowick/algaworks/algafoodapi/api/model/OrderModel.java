@@ -16,7 +16,6 @@ public class OrderModel {
     private BigDecimal subtotal;
     private BigDecimal deliveryFee;
     private BigDecimal total;
-    private BigDecimal randomValue;
     private OffsetDateTime createdDate;
     private OffsetDateTime confirmationDate;
     private OffsetDateTime cancellationDate;

@@ -47,7 +47,6 @@ CREATE TABLE `order_item`
     INDEX `index_order_item_product_id` (`product_id`),
     INDEX `index_order_item_order_id` (`order_id`),
     CONSTRAINT `fk_order_item_product_id` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`),
-    CONSTRAINT `fk_order_item_order_id` FOREIGN KEY (`order_id`) REFERENCES `order_` (`id`),
-    UNIQUE KEY `unique_order_item` (`product_id`, `order_id`)
+    CONSTRAINT `fk_order_item_order_id` FOREIGN KEY (`order_id`) REFERENCES `order_` (`id`)
 ) ENGINE = InnoDB
   charset = utf8;

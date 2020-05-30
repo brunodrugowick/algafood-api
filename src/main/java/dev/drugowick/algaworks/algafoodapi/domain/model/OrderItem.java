@@ -55,4 +55,14 @@ public class OrderItem {
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
+
+    public void calculateTotal() {
+        BigDecimal unitPrice = this.getUnitPrice();
+        Integer amount = this.getAmount();
+
+        if (unitPrice == null) unitPrice = BigDecimal.ZERO;
+        if (amount == null) amount = 0;
+
+        this.setTotalPrice(unitPrice.multiply(new BigDecimal(amount)));
+    }
 }

@@ -133,4 +133,12 @@ public class Restaurant {
 	public boolean addManager(User manager) {
 		return getManagers().add(manager);
 	}
+
+	public boolean acceptsPaymentMethod(PaymentMethod paymentMethod) {
+		return getPaymentMethods().contains(paymentMethod);
+	}
+
+	public boolean doesNotAccept(PaymentMethod paymentMethod) {
+		return !acceptsPaymentMethod(paymentMethod);
+	}
 }

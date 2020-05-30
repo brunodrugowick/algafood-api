@@ -16,4 +16,7 @@ public class PaymentMethodNotFoundException extends EntityNotFoundException {
 		this(String.format("There's no Payment Method with the id %d", id));
 	}
 
+	public PaymentMethodNotFoundException(Long restaurantId, Long paymentMethodId) {
+		this(String.format("There's no Payment Method with the id %d for Restaurant %d", paymentMethodId, restaurantId));
+	}
 }

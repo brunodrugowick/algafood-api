@@ -89,11 +89,21 @@ public class Order {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private OrderStatus status;
+    private OrderStatus status = OrderStatus.CREATED;
 
     @Embedded
     private Address deliveryAddress;
 
-    @OneToMany(mappedBy = "order")
-    private List<OrderItem> orderItems;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderItem> items;
+
+    public void calculateTotal() {
+        getItems().forEach(OrderItem::calculateTotal);
+
+        this.subtotal = getItems().stream()
+                .map(orderItem -> orderItem.getTotalPrice())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        this.total = this.subtotal.add(this.deliveryFee);
+    }
 }
