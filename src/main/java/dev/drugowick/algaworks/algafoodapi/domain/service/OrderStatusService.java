@@ -14,27 +14,27 @@ public class OrderStatusService {
     }
 
     @Transactional
-    public void confirmOrder(Long orderId) {
-        Order order = findOrElseThrow(orderId);
+    public void confirmOrder(String orderCode) {
+        Order order = findOrElseThrow(orderCode);
 
         order.confirm();
     }
 
     @Transactional
-    public void deliveryOrder(Long orderId) {
-        Order order = findOrElseThrow(orderId);
+    public void deliveryOrder(String orderCode) {
+        Order order = findOrElseThrow(orderCode);
 
         order.deliver();
     }
 
     @Transactional
-    public void cancelOrder(Long orderId) {
-        Order order = findOrElseThrow(orderId);
+    public void cancelOrder(String orderCode) {
+        Order order = findOrElseThrow(orderCode);
 
         order.cancel();
     }
 
-    private Order findOrElseThrow(Long orderId) {
-        return orderService.findOrElseThrow(orderId);
+    private Order findOrElseThrow(String orderCode) {
+        return orderService.findOrElseThrow(orderCode);
     }
 }

@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.UUID;
 
 // A custom annotation that validates if subtotal equals total when deliveryFee equals 0.
 @IfFreeDeliverySubtotalEqualsTotal(fieldDeliveryFee = "deliveryFee", fieldSubtotal = "subtotal", fieldTotal = "total")
@@ -30,6 +31,9 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
+    private String code;
 
     /**
      * @Column is included to exemplify its use, but it's not
@@ -99,6 +103,11 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> items;
 
+    @PrePersist
+    private void generateCode() {
+        this.code = UUID.randomUUID().toString();
+    }
+
     public void calculateTotal() {
         getItems().forEach(OrderItem::calculateTotal);
 
@@ -133,8 +142,8 @@ public class Order {
     private void setStatus (OrderStatus newStatus) {
         if (getStatus().canNotTransitionTo(newStatus)) {
             throw new GenericBusinessException(
-                    String.format("Impossible to transition order %d from %s to %s.",
-                            getId(), getStatus().getDescription(), newStatus.getDescription()));
+                    String.format("Impossible to transition order %s from %s to %s.",
+                            getCode(), getStatus().getDescription(), newStatus.getDescription()));
         }
 
         this.status = newStatus;

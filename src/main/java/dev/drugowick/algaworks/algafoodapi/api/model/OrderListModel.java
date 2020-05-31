@@ -10,7 +10,7 @@ import java.time.OffsetDateTime;
 @Setter
 public class OrderListModel {
 
-    private Long id;
+    private String code;
     private String status;
     private String clientEmail;
     private BigDecimal total;

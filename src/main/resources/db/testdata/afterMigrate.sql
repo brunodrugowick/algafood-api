@@ -139,17 +139,17 @@ values ((select id from restaurant where name = 'Pizzaria Marcante'),
        ((select id from restaurant where name = 'Pizzaria Embarcante'),
         (select id from payment_method where description = 'Word'));
 
-insert into order_ (subtotal, delivery_fee, total, created_date, confirmation_date, cancellation_date, delivery_date,
+insert into order_ (code, subtotal, delivery_fee, total, created_date, confirmation_date, cancellation_date, delivery_date,
                     payment_method_id, restaurant_id, client_id, status, address_address_line_1, address_address_line_2,
                     address_postal_code, address_region, address_city_id)
-values (100.00, 12.00, 112.00, current_timestamp, null, null, null,
+values ('aff37747-f651-4463-a6c3-03af003ccde9', 100.00, 12.00, 112.00, current_timestamp, null, null, null,
         (select id from payment_method where description = 'Credit Card'),
         (select id from restaurant where name = 'Pizzaria Marcante'), (select id from user where name = 'drugowick'),
         'CREATED', 'Rua 1', null, '13020-240', 'Botafogo', (select id from city where name = 'Campinas'));
-insert into order_ (subtotal, delivery_fee, total, created_date, confirmation_date, cancellation_date, delivery_date,
+insert into order_ (code, subtotal, delivery_fee, total, created_date, confirmation_date, cancellation_date, delivery_date,
                     payment_method_id, restaurant_id, client_id, status, address_address_line_1, address_address_line_2,
                     address_postal_code, address_region, address_city_id)
-values (200.00, 12.00, 212.00, current_timestamp, current_timestamp, null, current_timestamp,
+values ('7718a85e-c765-400c-b965-76bed8ae96e4', 200.00, 12.00, 212.00, current_timestamp, current_timestamp, null, current_timestamp,
         (select id from payment_method where description = 'Cash'),
         (select id from restaurant where name = 'Pizzaria Embarcante'), (select id from user where name = 'drugowick2'),
         'DELIVERED', 'Rua 2', null, '13020-140', 'Guanabara', (select id from city where name = 'Campinas'));

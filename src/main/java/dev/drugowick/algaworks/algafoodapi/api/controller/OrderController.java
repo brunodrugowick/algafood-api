@@ -40,10 +40,10 @@ public class OrderController {
         return orderListModelAssembler.toCollectionModel(orderRepository.findAll(), OrderListModel.class);
     }
 
-    @GetMapping("/{orderId}")
-    public OrderModel get(@PathVariable Long orderId) {
+    @GetMapping("/{orderCode}")
+    public OrderModel get(@PathVariable String orderCode) {
         return orderModelAssembler.toModel(
-                orderService.findOrElseThrow(orderId), OrderModel.class);
+                orderService.findOrElseThrow(orderCode), OrderModel.class);
     }
 
     @PostMapping
