@@ -21,7 +21,7 @@ public enum OrderStatus {
         return description;
     }
 
-    public boolean canNotTransationTo(OrderStatus newStatus) {
+    public boolean canNotTransitionTo(OrderStatus newStatus) {
         return !newStatus.previousOrderStatuses.contains(this);
     }
 }

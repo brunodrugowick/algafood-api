@@ -131,7 +131,7 @@ public class Order {
      * delivery and cancel.
      */
     private void setStatus (OrderStatus newStatus) {
-        if (getStatus().canNotTransationTo(newStatus)) {
+        if (getStatus().canNotTransitionTo(newStatus)) {
             throw new GenericBusinessException(
                     String.format("Impossible to transition order %d from %s to %s.",
                             getId(), getStatus().getDescription(), newStatus.getDescription()));
