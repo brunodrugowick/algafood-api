@@ -1,13 +1,8 @@
 package dev.drugowick.algaworks.algafoodapi.domain.service;
 
-import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Order;
-import dev.drugowick.algaworks.algafoodapi.domain.model.OrderStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 
 @Service
 public class OrderStatusService {
@@ -22,42 +17,21 @@ public class OrderStatusService {
     public void confirmOrder(Long orderId) {
         Order order = findOrElseThrow(orderId);
 
-        if (!order.getStatus().equals(OrderStatus.CREATED)) {
-            throw new GenericBusinessException(
-                    String.format("Impossible to transition order %d from %s to %s.",
-                            orderId, order.getStatus().getDescription(), OrderStatus.CONFIRMED.getDescription()));
-        }
-
-        order.setConfirmationDate(OffsetDateTime.now(ZoneOffset.UTC));
-        order.setStatus(OrderStatus.CONFIRMED);
+        order.confirm();
     }
 
     @Transactional
     public void deliveryOrder(Long orderId) {
         Order order = findOrElseThrow(orderId);
 
-        if (!order.getStatus().equals(OrderStatus.CONFIRMED)) {
-            throw new GenericBusinessException(
-                    String.format("Impossible to transition order %d from %s to %s.",
-                            orderId, order.getStatus().getDescription(), OrderStatus.DELIVERED.getDescription()));
-        }
-
-        order.setDeliveryDate(OffsetDateTime.now(ZoneOffset.UTC));
-        order.setStatus(OrderStatus.DELIVERED);
+        order.deliver();
     }
 
     @Transactional
     public void cancelOrder(Long orderId) {
         Order order = findOrElseThrow(orderId);
 
-        if (!order.getStatus().equals(OrderStatus.CREATED)) {
-            throw new GenericBusinessException(
-                    String.format("Impossible to transition order %d from %s to %s.",
-                            orderId, order.getStatus().getDescription(), OrderStatus.CANCELLED.getDescription()));
-        }
-
-        order.setCancellationDate(OffsetDateTime.now(ZoneOffset.UTC));
-        order.setStatus(OrderStatus.CANCELLED);
+        order.cancel();
     }
 
     private Order findOrElseThrow(Long orderId) {

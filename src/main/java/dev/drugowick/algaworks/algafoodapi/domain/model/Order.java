@@ -1,5 +1,6 @@
 package dev.drugowick.algaworks.algafoodapi.domain.model;
 
+import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessException;
 import dev.drugowick.algaworks.algafoodapi.domain.validation.IfFreeDeliverySubtotalEqualsTotal;
 import dev.drugowick.algaworks.algafoodapi.domain.validation.ValidationGroups;
 import lombok.Data;
@@ -14,6 +15,7 @@ import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 // A custom annotation that validates if subtotal equals total when deliveryFee equals 0.
@@ -106,4 +108,36 @@ public class Order {
 
         this.total = this.subtotal.add(this.deliveryFee);
     }
+
+    public void confirm() {
+        setStatus(OrderStatus.CONFIRMED);
+        setConfirmationDate(OffsetDateTime.now(ZoneOffset.UTC));
+    }
+
+    public void deliver() {
+        setStatus(OrderStatus.DELIVERED);
+        setDeliveryDate(OffsetDateTime.now(ZoneOffset.UTC));
+    }
+
+    public void cancel() {
+        setStatus(OrderStatus.CANCELLED);
+        setCancellationDate(OffsetDateTime.now(ZoneOffset.UTC));
+    }
+
+    /**
+     * This overrides the Lombok implementation.
+     *
+     * It's private to limit status modifications to be called from within the object, via the named methods confirm,
+     * delivery and cancel.
+     */
+    private void setStatus (OrderStatus newStatus) {
+        if (getStatus().canNotTransationTo(newStatus)) {
+            throw new GenericBusinessException(
+                    String.format("Impossible to transition order %d from %s to %s.",
+                            getId(), getStatus().getDescription(), newStatus.getDescription()));
+        }
+
+        this.status = newStatus;
+    }
+
 }
