@@ -12,6 +12,9 @@ public interface ProductRepository extends CustomJpaRepository<Product, Long> {
     @Query("from Product where restaurant.id = :restaurantId and id = :productId")
     Optional<Product> findById(@Param("restaurantId") Long restaurantId,@Param("productId") Long productId);
 
+    @Query("from Product where active = true and restaurant.id = :restaurantId")
+    List<Product> findActiveByRestaurantId(@Param("restaurantId") Long restaurantId);
+
     List<Product> findByRestaurantId(Long restaurantId);
 
 }

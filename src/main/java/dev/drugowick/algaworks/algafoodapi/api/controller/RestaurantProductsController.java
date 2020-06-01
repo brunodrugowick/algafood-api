@@ -33,8 +33,16 @@ public class RestaurantProductsController {
 	}
 
 	@GetMapping
-	public List<ProductModel> list(@PathVariable Long restaurantId) {
-		return modelAssembler.toCollectionModel(productRepository.findByRestaurantId(restaurantId), ProductModel.class);
+	public List<ProductModel> list(@PathVariable Long restaurantId, @RequestParam(required = false) boolean includeDeactivated) {
+		List<Product> queryResult = null;
+
+		if (includeDeactivated) {
+			queryResult = productRepository.findByRestaurantId(restaurantId);
+		} else {
+			queryResult = productRepository.findActiveByRestaurantId(restaurantId);
+		}
+
+		return modelAssembler.toCollectionModel(queryResult, ProductModel.class);
 	}
 
 	@GetMapping("/{productId}")
