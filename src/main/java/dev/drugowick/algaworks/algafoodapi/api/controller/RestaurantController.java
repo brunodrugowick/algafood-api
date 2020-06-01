@@ -1,9 +1,11 @@
 package dev.drugowick.algaworks.algafoodapi.api.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import dev.drugowick.algaworks.algafoodapi.api.assembler.RestaurantInputDisassembler;
 import dev.drugowick.algaworks.algafoodapi.api.assembler.RestaurantModelAssembler;
 import dev.drugowick.algaworks.algafoodapi.api.model.RestaurantModel;
 import dev.drugowick.algaworks.algafoodapi.api.model.input.RestaurantInput;
+import dev.drugowick.algaworks.algafoodapi.api.model.view.RestaurantView;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundException;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessException;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.RestaurantNotFoundException;
@@ -38,8 +40,20 @@ public class RestaurantController {
         this.restaurantInputDisassembler = restaurantInputDisassembler;
     }
 
-	@GetMapping
+    @GetMapping
 	public List<RestaurantModel> list() {
+	    return restaurantModelAssembler.toCollectionModel(restaurantRepository.findAll());
+	}
+
+	@JsonView(RestaurantView.Summary.class)
+	@GetMapping(params = "projection=summary")
+	public List<RestaurantModel> listSummaryJsonView() {
+	    return restaurantModelAssembler.toCollectionModel(restaurantRepository.findAll());
+	}
+
+	@JsonView(RestaurantView.NameOnly.class)
+	@GetMapping(params = "projection=name-only")
+	public List<RestaurantModel> listNameOnlyJsonView() {
 	    return restaurantModelAssembler.toCollectionModel(restaurantRepository.findAll());
 	}
 
