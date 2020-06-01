@@ -1,11 +1,13 @@
 package dev.drugowick.algaworks.algafoodapi.api.model;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
+@JsonFilter("orderFieldsFilter")
 @Getter
 @Setter
 public class OrderListModel {

@@ -1,5 +1,7 @@
 package dev.drugowick.algaworks.algafoodapi.api.controller;
 
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import dev.drugowick.algaworks.algafoodapi.api.assembler.GenericInputDisassembler;
 import dev.drugowick.algaworks.algafoodapi.api.assembler.GenericModelAssembler;
 import dev.drugowick.algaworks.algafoodapi.api.model.OrderListModel;
@@ -11,7 +13,9 @@ import dev.drugowick.algaworks.algafoodapi.domain.model.Order;
 import dev.drugowick.algaworks.algafoodapi.domain.model.User;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.OrderRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.OrderService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -36,8 +40,28 @@ public class OrderController {
     }
 
     @GetMapping
-    public List<OrderListModel> list() {
-        return orderListModelAssembler.toCollectionModel(orderRepository.findAll(), OrderListModel.class);
+    public MappingJacksonValue list(@RequestParam(required = false) String fields) {
+        List<Order> orderList = orderRepository.findAll();
+        List<OrderListModel> orderListModels = orderListModelAssembler.toCollectionModel(orderList, OrderListModel.class);
+
+        MappingJacksonValue orderListModelWrapper = new MappingJacksonValue(orderListModels);
+
+        SimpleFilterProvider filterProvider = new SimpleFilterProvider();
+        filterProvider.addFilter("orderFieldsFilter", SimpleBeanPropertyFilter.serializeAll());
+        if (StringUtils.isNoneBlank(fields)) {
+            filterProvider.addFilter("orderFieldsFilter", SimpleBeanPropertyFilter.filterOutAllExcept(csvToArray(fields)));
+        }
+        orderListModelWrapper.setFilters(filterProvider);
+
+        return orderListModelWrapper;
+    }
+
+    private String[] csvToArray(String fields) {
+        String[] fieldsArray = fields.split(",");
+        for (int i = 0, fieldsArrayLength = fieldsArray.length; i < fieldsArrayLength; i++) {
+            fieldsArray[i] = fieldsArray[i].trim();
+        }
+        return fieldsArray;
     }
 
     @GetMapping("/{orderCode}")
