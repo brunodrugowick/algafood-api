@@ -4,6 +4,7 @@ import dev.drugowick.algaworks.algafoodapi.api.assembler.RestaurantInputDisassem
 import dev.drugowick.algaworks.algafoodapi.api.assembler.RestaurantModelAssembler;
 import dev.drugowick.algaworks.algafoodapi.api.model.RestaurantModel;
 import dev.drugowick.algaworks.algafoodapi.api.model.input.RestaurantInput;
+import dev.drugowick.algaworks.algafoodapi.api.model.view.RestaurantView;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundException;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessException;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.RestaurantNotFoundException;
@@ -13,6 +14,7 @@ import dev.drugowick.algaworks.algafoodapi.domain.service.RestaurantCrudService;
 import dev.drugowick.algaworks.algafoodapi.domain.service.ValidationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,10 +40,39 @@ public class RestaurantController {
         this.restaurantInputDisassembler = restaurantInputDisassembler;
     }
 
-	@GetMapping
+    @GetMapping
 	public List<RestaurantModel> list() {
 	    return restaurantModelAssembler.toCollectionModel(restaurantRepository.findAll());
 	}
+
+	@GetMapping(value = "/jackson-view")
+	public MappingJacksonValue listJacksonView(@RequestParam(required = false) String projection) {
+		List<Restaurant> restaurantList = restaurantRepository.findAll();
+		List<RestaurantModel> restaurantsModelList = restaurantModelAssembler.toCollectionModel(restaurantList);
+
+		MappingJacksonValue restaurantsModelWrapper = new MappingJacksonValue(restaurantsModelList);
+
+		restaurantsModelWrapper.setSerializationView(RestaurantView.Summary.class);
+		if ("name-only".equals(projection)) {
+			restaurantsModelWrapper.setSerializationView(RestaurantView.NameOnly.class);
+		} else if ("all-fields".equals(projection)) {
+			restaurantsModelWrapper.setSerializationView(null);
+		}
+
+		return restaurantsModelWrapper;
+	}
+
+//	@JsonView(RestaurantView.Summary.class)
+//	@GetMapping(value = "/jackson-view", params = "projection=summary")
+//	public List<RestaurantModel> listSummaryJsonView() {
+//	    return restaurantModelAssembler.toCollectionModel(restaurantRepository.findAll());
+//	}
+//
+//	@JsonView(RestaurantView.NameOnly.class)
+//	@GetMapping(value = "/jackson-view", params = "projection=name-only")
+//	public List<RestaurantModel> listNameOnlyJsonView() {
+//	    return restaurantModelAssembler.toCollectionModel(restaurantRepository.findAll());
+//	}
 
 	@PostMapping
 	public ResponseEntity<?> save(@RequestBody @Valid RestaurantInput restaurantInput) {
