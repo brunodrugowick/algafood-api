@@ -4,6 +4,7 @@ import dev.drugowick.algaworks.algafoodapi.api.assembler.GenericInputDisassemble
 import dev.drugowick.algaworks.algafoodapi.api.assembler.GenericModelAssembler;
 import dev.drugowick.algaworks.algafoodapi.api.model.OrderListModel;
 import dev.drugowick.algaworks.algafoodapi.api.model.OrderModel;
+import dev.drugowick.algaworks.algafoodapi.api.model.filter.OrderFilter;
 import dev.drugowick.algaworks.algafoodapi.api.model.input.OrderInput;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundException;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessException;
@@ -11,6 +12,7 @@ import dev.drugowick.algaworks.algafoodapi.domain.model.Order;
 import dev.drugowick.algaworks.algafoodapi.domain.model.User;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.OrderRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.OrderService;
+import dev.drugowick.algaworks.algafoodapi.infrastructure.repository.spec.OrderSpecs;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,9 +37,18 @@ public class OrderController {
         this.orderListModelAssembler = orderListModelAssembler;
     }
 
+    /**
+     * OrderFilter contains several properties. Each property can be passed as URL Query Param and Spring is able to
+     * build the OrderFilter based on just that, filling properties that the client sent and letting others null.
+     *
+     * @param filter
+     * @return
+     */
     @GetMapping
-    public List<OrderListModel> list() {
-        return orderListModelAssembler.toCollectionModel(orderRepository.findAll(), OrderListModel.class);
+    public List<OrderListModel> search(OrderFilter filter) {
+        List<Order> orderList = orderRepository.findAll(OrderSpecs.usingFilter(filter));
+
+        return orderListModelAssembler.toCollectionModel(orderList, OrderListModel.class);
     }
 
     @GetMapping("/{orderCode}")

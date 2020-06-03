@@ -13,8 +13,10 @@ public class OrderListModel {
     private String code;
     private String status;
     private String clientEmail;
+    private Long clientId;
     private BigDecimal total;
     private OffsetDateTime createdDate;
     private OffsetDateTime deliveryDate;
     private String restaurantName;
+    private Long restaurantId;
 }
