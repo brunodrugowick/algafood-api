@@ -2,8 +2,10 @@ package dev.drugowick.algaworks.algafoodapi.api.controller;
 
 import dev.drugowick.algaworks.algafoodapi.api.assembler.GenericInputDisassembler;
 import dev.drugowick.algaworks.algafoodapi.api.assembler.GenericModelAssembler;
+import dev.drugowick.algaworks.algafoodapi.api.assembler.PageModelAssembler;
 import dev.drugowick.algaworks.algafoodapi.api.model.OrderListModel;
 import dev.drugowick.algaworks.algafoodapi.api.model.OrderModel;
+import dev.drugowick.algaworks.algafoodapi.api.model.PageModel;
 import dev.drugowick.algaworks.algafoodapi.api.model.filter.OrderFilter;
 import dev.drugowick.algaworks.algafoodapi.api.model.input.OrderInput;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundException;
@@ -13,11 +15,13 @@ import dev.drugowick.algaworks.algafoodapi.domain.model.User;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.OrderRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.OrderService;
 import dev.drugowick.algaworks.algafoodapi.infrastructure.repository.spec.OrderSpecs;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/orders")
@@ -28,13 +32,15 @@ public class OrderController {
     private final GenericModelAssembler<Order, OrderModel> orderModelAssembler;
     private final GenericInputDisassembler<OrderInput, Order> orderInputDisassembler;
     private final GenericModelAssembler<Order, OrderListModel> orderListModelAssembler;
+    private final PageModelAssembler<Order, OrderListModel> pageModelAssembler;
 
-    public OrderController(OrderService orderService, OrderRepository orderRepository, GenericModelAssembler<Order, OrderModel> orderModelAssembler, GenericInputDisassembler<OrderInput, Order> orderInputDisassembler, GenericModelAssembler<Order, OrderListModel> orderListModelAssembler) {
+    public OrderController(OrderService orderService, OrderRepository orderRepository, GenericModelAssembler<Order, OrderModel> orderModelAssembler, GenericInputDisassembler<OrderInput, Order> orderInputDisassembler, GenericModelAssembler<Order, OrderListModel> orderListModelAssembler, PageModelAssembler<Order, OrderListModel> pageModelAssembler) {
         this.orderService = orderService;
         this.orderRepository = orderRepository;
         this.orderModelAssembler = orderModelAssembler;
         this.orderInputDisassembler = orderInputDisassembler;
         this.orderListModelAssembler = orderListModelAssembler;
+        this.pageModelAssembler = pageModelAssembler;
     }
 
     /**
@@ -45,10 +51,10 @@ public class OrderController {
      * @return
      */
     @GetMapping
-    public List<OrderListModel> search(OrderFilter filter) {
-        List<Order> orderList = orderRepository.findAll(OrderSpecs.usingFilter(filter));
+    public PageModel<OrderListModel> search(OrderFilter filter, @PageableDefault(size = 8) Pageable pageable) {
+        Page<Order> orderPage = orderRepository.findAll(OrderSpecs.usingFilter(filter), pageable);
 
-        return orderListModelAssembler.toCollectionModel(orderList, OrderListModel.class);
+        return pageModelAssembler.toCollectionModelPage(orderPage, OrderListModel.class);
     }
 
     @GetMapping("/{orderCode}")

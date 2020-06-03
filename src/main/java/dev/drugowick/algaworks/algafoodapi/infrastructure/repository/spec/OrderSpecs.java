@@ -14,9 +14,13 @@ public class OrderSpecs {
 
             // These fetch lines solve the N+1 problem by telling JPA to fetch restaurants, users and delivery address
             // (and its nested objects) with the orders.
-            root.fetch("restaurant").fetch("cuisine");
-            root.fetch("client");
-            root.fetch("deliveryAddress").fetch("city").fetch("province");
+            // Additionally, since this is a Pageable resource, there can't be a fetch for the count query, which does
+            // not return an Order, so that's what we check here.
+            if (Order.class.equals(query.getResultType())) {
+                root.fetch("restaurant").fetch("cuisine");
+                root.fetch("client");
+                root.fetch("deliveryAddress").fetch("city").fetch("province");
+            }
 
             ArrayList<Predicate> predicates = new ArrayList<>();
 

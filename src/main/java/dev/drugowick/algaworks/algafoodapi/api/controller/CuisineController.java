@@ -9,6 +9,10 @@ import dev.drugowick.algaworks.algafoodapi.domain.model.Cuisine;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.CuisineRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.CuisineCrudService;
 import dev.drugowick.algaworks.algafoodapi.domain.service.ValidationService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,8 +50,14 @@ public class CuisineController {
 	}
 
 	@GetMapping
-	public List<CuisineModel> list() {
-		return genericModelAssembler.toCollectionModel(cuisineRepository.findAll(), CuisineModel.class);
+	public Page<CuisineModel> list(@PageableDefault(size = 5) Pageable pageable) {
+		Page<Cuisine> cuisinesPage = cuisineRepository.findAll(pageable);
+
+		List<CuisineModel> cuisineModels = genericModelAssembler.toCollectionModel(cuisinesPage.getContent(), CuisineModel.class);
+
+		Page<CuisineModel> cuisineModelPage = new PageImpl<>(cuisineModels, pageable, cuisinesPage.getTotalElements());
+
+		return cuisineModelPage;
 	}
 
 	@PostMapping
