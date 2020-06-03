@@ -13,6 +13,10 @@ import dev.drugowick.algaworks.algafoodapi.domain.model.User;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.OrderRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.OrderService;
 import dev.drugowick.algaworks.algafoodapi.infrastructure.repository.spec.OrderSpecs;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,10 +49,13 @@ public class OrderController {
      * @return
      */
     @GetMapping
-    public List<OrderListModel> search(OrderFilter filter) {
-        List<Order> orderList = orderRepository.findAll(OrderSpecs.usingFilter(filter));
+    public Page<OrderListModel> search(OrderFilter filter,
+                                       @PageableDefault(size = 8) Pageable pageable) {
+        Page<Order> orderPage = orderRepository.findAll(OrderSpecs.usingFilter(filter), pageable);
 
-        return orderListModelAssembler.toCollectionModel(orderList, OrderListModel.class);
+        List<OrderListModel> orderListModels = orderListModelAssembler.toCollectionModel(orderPage.getContent(), OrderListModel.class);
+
+        return new PageImpl<OrderListModel>(orderListModels, pageable, orderPage.getTotalElements());
     }
 
     @GetMapping("/{orderCode}")
