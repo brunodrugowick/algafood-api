@@ -1,6 +1,6 @@
 package dev.drugowick.algaworks.algafoodapi.infrastructure.repository.spec;
 
-import dev.drugowick.algaworks.algafoodapi.api.model.filter.OrderFilter;
+import dev.drugowick.algaworks.algafoodapi.domain.filter.OrderFilter;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Order;
 import org.springframework.data.jpa.domain.Specification;
 
