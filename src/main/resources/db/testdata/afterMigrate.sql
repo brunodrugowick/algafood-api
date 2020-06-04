@@ -1,33 +1,36 @@
-delete
-from order_item;
-delete
-from order_;
+set foreign_key_checks = 0;
 
-delete
-from restaurant_payment_method;
-delete
-from payment_method;
-delete
-from product;
-delete
-from restaurant;
-delete
-from cuisine;
-delete
-from city;
-delete
-from province;
+delete from order_item;
+delete from order_;
 
-delete
-from user_group;
-delete
-from group_permission;
-delete
-from user;
-delete
-from permission;
-delete
-from group_;
+delete from restaurant_payment_method;
+delete from payment_method;
+delete from product;
+delete from restaurant_manager;
+delete from restaurant;
+delete from cuisine;
+delete from city;
+delete from province;
+
+delete from user_group;
+delete from group_permission;
+delete from user;
+delete from permission;
+delete from group_;
+
+set foreign_key_checks = 1;
+
+alter table city auto_increment = 1;
+alter table cuisine auto_increment = 1;
+alter table province auto_increment = 1;
+alter table payment_method auto_increment = 1;
+alter table group_ auto_increment = 1;
+alter table permission auto_increment = 1;
+alter table product auto_increment = 1;
+alter table restaurant auto_increment = 1;
+alter table user auto_increment = 1;
+alter table order_ auto_increment = 1;
+alter table order_item auto_increment = 1;
 
 insert into cuisine (name)
 values ('Italian');
