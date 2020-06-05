@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.UUID;
@@ -17,7 +18,7 @@ public class ProductPhotoController {
 
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public void updatePhoto(@PathVariable Long restaurantId, @PathVariable Long productId,
-                            ProductPhotoInput productPhotoInput) throws IOException {
+                            @Valid ProductPhotoInput productPhotoInput) throws IOException {
 
         String filename = UUID.randomUUID() + "_" + restaurantId + "_" + productId;
 
