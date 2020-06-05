@@ -1,4 +1,4 @@
-package dev.drugowick.algaworks.algafoodapi.infrastructure.service;
+package dev.drugowick.algaworks.algafoodapi.infrastructure.service.query;
 
 import dev.drugowick.algaworks.algafoodapi.domain.filter.DailySalesFilter;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Order;
