@@ -1,2 +1,2 @@
-alter table restaurant add "active" boolean not null;
+alter table restaurant add active tinyint(1) not null;
 update restaurant set active = true;
