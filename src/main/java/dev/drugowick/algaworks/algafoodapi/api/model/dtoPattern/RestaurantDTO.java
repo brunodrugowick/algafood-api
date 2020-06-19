@@ -14,9 +14,10 @@ public enum RestaurantDTO {;
     private interface Id { @NotNull Long getId(); }
     private interface Name { @NotBlank String getName(); }
     private interface Delivery { @Multiple(number = 3) BigDecimal getDelivery(); }
-    private interface Cuisine { @NotBlank CuisineDTO.Response.Summary getCuisine(); }
+    private interface Cuisine { @NotNull CuisineDTO.Response.Summary getCuisine(); }
     private interface Active { @NotNull Boolean getActive(); }
     private interface Opened { @NotNull Boolean getOpened(); }
+    private interface Address { @NotNull AddressDTO.Response.Default getAddress(); }
 
     public enum Response {;
         @Getter @Setter @NoArgsConstructor public static class Default implements Id, Name, Delivery, Cuisine, Active, Opened {
@@ -26,9 +27,9 @@ public enum RestaurantDTO {;
             CuisineDTO.Response.Summary cuisine;
             Boolean active;
             Boolean opened;
+            AddressDTO.Response.Default address;
         }
     }
 
-    //private CuisineModel cuisine;
     //private AddressModel address;
 }
