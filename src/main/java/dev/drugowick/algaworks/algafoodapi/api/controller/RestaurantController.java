@@ -1,8 +1,10 @@
 package dev.drugowick.algaworks.algafoodapi.api.controller;
 
+import dev.drugowick.algaworks.algafoodapi.api.assembler.GenericModelAssembler;
 import dev.drugowick.algaworks.algafoodapi.api.assembler.RestaurantInputDisassembler;
 import dev.drugowick.algaworks.algafoodapi.api.assembler.RestaurantModelAssembler;
 import dev.drugowick.algaworks.algafoodapi.api.model.RestaurantModel;
+import dev.drugowick.algaworks.algafoodapi.api.model.dtoPattern.RestaurantDTO;
 import dev.drugowick.algaworks.algafoodapi.api.model.input.RestaurantInput;
 import dev.drugowick.algaworks.algafoodapi.api.model.view.RestaurantView;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundException;
@@ -30,19 +32,21 @@ public class RestaurantController {
 	private RestaurantCrudService restaurantCrudService;
 	private ValidationService validationService;
 	private RestaurantModelAssembler restaurantModelAssembler;
+	private final GenericModelAssembler<Restaurant, RestaurantDTO.Response.Default> modelAssembler;
 	private RestaurantInputDisassembler restaurantInputDisassembler;
 
-	public RestaurantController(RestaurantRepository restaurantRepository, RestaurantCrudService restaurantCrudService, ValidationService validationService, RestaurantModelAssembler restaurantModelAssembler, RestaurantInputDisassembler restaurantInputDisassembler) {
+	public RestaurantController(RestaurantRepository restaurantRepository, RestaurantCrudService restaurantCrudService, ValidationService validationService, RestaurantModelAssembler restaurantModelAssembler, GenericModelAssembler<Restaurant, RestaurantDTO.Response.Default> modelAssembler, RestaurantInputDisassembler restaurantInputDisassembler) {
 		this.restaurantRepository = restaurantRepository;
 		this.restaurantCrudService = restaurantCrudService;
 		this.validationService = validationService;
         this.restaurantModelAssembler = restaurantModelAssembler;
-        this.restaurantInputDisassembler = restaurantInputDisassembler;
+		this.modelAssembler = modelAssembler;
+		this.restaurantInputDisassembler = restaurantInputDisassembler;
     }
 
     @GetMapping
-	public List<RestaurantModel> list() {
-	    return restaurantModelAssembler.toCollectionModel(restaurantRepository.findAll());
+	public List<RestaurantDTO.Response.Default> list() {
+	    return modelAssembler.toCollectionModel(restaurantRepository.findAll(), RestaurantDTO.Response.Default.class);
 	}
 
 	@GetMapping(value = "/jackson-view")
