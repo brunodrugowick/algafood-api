@@ -1,8 +1,10 @@
 package dev.drugowick.algaworks.algafoodapi.api.controller;
 
-import dev.drugowick.algaworks.algafoodapi.api.assembler.RestaurantInputDisassembler;
+import dev.drugowick.algaworks.algafoodapi.api.assembler.GenericModelAssembler;
+import dev.drugowick.algaworks.algafoodapi.api.assembler.RestaurantDisassembler;
 import dev.drugowick.algaworks.algafoodapi.api.assembler.RestaurantModelAssembler;
 import dev.drugowick.algaworks.algafoodapi.api.model.RestaurantModel;
+import dev.drugowick.algaworks.algafoodapi.api.model.dtoPattern.RestaurantDTO;
 import dev.drugowick.algaworks.algafoodapi.api.model.input.RestaurantInput;
 import dev.drugowick.algaworks.algafoodapi.api.model.view.RestaurantView;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.EntityNotFoundException;
@@ -30,19 +32,30 @@ public class RestaurantController {
 	private RestaurantCrudService restaurantCrudService;
 	private ValidationService validationService;
 	private RestaurantModelAssembler restaurantModelAssembler;
-	private RestaurantInputDisassembler restaurantInputDisassembler;
+	private final GenericModelAssembler<Restaurant, RestaurantDTO.Response.Default> modelAssembler;
+	private final GenericModelAssembler<Restaurant, RestaurantDTO.Response.Summary> modelAssemblerSummary;
+	private RestaurantDisassembler restaurantDisassembler;
 
-	public RestaurantController(RestaurantRepository restaurantRepository, RestaurantCrudService restaurantCrudService, ValidationService validationService, RestaurantModelAssembler restaurantModelAssembler, RestaurantInputDisassembler restaurantInputDisassembler) {
+	public RestaurantController(
+			RestaurantRepository restaurantRepository,
+			RestaurantCrudService restaurantCrudService,
+			ValidationService validationService,
+			RestaurantModelAssembler restaurantModelAssembler,
+			GenericModelAssembler<Restaurant, RestaurantDTO.Response.Default> modelAssembler,
+			GenericModelAssembler<Restaurant, RestaurantDTO.Response.Summary> modelAssemblerSummary,
+			RestaurantDisassembler restaurantDisassembler) {
 		this.restaurantRepository = restaurantRepository;
 		this.restaurantCrudService = restaurantCrudService;
 		this.validationService = validationService;
         this.restaurantModelAssembler = restaurantModelAssembler;
-        this.restaurantInputDisassembler = restaurantInputDisassembler;
+		this.modelAssembler = modelAssembler;
+		this.modelAssemblerSummary = modelAssemblerSummary;
+		this.restaurantDisassembler = restaurantDisassembler;
     }
 
     @GetMapping
-	public List<RestaurantModel> list() {
-	    return restaurantModelAssembler.toCollectionModel(restaurantRepository.findAll());
+	public List<RestaurantDTO.Response.Default> list() {
+	    return modelAssembler.toCollectionModel(restaurantRepository.findAll(), RestaurantDTO.Response.Default.class);
 	}
 
 	@GetMapping(value = "/jackson-view")
@@ -62,6 +75,17 @@ public class RestaurantController {
 		return restaurantsModelWrapper;
 	}
 
+	@GetMapping(value = "/dto-pattern")
+	public List<?> listDtoPattern(@RequestParam(required = false) String projection) {
+		List<Restaurant> restaurantList = restaurantRepository.findAll();
+
+		if ("all-fields".equals(projection)) {
+			return modelAssembler.toCollectionModel(restaurantList, RestaurantDTO.Response.Default.class);
+		}
+
+		return modelAssemblerSummary.toCollectionModel(restaurantList, RestaurantDTO.Response.Summary.class);
+	}
+
 //	@JsonView(RestaurantView.Summary.class)
 //	@GetMapping(value = "/jackson-view", params = "projection=summary")
 //	public List<RestaurantModel> listSummaryJsonView() {
@@ -77,7 +101,19 @@ public class RestaurantController {
 	@PostMapping
 	public ResponseEntity<?> save(@RequestBody @Valid RestaurantInput restaurantInput) {
 		try {
-			Restaurant restaurant = restaurantInputDisassembler.toDomain(restaurantInput);
+			Restaurant restaurant = restaurantDisassembler.inputToDomain(restaurantInput);
+
+			return ResponseEntity.status(HttpStatus.CREATED)
+					.body(restaurantModelAssembler.toModel(restaurantCrudService.save(restaurant)));
+		} catch (EntityNotFoundException e) {
+			throw new GenericBusinessException(e.getMessage(), e);
+		}
+	}
+
+	@PostMapping(value = "/dto-pattern")
+	public ResponseEntity<?> saveDtoPattern(@RequestBody @Valid RestaurantDTO.Request.Default restaurantInput) {
+		try {
+			Restaurant restaurant = restaurantDisassembler.dtoToDomain(restaurantInput);
 
 			return ResponseEntity.status(HttpStatus.CREATED)
 					.body(restaurantModelAssembler.toModel(restaurantCrudService.save(restaurant)));
@@ -96,7 +132,7 @@ public class RestaurantController {
 									@RequestBody @Valid RestaurantInput restaurantInput) {
 		try {
 			Restaurant restaurantToUpdate = restaurantCrudService.findOrElseThrow(id);
-			restaurantInputDisassembler.copyToDomainObject(restaurantInput, restaurantToUpdate);
+			restaurantDisassembler.copyToDomainObject(restaurantInput, restaurantToUpdate);
 			// The save method will update when an existing ID is being passed.
 			return ResponseEntity.ok(restaurantModelAssembler.toModel(restaurantCrudService.save(restaurantToUpdate)));
 		} catch (EntityNotFoundException e) {
