@@ -1,5 +1,6 @@
 package dev.drugowick.algaworks.algafoodapi.api.assembler;
 
+import dev.drugowick.algaworks.algafoodapi.api.model.dtoPattern.RestaurantDTO;
 import dev.drugowick.algaworks.algafoodapi.api.model.input.RestaurantInput;
 import dev.drugowick.algaworks.algafoodapi.domain.model.City;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Cuisine;
@@ -8,16 +9,20 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RestaurantInputDisassembler {
+public class RestaurantDisassembler {
 
     private ModelMapper modelMapper;
 
-    public RestaurantInputDisassembler(ModelMapper modelMapper) {
+    public RestaurantDisassembler(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
     }
 
-    public Restaurant toDomain(RestaurantInput restaurantInput) {
+    public Restaurant inputToDomain(RestaurantInput restaurantInput) {
         return modelMapper.map(restaurantInput, Restaurant.class);
+    }
+
+    public Restaurant dtoToDomain(RestaurantDTO.Request.Default restaurantDto) {
+        return modelMapper.map(restaurantDto, Restaurant.class);
     }
 
     public void copyToDomainObject(RestaurantInput restaurantInput, Restaurant restaurant) {
