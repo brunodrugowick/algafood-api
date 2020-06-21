@@ -20,4 +20,10 @@ public enum CuisineDTO {;
 
     }
 
+    public enum Request {;
+        @Getter @Setter @NoArgsConstructor public static class IdOnly implements Id {
+            Long id;
+        }
+    }
+
 }
