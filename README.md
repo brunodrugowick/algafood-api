@@ -12,6 +12,22 @@ This project was bootstrapped with Spring Boot, so:
 ./mvnw spring-boot:run
 ``` 
 
+Since Spring Boot 2.3, you can run:
+
+```
+./mvnw spring-boot:build-image
+```
+
+### Storage
+
+If you use S3 to storage pictures, you must provide the key and secret keys. For security reasons they are not checked to the repository and you should provide on your run configuration.
+
+### Known issues
+
+I try to keep the application cross-compatible between MySQL and H2 (for demonstration purposes, of course), but there's one endpoint that I could not make to work which is the `/statistics/daily-sales`. If you want to see it working provide a MySQL instance and configure accordingly on `application.properties`.
+
+This creates a docker image of the project.
+
 ## Testing
 
 There's a [Insomnia_requests.json](src/main/resources/static/Insomnia_requests.json) file. Import it into [Insomnia](https://insomnia.rest/download/) to test all endpoints (already with examples). It's easier to just use the `Run in Insomnia` button above.
@@ -52,5 +68,4 @@ Note: the second option was added to show Flyway capabilities.
 
 ## Media Types
 
-The API works with `application/json`.
-
+The API works with `application/json`. There are endpoints which accept `image/jpeg` and `image/png`.
