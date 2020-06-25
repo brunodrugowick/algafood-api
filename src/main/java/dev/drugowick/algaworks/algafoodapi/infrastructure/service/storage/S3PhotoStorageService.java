@@ -8,11 +8,9 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import dev.drugowick.algaworks.algafoodapi.config.StorageProperties;
 import dev.drugowick.algaworks.algafoodapi.domain.service.PhotoStorageService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.net.URL;
 
-@Service
 @RequiredArgsConstructor
 public class S3PhotoStorageService implements PhotoStorageService {
 

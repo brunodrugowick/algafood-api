@@ -7,7 +7,6 @@ import org.springframework.util.FileCopyUtils;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-//@Service
 public class LocalPhotoStorageService implements PhotoStorageService {
 
     private final Path photosDirectory;
