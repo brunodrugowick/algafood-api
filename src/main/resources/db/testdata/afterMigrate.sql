@@ -17,6 +17,7 @@ delete from group_permission;
 delete from user;
 delete from permission;
 delete from group_;
+delete from product_photo;
 
 set foreign_key_checks = 1;
 

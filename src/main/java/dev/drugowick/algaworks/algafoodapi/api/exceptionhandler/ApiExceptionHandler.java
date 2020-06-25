@@ -20,6 +20,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -238,6 +239,26 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         }
 
         return super.handleExceptionInternal(ex, body, headers, status, request);
+    }
+
+    /**
+     * Since we throw a HttpMediaTypeNotAcceptable exception on one of our controllers, it's  necessary to overwrite
+     * and properly handle the Exception. If not, the default method would call the handleExceptionInternal, which we
+     * do override and then  it tries to send a body for the client...  which won't  be possible because for now this
+     * exception occurs when the client  is requesting a, for instance, png but we can only provide a jpeg.
+     *
+     * @param ex
+     * @param headers
+     * @param status
+     * @param request
+     * @return
+     */
+    @Override
+    protected ResponseEntity<Object> handleHttpMediaTypeNotAcceptable(HttpMediaTypeNotAcceptableException ex,
+                                                                      HttpHeaders headers,
+                                                                      HttpStatus status,
+                                                                      WebRequest request) {
+        return ResponseEntity.status(status).headers(headers).build();
     }
 
     private ResponseEntity<Object> handleValidationInternal(Exception exception, BindingResult bindingResult,

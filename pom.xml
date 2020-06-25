@@ -19,6 +19,7 @@
 		<modelmapper.version>2.3.0</modelmapper.version>
 		<squiggly.version>1.3.18</squiggly.version>
 		<jasperreports.version>6.12.2</jasperreports.version>
+		<awss3.version>1.11.810</awss3.version>
 	</properties>
 
 	<dependencies>
@@ -107,6 +108,11 @@
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports-functions</artifactId>
 			<version>${jasperreports.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-s3</artifactId>
+			<version>${awss3.version}</version>
 		</dependency>
 	</dependencies>
 
