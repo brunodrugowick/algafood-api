@@ -2,14 +2,12 @@ package dev.drugowick.algaworks.algafoodapi.infrastructure.service.storage;
 
 import dev.drugowick.algaworks.algafoodapi.config.ApplicationProperties;
 import dev.drugowick.algaworks.algafoodapi.domain.service.PhotoStorageService;
-import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-@Service
+//@Service
 public class LocalPhotoStorageService implements PhotoStorageService {
 
     private final Path photosDirectory;
@@ -19,11 +17,11 @@ public class LocalPhotoStorageService implements PhotoStorageService {
     }
 
     @Override
-    public InputStream get(String fileName) {
+    public PhotoWrapper get(String fileName) {
         try {
             Path filePath = getFilePath(fileName);
 
-            return Files.newInputStream(filePath);
+            return PhotoWrapper.builder().inputStream(Files.newInputStream(filePath)).build();
         } catch (Exception e) {
             throw new StorageException("Could not get file.", e);
         }

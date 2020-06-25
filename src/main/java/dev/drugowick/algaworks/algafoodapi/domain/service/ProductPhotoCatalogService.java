@@ -41,6 +41,7 @@ public class ProductPhotoCatalogService {
         // to whatever place the storage service is going to save.
         PhotoStorageService.NewPhoto newPhoto = PhotoStorageService.NewPhoto.builder()
                 .fileName(photo.getFileName())
+                .contentType(photo.getContentType())
                 .inputStream(inputStream)
                 .build();
 

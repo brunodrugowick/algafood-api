@@ -10,6 +10,8 @@ import dev.drugowick.algaworks.algafoodapi.domain.service.ProductCrudService;
 import dev.drugowick.algaworks.algafoodapi.domain.service.ProductPhotoCatalogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
@@ -18,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -39,7 +40,7 @@ public class ProductPhotoController {
     }
 
     @GetMapping
-    public ResponseEntity<InputStreamResource> getPhoto(@PathVariable Long restaurantId, @PathVariable Long productId,
+    public ResponseEntity<?> getPhoto(@PathVariable Long restaurantId, @PathVariable Long productId,
                                                         @RequestHeader(name = "accept") String acceptHeader)
             throws HttpMediaTypeNotAcceptableException {
         ProductPhoto productPhoto = productPhotoCatalogService.findOrElseThrow(restaurantId, productId);
@@ -49,10 +50,17 @@ public class ProductPhotoController {
 
         checkMediaType(photoMediaType, clientAcceptedMediaTypes);
 
-        InputStream inputStream = photoStorageService.get(productPhoto.getFileName());
-        return ResponseEntity.ok()
-                .contentType(photoMediaType)
-                .body(new InputStreamResource(inputStream));
+        PhotoStorageService.PhotoWrapper photoWrapper = photoStorageService.get(productPhoto.getFileName());
+        if (photoWrapper.hasUrl()) {
+            return ResponseEntity.status(HttpStatus.FOUND)
+                    .header(HttpHeaders.LOCATION, photoWrapper.getUrl())
+                    .build();
+        } else {
+            return ResponseEntity.ok()
+                    .contentType(photoMediaType)
+                    .body(new InputStreamResource(photoWrapper.getInputStream()));
+        }
+
     }
 
     /**

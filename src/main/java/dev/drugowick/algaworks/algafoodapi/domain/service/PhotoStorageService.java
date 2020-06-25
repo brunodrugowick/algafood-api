@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface PhotoStorageService {
 
-    InputStream get(String fileName);
+    PhotoWrapper get(String fileName);
 
     void store(NewPhoto newPhoto);
 
@@ -30,6 +30,22 @@ public interface PhotoStorageService {
     @Builder
     class NewPhoto {
         private String fileName;
+        private String contentType;
         private InputStream inputStream;
+    }
+
+    @Getter
+    @Builder
+    class PhotoWrapper {
+        private InputStream inputStream;
+        private String url;
+
+        public boolean hasUrl() {
+            return url != null;
+        }
+
+        public boolean hasInputStream() {
+            return inputStream != null;
+        }
     }
 }
