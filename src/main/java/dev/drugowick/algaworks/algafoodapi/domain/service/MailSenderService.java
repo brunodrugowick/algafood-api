@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Singular;
 
+import java.util.Map;
 import java.util.Set;
 
 public interface MailSenderService {
@@ -23,5 +24,8 @@ public interface MailSenderService {
 
         @NonNull // Helps builder to demand a value
         private String body;
+
+        @Singular
+        private Map<String, Object> variables;
     }
 }
