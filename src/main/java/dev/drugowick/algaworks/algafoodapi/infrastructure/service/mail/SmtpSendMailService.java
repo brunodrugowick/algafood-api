@@ -5,13 +5,11 @@ import dev.drugowick.algaworks.algafoodapi.domain.service.MailSenderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import javax.mail.internet.MimeMessage;
 
-@Service
 @RequiredArgsConstructor
 public class SmtpSendMailService implements MailSenderService {
 
@@ -38,7 +36,7 @@ public class SmtpSendMailService implements MailSenderService {
 
     }
 
-    private String processTemplate(MailMessage message) {
+    protected String processTemplate(MailMessage message) {
         try {
             Context thymeleafContext = new Context();
             thymeleafContext.setVariables(message.getVariables());
