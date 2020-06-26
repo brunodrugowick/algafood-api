@@ -22,7 +22,7 @@ public class SmtpSendMailService implements MailSenderService {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
             helper.setFrom(emailProperties.getSender());
-            helper.setTo(message.getTo().toArray(new String[0]));
+            helper.setTo(message.getRecipients().toArray(new String[0]));
             helper.setSubject(message.getSubject());
             helper.setText(message.getBody(), true);
 

@@ -2,6 +2,8 @@ package dev.drugowick.algaworks.algafoodapi.domain.service;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NonNull;
+import lombok.Singular;
 
 import java.util.Set;
 
@@ -12,8 +14,14 @@ public interface MailSenderService {
     @Getter
     @Builder
     class MailMessage {
-        private Set<String> to;
+
+        @Singular // Helps the builder to receive one item at a time. Cool.
+        private Set<String> recipients;
+
+        @NonNull // Helps builder to demand a value
         private String subject;
+
+        @NonNull // Helps builder to demand a value
         private String body;
     }
 }
