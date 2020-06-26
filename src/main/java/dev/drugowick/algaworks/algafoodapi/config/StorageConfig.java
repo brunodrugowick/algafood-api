@@ -8,6 +8,7 @@ import dev.drugowick.algaworks.algafoodapi.domain.service.PhotoStorageService;
 import dev.drugowick.algaworks.algafoodapi.infrastructure.service.storage.LocalPhotoStorageService;
 import dev.drugowick.algaworks.algafoodapi.infrastructure.service.storage.S3PhotoStorageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -19,6 +20,7 @@ public class StorageConfig {
     private final ApplicationProperties applicationProperties;
 
     @Bean
+    @ConditionalOnProperty(name = "algafoodapi.storage.type", havingValue = "s3")
     public AmazonS3 amazonS3() {
         BasicAWSCredentials basicAWSCredentials = new BasicAWSCredentials(storageProperties.getS3().getKey(), storageProperties.getS3().getSecret());
 
