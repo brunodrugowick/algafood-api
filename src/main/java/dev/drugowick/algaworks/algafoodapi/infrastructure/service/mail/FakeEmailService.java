@@ -5,6 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
+/**
+ * Does not send an email. Instead, prints the processed template to the console.
+ */
 @Slf4j
 public class FakeEmailService extends SmtpSendMailService {
 

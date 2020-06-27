@@ -2,6 +2,7 @@ package dev.drugowick.algaworks.algafoodapi.config;
 
 import dev.drugowick.algaworks.algafoodapi.domain.service.MailSenderService;
 import dev.drugowick.algaworks.algafoodapi.infrastructure.service.mail.FakeEmailService;
+import dev.drugowick.algaworks.algafoodapi.infrastructure.service.mail.SandboxSendMailService;
 import dev.drugowick.algaworks.algafoodapi.infrastructure.service.mail.SmtpSendMailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -24,6 +25,8 @@ public class EmailConfig {
                 return new SmtpSendMailService(javaMailSender, emailProperties, templateEngine);
             case FAKE:
                 return new FakeEmailService(javaMailSender, emailProperties, templateEngine);
+            case SANDBOX:
+                return new SandboxSendMailService(javaMailSender, emailProperties, templateEngine);
             default:
                 return null;
         }

@@ -2,7 +2,7 @@ package dev.drugowick.algaworks.algafoodapi.infrastructure.service.mail;
 
 import dev.drugowick.algaworks.algafoodapi.config.EmailProperties;
 import dev.drugowick.algaworks.algafoodapi.domain.service.MailSenderService;
-import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.thymeleaf.context.Context;
@@ -11,12 +11,15 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
-@RequiredArgsConstructor
-public class SmtpSendMailService implements MailSenderService {
+/**
+ * Sends the email to a specific email address regardless of the data coming from MailMessage
+ */
+@Slf4j
+public class SandboxSendMailService extends SmtpSendMailService implements MailSenderService {
 
-    protected final JavaMailSender mailSender;
-    protected final EmailProperties emailProperties;
-    protected final SpringTemplateEngine templateEngine;
+    public SandboxSendMailService(JavaMailSender mailSender, EmailProperties emailProperties, SpringTemplateEngine templateEngine) {
+        super(mailSender, emailProperties, templateEngine);
+    }
 
     @Override
     public void send(MailMessage message) {
@@ -30,15 +33,12 @@ public class SmtpSendMailService implements MailSenderService {
 
     }
 
+    @Override
     protected MimeMessage getMimeMessage(MailMessage message) throws MessagingException {
-        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessage mimeMessage = super.getMimeMessage(message);
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
-        String processedBody = processTemplate(message);
 
-        helper.setFrom(emailProperties.getSender());
-        helper.setTo(message.getRecipients().toArray(new String[0]));
-        helper.setSubject(message.getSubject());
-        helper.setText(processedBody, true);
+        helper.setTo(emailProperties.getSandbox().getRecipient());
 
         return mimeMessage;
     }
