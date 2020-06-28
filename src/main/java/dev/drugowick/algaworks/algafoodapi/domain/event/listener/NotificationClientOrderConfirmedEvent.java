@@ -5,8 +5,9 @@ import dev.drugowick.algaworks.algafoodapi.domain.model.Order;
 import dev.drugowick.algaworks.algafoodapi.domain.service.MailSenderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
 @Slf4j
@@ -15,7 +16,7 @@ public class NotificationClientOrderConfirmedEvent {
 
     private final MailSenderService mailSender;
 
-    @EventListener
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void whenOrderConfirmed(OrderConfirmedEvent event) {
         Order order = event.getOrder();
         String clientEmail = order.getClient().getEmail();
