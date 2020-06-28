@@ -1,11 +1,13 @@
 package dev.drugowick.algaworks.algafoodapi.domain.model;
 
+import dev.drugowick.algaworks.algafoodapi.domain.event.OrderConfirmedEvent;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessException;
 import dev.drugowick.algaworks.algafoodapi.domain.validation.IfFreeDeliverySubtotalEqualsTotal;
 import dev.drugowick.algaworks.algafoodapi.domain.validation.ValidationGroups;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.domain.AbstractAggregateRoot;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -22,9 +24,9 @@ import java.util.UUID;
 // A custom annotation that validates if subtotal equals total when deliveryFee equals 0.
 @IfFreeDeliverySubtotalEqualsTotal(fieldDeliveryFee = "deliveryFee", fieldSubtotal = "subtotal", fieldTotal = "total")
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Entity(name = "order_")
-public class Order {
+public class Order extends AbstractAggregateRoot<Order> {
 
     @NotNull(groups = ValidationGroups.OrderId.class)
     @EqualsAndHashCode.Include
@@ -121,6 +123,8 @@ public class Order {
     public void confirm() {
         setStatus(OrderStatus.CONFIRMED);
         setConfirmationDate(OffsetDateTime.now(ZoneOffset.UTC));
+
+        registerEvent(new OrderConfirmedEvent(this));
     }
 
     public void deliver() {

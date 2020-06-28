@@ -1,35 +1,30 @@
 package dev.drugowick.algaworks.algafoodapi.domain.service;
 
 import dev.drugowick.algaworks.algafoodapi.domain.model.Order;
+import dev.drugowick.algaworks.algafoodapi.domain.repository.OrderRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class OrderStatusService {
 
     private final OrderService orderService;
-    private final MailSenderService mailSender;
-
-    public OrderStatusService(OrderService orderService, MailSenderService mailSender) {
-        this.orderService = orderService;
-        this.mailSender = mailSender;
-    }
+    private final OrderRepository orderRepository;
 
     @Transactional
     public void confirmOrder(String orderCode) {
         Order order = findOrElseThrow(orderCode);
         order.confirm();
 
-        String clientEmail = order.getClient().getEmail();
-        log.info("Sending confirmation mail to " + clientEmail);
-        mailSender.send(MailSenderService.MailMessage.builder()
-                .subject(order.getRestaurant().getName() + " - Order Confirmation")
-                .body("order-confirmation.html")
-                .recipient(clientEmail)
-                .variable("order", order)
-                .build());
+        /**
+         * The implementation of Domain Events by Spring Data requires explicit calls to save()  on the  Repository to
+         * actually an event (see the method Order.confirm() which register an event).
+         */
+        orderRepository.save(order);
     }
 
     @Transactional
