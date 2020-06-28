@@ -49,6 +49,28 @@ Note: HATEOAS soon...
 
 You may also use Apache jMeter or Apache Bench (`ab -n <requests> -c <how-many-in-paralell> <endpoint>`)
 
+### CORS
+
+To simulate the CORS situation you want to access your API through other domain, for example `http://api.algafood.local:<port>`. Start by adding the following to your `hosts` file:
+
+```text
+127.0.0.1       api.algafood.local
+``` 
+
+Now on line 19 of the `src/main/resources/templates/requests.html` file, add the address of where your API is running, like so:
+
+```javascript
+var host = "http://localhost:<port>";
+```
+
+Finally, run and access your API through `http://api.algafood.local:<port>/requests`.
+
+This setup will activate the CORS implementation on any browser since the requests are from `api.algafood.local` to `localhost`. 
+
+Of course the requests will work since they are being accepted by the server configuration at `src/main/java/dev/drugowick/algaworks/algafoodapi/config/WebConfig.java`. 
+
+You can deactivate that and see for yourself CORS working. You can also  change the maxAge and see the browser re-doing the pre-flight requests after the "maxAge" time. 
+
 ### Flyway
 
 This application can use H2 or MySQL as database. The H2 support was designed for self-contained demonstrations on heroku, [for example](https://algafoodapi.herokuapp.com/). So you may see some limitations on SQL code.

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Drugo AlgafoodAPI</title>
+</head>
+<body>
+        <p>
+            <button id="getRestaurants" class="btn btn-secondary">GET Restaurants</button>
+            <button id="getPaymentMethods" class="btn btn-secondary">GET Payment Methods</button>
+            <button id="getOrders" class="btn btn-secondary">GET Orders</button>
+        </p>
+        <p>
+            <input type="text" id="payment-method" placeholder="Payment Method">
+            <button type="button" id="post-payment-method">POST Payment Method</button>
+        </p>
+        <p>
+            <input type="text" id="payment-method-id" placeholder="ID of the Payment Method">
+            <button type="button" id="delete-payment-method">DELETE Payment Method</button>
+        </p>
+        <p>
+            <pre id="response"></pre>
+        </p>
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script>
+    // This is null to make it work on other deployments than local.
+    // There are instructions on how README.md on how to test CORS using this variable.
+    const host = "";
+
+    //var host = "";
+
+    function getRestaurants() {
+        ajaxRequest("/restaurants", "get")
+    }
+
+    function getPaymentMethods() {
+        ajaxRequest("/payment-methods", "get")
+    }
+
+    function getOrders() {
+        ajaxRequest("/orders", "get")
+    }
+
+    function postPaymentMethod() {
+        var paymentMethodJson = JSON.stringify({
+            "description": $("#payment-method").val()
+        });
+        ajaxRequest("/payment-methods", "post", paymentMethodJson);
+    }
+
+    function deletePaymentMethod() {
+        const path = "/payment-methods/" + $("#payment-method-id").val();
+        ajaxRequest(path, "delete");
+    }
+
+    function ajaxRequest(path, method, payload) {
+        $.ajax({
+            url: host + path,
+            type: method,
+            data: payload,
+            contentType: "application/json",
+
+            success: function (response) {
+                $("#response").text(JSON.stringify(response, undefined,  4));
+            },
+            error: function (response) {
+                $("#response").text(JSON.stringify(response, undefined,  4));
+            }
+        });
+    }
+
+    $("#getRestaurants").click(getRestaurants);
+    $("#getPaymentMethods").click(getPaymentMethods);
+    $("#getOrders").click(getOrders);
+
+    $("#post-payment-method").click(postPaymentMethod);
+    $("#delete-payment-method").click(deletePaymentMethod);
+</script>
+</body>
+</html>
