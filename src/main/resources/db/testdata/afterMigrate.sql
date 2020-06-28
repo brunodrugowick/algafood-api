@@ -63,9 +63,9 @@ insert into group_permission (group_id, permission_id)
 values ((select id from group_ where name = 'Group 2'), (select id from permission where name = 'WRITE'));
 
 insert into user (name, email, password, created_date)
-values ('drugowick', 'bruno.drugowick@gmail.com', 'password', current_timestamp);
+values ('drugowick', 'bruno.drugowick+algafoodapi_1@gmail.com', 'password', current_timestamp);
 insert into user (name, email, password, created_date)
-values ('drugowick2', 'brunodrugowick@gmail.com', 'password', current_timestamp);
+values ('drugowick2', 'brunodrugowick+algafoodapi_2@gmail.com', 'password', current_timestamp);
 
 insert into user_group (user_id, group_id)
 values ((select id from user where name = 'drugowick'), (select id from group_ where name = 'Group 1'));
