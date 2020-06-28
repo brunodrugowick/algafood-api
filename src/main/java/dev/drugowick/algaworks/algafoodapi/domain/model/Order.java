@@ -1,6 +1,7 @@
 package dev.drugowick.algaworks.algafoodapi.domain.model;
 
 import dev.drugowick.algaworks.algafoodapi.domain.event.OrderConfirmedEvent;
+import dev.drugowick.algaworks.algafoodapi.domain.event.listener.OrderCancelledEvent;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessException;
 import dev.drugowick.algaworks.algafoodapi.domain.validation.IfFreeDeliverySubtotalEqualsTotal;
 import dev.drugowick.algaworks.algafoodapi.domain.validation.ValidationGroups;
@@ -135,6 +136,8 @@ public class Order extends AbstractAggregateRoot<Order> {
     public void cancel() {
         setStatus(OrderStatus.CANCELLED);
         setCancellationDate(OffsetDateTime.now(ZoneOffset.UTC));
+
+        registerEvent(new OrderCancelledEvent(this));
     }
 
     /**

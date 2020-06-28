@@ -37,8 +37,13 @@ public class OrderStatusService {
     @Transactional
     public void cancelOrder(String orderCode) {
         Order order = findOrElseThrow(orderCode);
-
         order.cancel();
+
+        /**
+         * The implementation of Domain Events by Spring Data requires explicit calls to save()  on the  Repository to
+         * actually an event (see the method Order.confirm() which register an event).
+         */
+        orderRepository.save(order);
     }
 
     private Order findOrElseThrow(String orderCode) {

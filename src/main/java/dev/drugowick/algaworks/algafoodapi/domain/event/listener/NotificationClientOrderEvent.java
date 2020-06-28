@@ -12,7 +12,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class NotificationClientOrderConfirmedEvent {
+public class NotificationClientOrderEvent {
 
     private final MailSenderService mailSender;
 
@@ -21,11 +21,30 @@ public class NotificationClientOrderConfirmedEvent {
         Order order = event.getOrder();
         String clientEmail = order.getClient().getEmail();
         log.info("Sending confirmation mail to " + clientEmail);
-        mailSender.send(MailSenderService.MailMessage.builder()
+
+        MailSenderService.MailMessage mailMessage = MailSenderService.MailMessage.builder()
                 .subject(order.getRestaurant().getName() + " - Order Confirmation")
                 .body("order-confirmation.html")
                 .recipient(clientEmail)
                 .variable("order", order)
-                .build());
+                .build();
+
+        mailSender.send(mailMessage);
+    }
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    public void  whenOrderCancelled(OrderCancelledEvent event) {
+        Order order = event.getOrder();
+        String clientEmail = order.getClient().getEmail();
+        log.info("Sending cancellation mail to " + clientEmail);
+
+        MailSenderService.MailMessage mailMessage = MailSenderService.MailMessage.builder()
+                .subject(order.getRestaurant().getName() + " - Order Cancellation")
+                .body("order-cancellation.html")
+                .recipient(clientEmail)
+                .variable("order", order)
+                .build();
+
+        mailSender.send(mailMessage);
     }
 }

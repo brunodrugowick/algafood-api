@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body style="font: 14px Arial, Helvetica, sans-serif">
+<h1 style="color: red; font-size: 26px">Order Cancellation!</h1>
+
+<!--/*@thymesVar id="order" type="dev.drugowick.algaworks.algafoodapi.domain.model.Order"*/-->
+<p th:text="${order.client.name} + ', your order is cancelled.'"></p>
+
+<br>
+<h2 style="font-size: 20px">Order Code</h2>
+<p th:text="'Your order code is: ' + ${order.code}"></p>
+
+<br>
+<h2 style="font-size: 20px" th:text="${order.restaurant.name}">Pizzaria Marcante</h2>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0"
+       style="max-width: 600px; color: #6F6F6F">
+    <tr th:each="item : ${order.items}">
+        <td style="padding: 10px 0" th:text="${item.amount} + 'x ' + ${item.product.name}">3x Pizza Waltão</td>
+        <td style="width: 30px" th:text="${#numbers.formatDecimal(item.totalPrice, 0, 'COMMA', 2, 'POINT')}">$ 20.00</td>
+    </tr>
+    <tr>
+        <td style="padding: 10px 0">Delivery</td>
+        <td style="width: 30px" th:text="${#numbers.formatDecimal(order.deliveryFee, 0, 'COMMA', 2, 'POINT')}">$ 5.00</td>
+    </tr>
+    <tr>
+        <td style="padding: 10px 0"><b>Total</b></td>
+        <td style="width: 30px" th:text="${#numbers.formatDecimal(order.total, 0, 'COMMA', 2, 'POINT')}">$ 25.00</td>
+    </tr>
+</table>
+
+<br>
+<h2 style="font-size: 20px">Payment Method</h2>
+<p style="color: #6F6F6F" th:text="${order.paymentMethod.description}">Credit Card</p>
+
+</body>
+</html>
