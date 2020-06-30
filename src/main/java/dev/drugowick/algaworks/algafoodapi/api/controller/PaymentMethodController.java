@@ -65,7 +65,10 @@ public class PaymentMethodController {
                 paymentMethodCrudService.findOrElseThrow(id), PaymentMethodModel.class);
 
         return ResponseEntity.ok()
-                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                //.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePrivate()) // Instructs only local caching (for sensitive data)
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePublic()) // instructs shared caches that this can be shared
+                //.cacheControl(CacheControl.noCache()) // Even cached, every request is validated (as if is always staled, without maxAge)
+                //.cacheControl(CacheControl.noStore()) // Instructs the response to NOT be cached.
                 .body(paymentMethodModel);
     }
 
