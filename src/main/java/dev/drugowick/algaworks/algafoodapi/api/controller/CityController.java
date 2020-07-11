@@ -9,6 +9,7 @@ import dev.drugowick.algaworks.algafoodapi.domain.model.City;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.CityRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.CityCrudService;
 import dev.drugowick.algaworks.algafoodapi.domain.service.ValidationService;
+import io.swagger.annotations.Api;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
+@Api(tags = "Cities")
 @RestController
 @RequestMapping("cities")
 public class CityController {
