@@ -10,6 +10,7 @@ import dev.drugowick.algaworks.algafoodapi.domain.repository.CityRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.CityCrudService;
 import dev.drugowick.algaworks.algafoodapi.domain.service.ValidationService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +18,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("cities")
+@RequestMapping(path = "cities", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CityController implements CityControllerOpenApi {
 
     /**

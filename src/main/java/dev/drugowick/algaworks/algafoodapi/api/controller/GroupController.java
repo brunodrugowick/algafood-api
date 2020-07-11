@@ -12,6 +12,7 @@ import dev.drugowick.algaworks.algafoodapi.domain.repository.GroupRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.GroupCrudService;
 import dev.drugowick.algaworks.algafoodapi.domain.service.PermissionCrudService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/groups")
+@RequestMapping(path = "/groups", produces = MediaType.APPLICATION_JSON_VALUE)
 public class GroupController implements GroupControllerOpenApi {
 
     private GroupRepository groupRepository;
