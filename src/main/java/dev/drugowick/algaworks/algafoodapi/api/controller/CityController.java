@@ -11,6 +11,7 @@ import dev.drugowick.algaworks.algafoodapi.domain.service.CityCrudService;
 import dev.drugowick.algaworks.algafoodapi.domain.service.ValidationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -56,13 +57,13 @@ public class CityController {
 
     @ApiOperation("Retrieves a city by ID")
     @GetMapping("/{id}")
-    public CityModel get(@PathVariable Long id) {
+    public CityModel get(@ApiParam(value = "City ID", example = "1") @PathVariable Long id) {
         return genericModelAssembler.toModel(cityCrudService.findOrElseThrow(id), CityModel.class);
     }
 
     @ApiOperation("Creates a new city")
     @PostMapping
-    public ResponseEntity<CityModel> save(@RequestBody @Valid CityInput cityInput) {
+    public ResponseEntity<CityModel> save(@ApiParam(value = "A representation of a new city") @RequestBody @Valid CityInput cityInput) {
         City city = cityInputDisassembler.toDomain(cityInput);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(genericModelAssembler.toModel(cityCrudService.save(city), CityModel.class));
@@ -70,7 +71,11 @@ public class CityController {
 
     @ApiOperation("Updates a city by ID")
     @PutMapping("/{id}")
-    public ResponseEntity<CityModel> update(@PathVariable @Valid Long id, @RequestBody CityInput cityInput) {
+    public ResponseEntity<CityModel> update(@ApiParam(value = "City ID", example = "1")
+                                            @PathVariable @Valid Long id,
+
+                                            @ApiParam(value = "A representation with new data of a city")
+                                            @RequestBody CityInput cityInput) {
         City cityToUpdate = cityCrudService.findOrElseThrow(id);
         cityInputDisassembler.copyToDomainObject(cityInput, cityToUpdate);
         // The save method will update when an existing ID is being passed.
@@ -91,7 +96,7 @@ public class CityController {
 
     @ApiOperation("Removes a city by ID")
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public void delete(@ApiParam(value = "City ID", example = "1") @PathVariable Long id) {
         cityCrudService.delete(id);
     }
 
