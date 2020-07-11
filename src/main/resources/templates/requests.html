@@ -15,6 +15,7 @@
         </p>
         <p>
             <input type="text" id="payment-method-id" placeholder="ID of the Payment Method">
+            <button type="button" id="get-payment-method">GET Payment Method</button>
             <button type="button" id="delete-payment-method">DELETE Payment Method</button>
         </p>
         <p>
@@ -48,6 +49,11 @@
         ajaxRequest("/payment-methods", "post", paymentMethodJson);
     }
 
+    function getPaymentMethod() {
+        const path = "/payment-methods/" + $("#payment-method-id").val();
+        ajaxRequest(path, "get");
+    }
+
     function deletePaymentMethod() {
         const path = "/payment-methods/" + $("#payment-method-id").val();
         ajaxRequest(path, "delete");
@@ -74,6 +80,7 @@
     $("#getOrders").click(getOrders);
 
     $("#post-payment-method").click(postPaymentMethod);
+    $("#get-payment-method").click(getPaymentMethod);
     $("#delete-payment-method").click(deletePaymentMethod);
 </script>
 </body>

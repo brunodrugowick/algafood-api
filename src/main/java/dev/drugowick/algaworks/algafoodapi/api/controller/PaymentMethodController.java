@@ -9,6 +9,7 @@ import dev.drugowick.algaworks.algafoodapi.domain.model.PaymentMethod;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.PaymentMethodRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.PaymentMethodCrudService;
 import dev.drugowick.algaworks.algafoodapi.domain.service.ValidationService;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/payment-methods")
@@ -42,8 +44,12 @@ public class PaymentMethodController {
     }
 
     @GetMapping
-    public List<PaymentMethodModel> list() {
-        return genericModelAssembler.toCollectionModel(paymentMethodRepository.findAll(), PaymentMethodModel.class);
+    public ResponseEntity<List<PaymentMethodModel>> list() {
+        List<PaymentMethodModel> paymentMethodModels = genericModelAssembler.toCollectionModel(paymentMethodRepository.findAll(), PaymentMethodModel.class);
+
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                .body(paymentMethodModels);
     }
 
     @PostMapping
@@ -54,8 +60,16 @@ public class PaymentMethodController {
     }
 
     @GetMapping("/{id}")
-    public PaymentMethodModel get(@PathVariable Long id) {
-        return genericModelAssembler.toModel(paymentMethodCrudService.findOrElseThrow(id), PaymentMethodModel.class);
+    public ResponseEntity<PaymentMethodModel> get(@PathVariable Long id) {
+        PaymentMethodModel paymentMethodModel = genericModelAssembler.toModel(
+                paymentMethodCrudService.findOrElseThrow(id), PaymentMethodModel.class);
+
+        return ResponseEntity.ok()
+                //.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePrivate()) // Instructs only local caching (for sensitive data)
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePublic()) // instructs shared caches that this can be shared
+                //.cacheControl(CacheControl.noCache()) // Even cached, every request is validated (as if is always staled, without maxAge)
+                //.cacheControl(CacheControl.noStore()) // Instructs the response to NOT be cached.
+                .body(paymentMethodModel);
     }
 
     @PutMapping("{id}")
