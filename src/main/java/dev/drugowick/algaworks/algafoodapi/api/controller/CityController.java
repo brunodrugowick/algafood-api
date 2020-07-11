@@ -2,6 +2,7 @@ package dev.drugowick.algaworks.algafoodapi.api.controller;
 
 import dev.drugowick.algaworks.algafoodapi.api.assembler.CityInputDisassembler;
 import dev.drugowick.algaworks.algafoodapi.api.assembler.GenericModelAssembler;
+import dev.drugowick.algaworks.algafoodapi.api.exceptionhandler.ApiError;
 import dev.drugowick.algaworks.algafoodapi.api.model.CityModel;
 import dev.drugowick.algaworks.algafoodapi.api.model.input.CityInput;
 import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessException;
@@ -9,9 +10,7 @@ import dev.drugowick.algaworks.algafoodapi.domain.model.City;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.CityRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.CityCrudService;
 import dev.drugowick.algaworks.algafoodapi.domain.service.ValidationService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -56,13 +55,20 @@ public class CityController {
     }
 
     @ApiOperation("Retrieves a city by ID")
+    @ApiResponses({
+            @ApiResponse(code = 400, message = "Not a valid request", response = ApiError.class)
+    })
     @GetMapping("/{id}")
     public CityModel get(@ApiParam(value = "City ID", example = "1") @PathVariable Long id) {
         return genericModelAssembler.toModel(cityCrudService.findOrElseThrow(id), CityModel.class);
     }
 
     @ApiOperation("Creates a new city")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "City created")
+    })
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<CityModel> save(@ApiParam(value = "A representation of a new city") @RequestBody @Valid CityInput cityInput) {
         City city = cityInputDisassembler.toDomain(cityInput);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -70,6 +76,10 @@ public class CityController {
     }
 
     @ApiOperation("Updates a city by ID")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "City updated"),
+            @ApiResponse(code = 404, message = "City not found", response = ApiError.class)
+    })
     @PutMapping("/{id}")
     public ResponseEntity<CityModel> update(@ApiParam(value = "City ID", example = "1")
                                             @PathVariable @Valid Long id,
@@ -95,6 +105,10 @@ public class CityController {
     }
 
     @ApiOperation("Removes a city by ID")
+    @ApiResponses({
+            @ApiResponse(code = 204, message = "City removed"),
+            @ApiResponse(code = 404, message = "City not found", response = ApiError.class)
+    })
     @DeleteMapping("/{id}")
     public void delete(@ApiParam(value = "City ID", example = "1") @PathVariable Long id) {
         cityCrudService.delete(id);
