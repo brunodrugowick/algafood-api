@@ -2,10 +2,10 @@ package dev.drugowick.algaworks.algafoodapi.api.controller;
 
 import dev.drugowick.algaworks.algafoodapi.api.assembler.GenericInputDisassembler;
 import dev.drugowick.algaworks.algafoodapi.api.assembler.GenericModelAssembler;
+import dev.drugowick.algaworks.algafoodapi.api.controller.openapi.GroupControllerOpenApi;
 import dev.drugowick.algaworks.algafoodapi.api.model.GroupModel;
 import dev.drugowick.algaworks.algafoodapi.api.model.PermissionModel;
 import dev.drugowick.algaworks.algafoodapi.api.model.input.GroupInput;
-import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Group;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Permission;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.GroupRepository;
@@ -17,11 +17,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/groups")
-public class GroupController {
+public class GroupController implements GroupControllerOpenApi {
 
     private GroupRepository groupRepository;
     private GroupCrudService groupService;
@@ -43,11 +42,13 @@ public class GroupController {
         this.genericInputDisassembler = genericInputDisassembler;
     }
 
+    @Override
     @GetMapping
     public List<GroupModel> list() {
         return genericModelAssembler.toCollectionModel(groupRepository.findAll(), GroupModel.class);
     }
 
+    @Override
     @PostMapping
     public ResponseEntity<GroupModel> save(@RequestBody @Valid GroupInput groupInput) {
         Group group = genericInputDisassembler.toDomain(groupInput, Group.class);
@@ -55,11 +56,13 @@ public class GroupController {
                 .body(genericModelAssembler.toModel(groupService.save(group), GroupModel.class));
     }
 
+    @Override
     @GetMapping("/{id}")
     public GroupModel get(@PathVariable Long id) {
         return genericModelAssembler.toModel(groupService.findOrElseThrow(id), GroupModel.class);
     }
 
+    @Override
     @PutMapping("/{id}")
     public GroupModel update(@PathVariable Long id,
                              @RequestBody @Valid GroupInput groupInput) {
@@ -68,16 +71,13 @@ public class GroupController {
         return genericModelAssembler.toModel(groupService.update(id, groupToUpdate), GroupModel.class);
     }
 
-    @PatchMapping("/{id}")
-    public Group partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> groupMap) {
-        throw new GenericBusinessException("This method is temporarily not allowed.");
-    }
-
+    @Override
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         groupService.delete(id);
     }
 
+    @Override
     @GetMapping("/{groupId}/permissions")
     public List<PermissionModel> listPermissions(@PathVariable Long groupId) {
         Group group = groupService.findOrElseThrow(groupId);
@@ -85,6 +85,7 @@ public class GroupController {
         return permissionModelAssembler.toCollectionModel(group.getPermissions(), PermissionModel.class);
     }
 
+    @Override
     @PutMapping("/{groupId}/permissions/{permissionId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void bindPermission(@PathVariable Long groupId,
@@ -92,12 +93,11 @@ public class GroupController {
         groupService.bindPermission(groupId, permissionId);
     }
 
+    @Override
     @DeleteMapping("/{groupId}/permissions/{permissionId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void unbindPermission(@PathVariable Long groupId,
-                               @PathVariable Long permissionId) {
+                                 @PathVariable Long permissionId) {
         groupService.unbindPermission(groupId, permissionId);
     }
-
-
 }

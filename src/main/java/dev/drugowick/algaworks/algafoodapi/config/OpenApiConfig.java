@@ -30,7 +30,7 @@ import java.util.List;
 public class OpenApiConfig {
 
     @Bean
-    public Docket apiDocket() {
+    public static Docket apiDocket(OpenApiConfig openApiConfig) {
         var typeResolver = new TypeResolver();
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
@@ -38,13 +38,20 @@ public class OpenApiConfig {
                     .paths(PathSelectors.any())
                     .build()
                 .useDefaultResponseMessages(false)
-                .globalResponseMessage(RequestMethod.GET, globalGetResponseMessages())
-                .globalResponseMessage(RequestMethod.POST, globalPostPutResponseMessages())
-                .globalResponseMessage(RequestMethod.PUT, globalPostPutResponseMessages())
-                .globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
-                .apiInfo(apiInfo())
+                .globalResponseMessage(RequestMethod.GET, openApiConfig.globalGetResponseMessages())
+                .globalResponseMessage(RequestMethod.POST, openApiConfig.globalPostPutResponseMessages())
+                .globalResponseMessage(RequestMethod.PUT, openApiConfig.globalPostPutResponseMessages())
+                .globalResponseMessage(RequestMethod.DELETE, openApiConfig.globalDeleteResponseMessages())
+                .apiInfo(openApiConfig.apiInfo())
                 .additionalModels(typeResolver.resolve(ApiError.class))
-                .tags(new Tag("Cities", "Manages cities."));
+                .tags(tags()[0], tags());
+    }
+
+    private static Tag[] tags() {
+        return new Tag[]{
+                new Tag("Cities", "Manages cities."),
+                new Tag("Groups", "Manages groups.")
+        };
     }
 
     private List<ResponseMessage> globalGetResponseMessages() {
