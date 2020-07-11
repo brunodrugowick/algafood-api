@@ -12,6 +12,7 @@ import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
+import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.service.ResponseMessage;
@@ -37,7 +38,7 @@ public class OpenApiConfig {
                     .paths(PathSelectors.any())
                     .build()
                 .useDefaultResponseMessages(false)
-                .globalResponseMessage(RequestMethod.GET, globalGetReponseMessages())
+                .globalResponseMessage(RequestMethod.GET, globalGetResponseMessages())
                 .globalResponseMessage(RequestMethod.POST, globalPostPutResponseMessages())
                 .globalResponseMessage(RequestMethod.PUT, globalPostPutResponseMessages())
                 .globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
@@ -46,17 +47,20 @@ public class OpenApiConfig {
                 .tags(new Tag("Cities", "Manages cities."));
     }
 
-    private List<ResponseMessage> globalGetReponseMessages() {
+    private List<ResponseMessage> globalGetResponseMessages() {
         return Arrays.asList(
                 new ResponseMessageBuilder()
                     .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                    .message("Internal server error").build(),
+                    .message("Internal server error")
+                    .responseModel(new ModelRef("ApiError"))
+                    .responseModel(new ModelRef("ApiError")).build(),
                 new ResponseMessageBuilder()
                     .code(HttpStatus.NOT_ACCEPTABLE.value())
                     .message("There's no valid representation that the client accepts").build(),
                 new ResponseMessageBuilder()
                     .code(HttpStatus.NOT_FOUND.value())
-                    .message("Resource not found").build()
+                    .message("Resource not found")
+                    .responseModel(new ModelRef("ApiError")).build()
         );
     }
 
@@ -65,10 +69,12 @@ public class OpenApiConfig {
                 new ResponseMessageBuilder()
                         .code(HttpStatus.BAD_REQUEST.value())
                         .message("Invalid request (client error)")
+                        .responseModel(new ModelRef("ApiError"))
                         .build(),
                 new ResponseMessageBuilder()
                         .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                         .message("Internal server error")
+                        .responseModel(new ModelRef("ApiError"))
                         .build(),
                 new ResponseMessageBuilder()
                         .code(HttpStatus.NOT_ACCEPTABLE.value())
@@ -86,10 +92,12 @@ public class OpenApiConfig {
                 new ResponseMessageBuilder()
                         .code(HttpStatus.BAD_REQUEST.value())
                         .message("Invalid request (client error)")
+                        .responseModel(new ModelRef("ApiError"))
                         .build(),
                 new ResponseMessageBuilder()
                         .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                         .message("Internal server error")
+                        .responseModel(new ModelRef("ApiError"))
                         .build()
         );
     }
