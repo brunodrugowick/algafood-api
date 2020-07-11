@@ -1,5 +1,7 @@
 package dev.drugowick.algaworks.algafoodapi.config;
 
+import com.fasterxml.classmate.TypeResolver;
+import dev.drugowick.algaworks.algafoodapi.api.exceptionhandler.ApiError;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -28,6 +30,7 @@ public class OpenApiConfig {
 
     @Bean
     public Docket apiDocket() {
+        var typeResolver = new TypeResolver();
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                     .apis(RequestHandlerSelectors.basePackage("dev.drugowick"))
@@ -35,6 +38,9 @@ public class OpenApiConfig {
                     .build()
                 .useDefaultResponseMessages(false)
                 .globalResponseMessage(RequestMethod.GET, globalGetReponseMessages())
+                .globalResponseMessage(RequestMethod.POST, globalPostPutResponseMessages())
+                .globalResponseMessage(RequestMethod.PUT, globalPostPutResponseMessages())
+                .globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
                 .apiInfo(apiInfo())
                 .tags(new Tag("Cities", "Manages cities."));
     }
@@ -50,6 +56,40 @@ public class OpenApiConfig {
                 new ResponseMessageBuilder()
                     .code(HttpStatus.NOT_FOUND.value())
                     .message("Resource not found").build()
+        );
+    }
+
+    private List<ResponseMessage> globalPostPutResponseMessages() {
+        return Arrays.asList(
+                new ResponseMessageBuilder()
+                        .code(HttpStatus.BAD_REQUEST.value())
+                        .message("Invalid request (client error)")
+                        .build(),
+                new ResponseMessageBuilder()
+                        .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                        .message("Internal server error")
+                        .build(),
+                new ResponseMessageBuilder()
+                        .code(HttpStatus.NOT_ACCEPTABLE.value())
+                        .message("There's no valid representation that the client accepts")
+                        .build(),
+                new ResponseMessageBuilder()
+                        .code(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value())
+                        .message("Request body is in an unsupported format")
+                        .build()
+        );
+    }
+
+    private List<ResponseMessage> globalDeleteResponseMessages() {
+        return Arrays.asList(
+                new ResponseMessageBuilder()
+                        .code(HttpStatus.BAD_REQUEST.value())
+                        .message("Invalid request (client error)")
+                        .build(),
+                new ResponseMessageBuilder()
+                        .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                        .message("Internal server error")
+                        .build()
         );
     }
 
