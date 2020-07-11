@@ -1,23 +1,19 @@
 package dev.drugowick.algaworks.algafoodapi.api.model;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 @Setter
 @Getter
 public class ProvinceModel {
 
-    @NotNull
+    @ApiModelProperty(example = "1")
     private Long id;
 
-    @NotBlank
+    @ApiModelProperty(example = "São Paulo")
     private String name;
 
-    @NotBlank // Maybe not necessary with the size validation
-    @Size(min = 1, max = 2)
+    @ApiModelProperty(example = "SP")
     private String abbreviation;
 }
