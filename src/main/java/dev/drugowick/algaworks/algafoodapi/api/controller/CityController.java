@@ -10,6 +10,7 @@ import dev.drugowick.algaworks.algafoodapi.domain.repository.CityRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.CityCrudService;
 import dev.drugowick.algaworks.algafoodapi.domain.service.ValidationService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,16 +48,19 @@ public class CityController {
         this.cityInputDisassembler = cityInputDisassembler;
     }
 
+    @ApiOperation("Retrieves the list of cities")
     @GetMapping
     public List<CityModel> list() {
         return genericModelAssembler.toCollectionModel(cityRepository.findAll(), CityModel.class);
     }
 
+    @ApiOperation("Retrieves a city by ID")
     @GetMapping("/{id}")
     public CityModel get(@PathVariable Long id) {
         return genericModelAssembler.toModel(cityCrudService.findOrElseThrow(id), CityModel.class);
     }
 
+    @ApiOperation("Creates a new city")
     @PostMapping
     public ResponseEntity<CityModel> save(@RequestBody @Valid CityInput cityInput) {
         City city = cityInputDisassembler.toDomain(cityInput);
@@ -64,6 +68,7 @@ public class CityController {
                 .body(genericModelAssembler.toModel(cityCrudService.save(city), CityModel.class));
     }
 
+    @ApiOperation("Updates a city by ID")
     @PutMapping("/{id}")
     public ResponseEntity<CityModel> update(@PathVariable @Valid Long id, @RequestBody CityInput cityInput) {
         City cityToUpdate = cityCrudService.findOrElseThrow(id);
@@ -72,6 +77,7 @@ public class CityController {
         return ResponseEntity.ok(genericModelAssembler.toModel(cityCrudService.save(cityToUpdate), CityModel.class));
     }
 
+    @ApiOperation("Updates a city by ID")
     @PatchMapping("/{id}")
     public ResponseEntity<?> partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> cityMap) {
         throw new GenericBusinessException("This method is temporarily not allowed.");
@@ -83,6 +89,7 @@ public class CityController {
 //        return update(id, cityToUpdate);
     }
 
+    @ApiOperation("Removes a city by ID")
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         cityCrudService.delete(id);
