@@ -42,6 +42,7 @@ public class OpenApiConfig {
                 .globalResponseMessage(RequestMethod.PUT, globalPostPutResponseMessages())
                 .globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
                 .apiInfo(apiInfo())
+                .additionalModels(typeResolver.resolve(ApiError.class))
                 .tags(new Tag("Cities", "Manages cities."));
     }
 
