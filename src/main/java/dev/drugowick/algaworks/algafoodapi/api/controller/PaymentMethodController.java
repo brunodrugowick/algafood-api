@@ -13,8 +13,10 @@ import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.ServletWebRequest;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -60,7 +62,11 @@ public class PaymentMethodController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PaymentMethodModel> get(@PathVariable Long id) {
+    public ResponseEntity<PaymentMethodModel> get(@PathVariable Long id, ServletWebRequest request, Principal principal) {
+
+        // If for whatever reason you want to use this here
+        System.out.println(request + "\n\n" + principal);
+
         PaymentMethodModel paymentMethodModel = genericModelAssembler.toModel(
                 paymentMethodCrudService.findOrElseThrow(id), PaymentMethodModel.class);
 

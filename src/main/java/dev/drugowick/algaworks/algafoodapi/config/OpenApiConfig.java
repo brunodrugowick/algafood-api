@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.context.request.ServletWebRequest;
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -23,6 +24,7 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -46,8 +48,16 @@ public class OpenApiConfig {
                 .globalResponseMessage(RequestMethod.DELETE, openApiConfig.globalDeleteResponseMessages())
                 .apiInfo(openApiConfig.apiInfo())
                 .additionalModels(typeResolver.resolve(ApiError.class))
+                .ignoredParameterTypes(ignoredClasses())
                 .directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
                 .tags(tags()[0], tags());
+    }
+
+    private static Class[] ignoredClasses() {
+        return new Class[]{
+                ServletWebRequest.class,
+                Principal.class
+        };
     }
 
     private static Tag[] tags() {
