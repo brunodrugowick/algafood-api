@@ -3,6 +3,7 @@ package dev.drugowick.algaworks.algafoodapi.api.controller;
 import dev.drugowick.algaworks.algafoodapi.api.assembler.GenericModelAssembler;
 import dev.drugowick.algaworks.algafoodapi.api.assembler.RestaurantDisassembler;
 import dev.drugowick.algaworks.algafoodapi.api.assembler.RestaurantModelAssembler;
+import dev.drugowick.algaworks.algafoodapi.api.controller.openapi.RestaurantControllerOpenApi;
 import dev.drugowick.algaworks.algafoodapi.api.model.RestaurantModel;
 import dev.drugowick.algaworks.algafoodapi.api.model.dtoPattern.RestaurantDTO;
 import dev.drugowick.algaworks.algafoodapi.api.model.input.RestaurantInput;
@@ -15,18 +16,17 @@ import dev.drugowick.algaworks.algafoodapi.domain.repository.RestaurantRepositor
 import dev.drugowick.algaworks.algafoodapi.domain.service.RestaurantCrudService;
 import dev.drugowick.algaworks.algafoodapi.domain.service.ValidationService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 @RestController
-@RequestMapping("/restaurants")
-public class RestaurantController {
+@RequestMapping(path = "/restaurants", produces = MediaType.APPLICATION_JSON_VALUE)
+public class RestaurantController implements RestaurantControllerOpenApi {
 
 	private RestaurantRepository restaurantRepository;
 	private RestaurantCrudService restaurantCrudService;
@@ -138,24 +138,6 @@ public class RestaurantController {
 		} catch (EntityNotFoundException e) {
 			throw new GenericBusinessException(e.getMessage(), e);
 		}
-	}
-
-	@PatchMapping("/{id}")
-	public ResponseEntity<?> partialUpdate(@PathVariable Long id, @RequestBody Map<String,
-				Object> restaurantMap, HttpServletRequest request) {
-		throw new GenericBusinessException("This method is temporarily not allowed.");
-//		Restaurant restaurantToUpdate = restaurantCrudService.findOrElseThrow(id);
-//
-//		try {
-//			ObjectMerger.mergeRequestBodyToGenericObject(restaurantMap, restaurantToUpdate, Restaurant.class);
-//		} catch (IllegalArgumentException e) {
-//			Throwable rootCause = ExceptionUtils.getRootCause(e);
-//			var servletServerHttpRequest = new ServletServerHttpRequest(request);
-//			throw new HttpMessageNotReadableException(e.getMessage(), rootCause, servletServerHttpRequest);
-//		}
-//
-//		validationService.validate(restaurantToUpdate, "restaurant");
-//		return update(id, restaurantToUpdate);
 	}
 
 	@DeleteMapping("/{id}")

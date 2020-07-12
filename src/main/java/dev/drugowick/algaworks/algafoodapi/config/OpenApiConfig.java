@@ -65,7 +65,9 @@ public class OpenApiConfig {
                 new Tag("Cities", "Manages cities."),
                 new Tag("Groups", "Manages groups."),
                 new Tag("Cuisines", "Manages cuisines"),
-                new Tag("Payment Methods", "Manages payment methods")
+                new Tag("Payment Methods", "Manages payment methods"),
+                new Tag("Orders", "Manages orders"),
+                new Tag("Restaurants", "Manages restaurants")
         };
     }
 
