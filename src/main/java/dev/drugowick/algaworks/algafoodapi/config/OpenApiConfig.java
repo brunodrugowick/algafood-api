@@ -1,10 +1,12 @@
 package dev.drugowick.algaworks.algafoodapi.config;
 
 import com.fasterxml.classmate.TypeResolver;
+import dev.drugowick.algaworks.algafoodapi.api.controller.openapi.model.PageableModelOpenApi;
 import dev.drugowick.algaworks.algafoodapi.api.exceptionhandler.ApiError;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
@@ -44,6 +46,7 @@ public class OpenApiConfig {
                 .globalResponseMessage(RequestMethod.DELETE, openApiConfig.globalDeleteResponseMessages())
                 .apiInfo(openApiConfig.apiInfo())
                 .additionalModels(typeResolver.resolve(ApiError.class))
+                .directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
                 .tags(tags()[0], tags());
     }
 
