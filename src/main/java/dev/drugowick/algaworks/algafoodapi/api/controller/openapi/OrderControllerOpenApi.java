@@ -16,7 +16,9 @@ public interface OrderControllerOpenApi {
     @ApiImplicitParams({
             @ApiImplicitParam(value = "Property names to filter", name = "fields", type = "string", paramType = "query")
     })
-    public PageModel<OrderListModel> search(OrderFilter filter, Pageable pageable);
+    public PageModel<OrderListModel> search(
+            OrderFilter filter,
+            Pageable pageable);
 
     @ApiOperation("Retrieves an order by ID")
     @ApiImplicitParams({
@@ -26,7 +28,9 @@ public interface OrderControllerOpenApi {
             @ApiResponse(code = 400, message = "Invalid order ID", response = ApiError.class),
             @ApiResponse(code = 404, message = "Order not found", response = ApiError.class)
     })
-    public OrderModel get(String orderCode);
+    public OrderModel get(
+            @ApiParam(value = "Order ID", example = "aff37747-f651-4463-a6c3-03af003ccde9",
+                    required = true) String orderCode);
 
     @ApiOperation("Creates a new order")
     @ApiResponses({
