@@ -53,7 +53,8 @@ public class OpenApiConfig {
     private static Tag[] tags() {
         return new Tag[]{
                 new Tag("Cities", "Manages cities."),
-                new Tag("Groups", "Manages groups.")
+                new Tag("Groups", "Manages groups."),
+                new Tag("Cuisines", "Manages cuisines")
         };
     }
 
@@ -93,6 +94,10 @@ public class OpenApiConfig {
                 new ResponseMessageBuilder()
                         .code(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value())
                         .message("Request body is in an unsupported format")
+                        .build(),
+                new ResponseMessageBuilder()
+                        .code(HttpStatus.CONFLICT.value())
+                        .message("Operation requested cnoflicts with another entity")
                         .build()
         );
     }
