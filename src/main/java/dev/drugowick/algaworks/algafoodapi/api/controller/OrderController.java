@@ -3,6 +3,7 @@ package dev.drugowick.algaworks.algafoodapi.api.controller;
 import dev.drugowick.algaworks.algafoodapi.api.assembler.GenericInputDisassembler;
 import dev.drugowick.algaworks.algafoodapi.api.assembler.GenericModelAssembler;
 import dev.drugowick.algaworks.algafoodapi.api.assembler.PageModelAssembler;
+import dev.drugowick.algaworks.algafoodapi.api.controller.openapi.OrderControllerOpenApi;
 import dev.drugowick.algaworks.algafoodapi.api.model.OrderListModel;
 import dev.drugowick.algaworks.algafoodapi.api.model.OrderModel;
 import dev.drugowick.algaworks.algafoodapi.api.model.PageModel;
@@ -19,13 +20,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/orders")
-public class OrderController {
+@RequestMapping(path = "/orders", produces = MediaType.APPLICATION_JSON_VALUE)
+public class OrderController implements OrderControllerOpenApi {
 
     private final OrderService orderService;
     private final OrderRepository orderRepository;

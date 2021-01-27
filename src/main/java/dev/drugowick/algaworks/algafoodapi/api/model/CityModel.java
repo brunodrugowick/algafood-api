@@ -1,23 +1,19 @@
 package dev.drugowick.algaworks.algafoodapi.api.model;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
+//@ApiModel(value = "CityModel", description = "Representation of a city")
 @Getter
 @Setter
 public class CityModel {
 
-    @NotNull
+    @ApiModelProperty(example = "1")
     private Long id;
 
-    @NotBlank
+    @ApiModelProperty(example = "Campinas")
     private String name;
 
-    @NotNull
-    @Valid
     private ProvinceModel province;
 }

@@ -2,24 +2,24 @@ package dev.drugowick.algaworks.algafoodapi.api.controller;
 
 import dev.drugowick.algaworks.algafoodapi.api.assembler.CityInputDisassembler;
 import dev.drugowick.algaworks.algafoodapi.api.assembler.GenericModelAssembler;
+import dev.drugowick.algaworks.algafoodapi.api.controller.openapi.CityControllerOpenApi;
 import dev.drugowick.algaworks.algafoodapi.api.model.CityModel;
 import dev.drugowick.algaworks.algafoodapi.api.model.input.CityInput;
-import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.City;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.CityRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.CityCrudService;
 import dev.drugowick.algaworks.algafoodapi.domain.service.ValidationService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 @RestController
-@RequestMapping("cities")
-public class CityController {
+@RequestMapping(path = "cities", produces = MediaType.APPLICATION_JSON_VALUE)
+public class CityController implements CityControllerOpenApi {
 
     /**
      * I don't like it but, for the sake of simplicity for now, operations that do not require a
@@ -56,6 +56,7 @@ public class CityController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<CityModel> save(@RequestBody @Valid CityInput cityInput) {
         City city = cityInputDisassembler.toDomain(cityInput);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -63,22 +64,12 @@ public class CityController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CityModel> update(@PathVariable @Valid Long id, @RequestBody CityInput cityInput) {
+    public ResponseEntity<CityModel> update(@PathVariable @Valid Long id,
+                                            @RequestBody CityInput cityInput) {
         City cityToUpdate = cityCrudService.findOrElseThrow(id);
         cityInputDisassembler.copyToDomainObject(cityInput, cityToUpdate);
         // The save method will update when an existing ID is being passed.
         return ResponseEntity.ok(genericModelAssembler.toModel(cityCrudService.save(cityToUpdate), CityModel.class));
-    }
-
-    @PatchMapping("/{id}")
-    public ResponseEntity<?> partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> cityMap) {
-        throw new GenericBusinessException("This method is temporarily not allowed.");
-//        City cityToUpdate = cityCrudService.findOrElseThrow(id);
-//
-//        ObjectMerger.mergeRequestBodyToGenericObject(cityMap, cityToUpdate, City.class);
-//        validationService.validate(cityToUpdate, "city");
-//
-//        return update(id, cityToUpdate);
     }
 
     @DeleteMapping("/{id}")
