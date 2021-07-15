@@ -22,6 +22,14 @@
 		<awss3.version>1.11.810</awss3.version>
 	</properties>
 
+	<!-- Jasper Reports is a pain in the butt ... see https://github.com/TIBCOSoftware/jasperreports/issues/148#issuecomment-699499638  -->
+	<repositories>
+		<repository>
+			<id>jaspersoft-third-party</id>
+			<url>https://jaspersoft.jfrog.io/jaspersoft/third-party-ce-artifacts/</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
