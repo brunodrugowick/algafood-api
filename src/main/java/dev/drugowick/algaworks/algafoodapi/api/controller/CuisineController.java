@@ -2,28 +2,30 @@ package dev.drugowick.algaworks.algafoodapi.api.controller;
 
 import dev.drugowick.algaworks.algafoodapi.api.assembler.GenericInputDisassembler;
 import dev.drugowick.algaworks.algafoodapi.api.assembler.GenericModelAssembler;
+import dev.drugowick.algaworks.algafoodapi.api.assembler.PageModelAssembler;
+import dev.drugowick.algaworks.algafoodapi.api.controller.openapi.CuisineControllerOpenApi;
 import dev.drugowick.algaworks.algafoodapi.api.model.CuisineModel;
+import dev.drugowick.algaworks.algafoodapi.api.model.PageModel;
 import dev.drugowick.algaworks.algafoodapi.api.model.input.CuisineInput;
-import dev.drugowick.algaworks.algafoodapi.domain.exception.GenericBusinessException;
 import dev.drugowick.algaworks.algafoodapi.domain.model.Cuisine;
 import dev.drugowick.algaworks.algafoodapi.domain.repository.CuisineRepository;
 import dev.drugowick.algaworks.algafoodapi.domain.service.CuisineCrudService;
-import dev.drugowick.algaworks.algafoodapi.domain.service.ValidationService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/cuisines")
-public class CuisineController {
+@RequestMapping(path = "/cuisines", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequiredArgsConstructor
+public class CuisineController implements CuisineControllerOpenApi {
 
 	/**
 	 * I don't like it but, for the sake of simplicity for now, operations that do not require a
@@ -31,33 +33,17 @@ public class CuisineController {
 	 * are using the service layer (delete, save, update).
 	 */
 
-	private CuisineRepository cuisineRepository;
-	private CuisineCrudService cuisinesCrudService;
-	private ValidationService validationService;
-	private GenericModelAssembler<Cuisine, CuisineModel> genericModelAssembler;
-	private GenericInputDisassembler<CuisineInput, Cuisine> genericInputDisassembler;
-
-	public CuisineController(CuisineRepository cuisineRepository,
-							 CuisineCrudService cuisinesCrudService,
-							 ValidationService validationService,
-							 GenericModelAssembler<Cuisine, CuisineModel> genericModelAssembler,
-							 GenericInputDisassembler<CuisineInput, Cuisine> genericInputDisassembler) {
-		this.cuisineRepository = cuisineRepository;
-		this.cuisinesCrudService = cuisinesCrudService;
-		this.validationService = validationService;
-		this.genericModelAssembler = genericModelAssembler;
-		this.genericInputDisassembler = genericInputDisassembler;
-	}
+	private final CuisineRepository cuisineRepository;
+	private final CuisineCrudService cuisinesCrudService;
+	private final GenericModelAssembler<Cuisine, CuisineModel> genericModelAssembler;
+	private final GenericInputDisassembler<CuisineInput, Cuisine> genericInputDisassembler;
+	private final PageModelAssembler<Cuisine, CuisineModel> pageAssembler;
 
 	@GetMapping
-	public Page<CuisineModel> list(@PageableDefault(size = 5) Pageable pageable) {
+	public PageModel<CuisineModel> list(@PageableDefault(size = 5) Pageable pageable) {
 		Page<Cuisine> cuisinesPage = cuisineRepository.findAll(pageable);
 
-		List<CuisineModel> cuisineModels = genericModelAssembler.toCollectionModel(cuisinesPage.getContent(), CuisineModel.class);
-
-		Page<CuisineModel> cuisineModelPage = new PageImpl<>(cuisineModels, pageable, cuisinesPage.getTotalElements());
-
-		return cuisineModelPage;
+		return pageAssembler.toCollectionModelPage(cuisinesPage, CuisineModel.class);
 	}
 
 	@PostMapping
@@ -79,17 +65,6 @@ public class CuisineController {
 		genericInputDisassembler.copyToDomainObject(cuisineInput, cuisineToUpdate);
 		// The save method will update when an existing ID is being passed.
 		return genericModelAssembler.toModel(cuisinesCrudService.save(cuisineToUpdate), CuisineModel.class);
-	}
-
-	@PatchMapping("/{id}")
-	public Cuisine partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> cuisineMap) {
-		throw new GenericBusinessException("This method is temporarily not allowed.");
-//		Cuisine cuisineToUpdate = cuisinesCrudService.findOrElseThrow(id);
-//
-//		ObjectMerger.mergeRequestBodyToGenericObject(cuisineMap, cuisineToUpdate, Cuisine.class);
-//		validationService.validate(cuisineToUpdate, "cuisine");
-//
-//		return update(id, cuisineToUpdate);
 	}
 
 	@DeleteMapping(value = "/{id}")

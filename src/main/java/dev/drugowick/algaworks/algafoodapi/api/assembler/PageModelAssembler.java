@@ -8,6 +8,12 @@ import org.springframework.stereotype.Component;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+/**
+ * Assembles a Page to be returned to the client
+ *
+ * @param <T> A domain object that needs to be assembled into a page.
+ * @param <S> A model objetct to be returned into a page.
+ */
 @Component
 public class PageModelAssembler<T, S> {
 
