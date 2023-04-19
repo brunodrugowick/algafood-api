@@ -19,7 +19,7 @@
 		<modelmapper.version>2.3.0</modelmapper.version>
 		<squiggly.version>1.3.18</squiggly.version>
 		<jasperreports.version>6.12.2</jasperreports.version>
-		<awss3.version>1.11.810</awss3.version>
+		<awss3.version>1.12.261</awss3.version>
 	</properties>
 
 	<!-- Jasper Reports is a pain in the butt ... see https://github.com/TIBCOSoftware/jasperreports/issues/148#issuecomment-699499638  -->
