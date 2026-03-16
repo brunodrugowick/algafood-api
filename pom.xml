@@ -18,7 +18,7 @@
 		<java.version>11</java.version>
 		<modelmapper.version>2.3.0</modelmapper.version>
 		<squiggly.version>1.3.18</squiggly.version>
-		<jasperreports.version>6.12.2</jasperreports.version>
+		<jasperreports.version>7.0.4</jasperreports.version>
 		<awss3.version>1.12.261</awss3.version>
 	</properties>
 
